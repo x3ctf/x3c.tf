@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>\x3C/script></title>
-    <meta content="x3CTF 2024" property="og:title" />
+    <meta content="x3CTF 2025 (feat. mvm)" property="og:title" />
     <meta content="\x3C/script>" property="og:description" />
     <meta content="https://x3c.tf/" property="og:url" />
     <meta content="#0E162E" data-react-helmet="true" name="theme-color" />
@@ -84,6 +84,47 @@
             margin-top: 24px;
             margin-bottom: 64px
         }
+        .modal {
+            left: 16px;
+            bottom: 16px;
+            width: 90%;
+            height: fit-content;
+            max-width: 320px;
+            max-height: 480px;
+            background: #FFF;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            box-shadow: 2px 2px 8px #0007;
+            & h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+            & .button {
+                background: #0d6efd;
+                border: 1px solid #0d6efd;
+                user-select: none;
+                color: #fff;
+                padding: 6px 12px;
+                border-radius: 6px;
+                height: 24px;
+                display: inline-block;
+                line-height: 22px;
+                text-decoration: none;
+                &.decline {
+                    background: #FFF;
+                    color: #000;
+                    border: 1px solid #000;
+                    cursor: not-allowed;
+                    transition: 0.2s opacity;
+                    opacity: 1;
+                    &:hover {
+                        opacity: 0;
+                    }
+                }
+            }
+            position: fixed;
+        }
     </style>
 </head>
 <body>
@@ -117,5 +158,14 @@
         </p>
     </details>
 </footer>
+<div class="modal">
+    <div>
+        <h1>We care about your privacy</h1>
+        <p>However, we <u>will</u> steal your CTF challenges and share them with our <u>841</u> partners (CTF players) worldwide.</p>
+        <p>That's right, x3CTF is teaming up with mvm to accept <b>your</b> challenge submissions for the next x3CTF event, x3CTF 2025 (feat. mvm).</p>
+        <a href="https://ctf.mvm.lol/" class="button">Submit a chall</a>
+        <a class="button decline" style="">Decline</a>
+    </div>
+</div>
 </body>
 </html>
