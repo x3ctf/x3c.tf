@@ -1,171 +1,509 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Coming soon!! -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>\x3C/script></title>
-    <meta content="x3CTF 2025 (feat. mvm)" property="og:title" />
-    <meta content="\x3C/script>" property="og:description" />
-    <meta content="https://x3c.tf/" property="og:url" />
-    <meta content="#0E162E" data-react-helmet="true" name="theme-color" />
-    <style>
-        html, body {
-            background: #0E162E;
-            font-family: sans-serif;
-            text-align: center;
-            min-height: 90vh;
-            margin: 0;
-        }
-        h1 {
-            color: #949494;
-            font-size: 36px;
-            font-weight: normal;
-        }
-        .searches {
-            max-width: 480px;
-            margin: auto;
-            color: #CCC;
-        }
-        .searches > p {
-            text-align: left;
-            font-size: 10px;
-        }
-        .searches > div {
-            border: 4px solid #343A4E;
-            border-radius: 12px;
-            width: 100%;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            user-select: none;
-            cursor: pointer;
-            font-weight: bold;
-            margin: 8px 0;
-        }
-        .searches > div > a {
-            color: #FFF;
-            text-decoration: none;
-        }
-        .searches > div:hover {
-            background: #343A4E50;
-        }
-        footer {
-            color: #CCC;
-            font-size: 8px;
-            width: 80%;
-            margin: auto;
-        }
-        footer a {
-            color: inherit;
-        }
-        header {
-            border-top: #FFF 2px solid;
-            border-bottom: #222 2px solid;
-            background: linear-gradient(180deg, #9DF 0%, #6BE 100%);;
-            width: 100%;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFF;
-            font-size: 18px;
-            text-shadow: 1px 1px 1px #0009;
-            user-select: none;
-        }
-        details > summary {
-            list-style:none;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .search {
-            margin-top: 24px;
-            margin-bottom: 64px
-        }
-        .modal {
-            left: 16px;
-            bottom: 16px;
-            width: 90%;
-            height: fit-content;
-            max-width: 320px;
-            max-height: 480px;
-            background: #FFF;
-            border-radius: 16px;
-            padding: 16px;
-            text-align: left;
-            box-shadow: 2px 2px 8px #0007;
-            & h1 {
-                margin: 0;
-                font-size: 24px;
-            }
-            & .button {
-                background: #0d6efd;
-                border: 1px solid #0d6efd;
-                user-select: none;
-                color: #fff;
-                padding: 6px 12px;
-                border-radius: 6px;
-                height: 24px;
-                display: inline-block;
-                line-height: 22px;
-                text-decoration: none;
-                &.decline {
-                    background: #FFF;
-                    color: #000;
-                    border: 1px solid #000;
-                    cursor: not-allowed;
-                    transition: 0.2s opacity;
-                    opacity: 1;
-                    &:hover {
-                        opacity: 0;
-                    }
-                }
-            }
-            position: fixed;
-        }
-    </style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>\x3C/script></title>
+  <meta content="x3CTF 2025 (feat. mvm)" property="og:title" />
+  <meta content="\x3C/script>" property="og:description" />
+  <meta content="https://x3c.tf/" property="og:url" />
+  <meta content="#FF849C" data-react-helmet="true" name="theme-color" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Geo:ital@0;1&display=block" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Lilita+One&display=block" rel="stylesheet">
+	<link rel="icon" type="image/png" href="favicon.ico" />
+	<style type="text/css">
+		body,html {
+			font-family: "Geo", monospace;
+			color: #FFF;
+			text-align: center;
+			height: 80%;
+		}
+		body {
+			background: #00A;
+		}
+		h1 {
+			font-size: 72px;
+			font-weight: 400;
+			margin-bottom: 0;
+			color: #FFF;
+			background: #a0a;
+		}
+		#countdown {
+			font-size: 32px;
+			height:80%;
+			vertical-align: center;
+    		display: flex;
+    		flex-direction: column;
+    		align-content: center;
+    		justify-content: center;
+    		align-items: center;
+		}
+		.overlay {
+			opacity: 0;
+			position: fixed;
+			user-select: none;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+		}
+		#msgsOverlay {
+			opacity: 0.4;
+			filter: blur(2px);
+			transition: 2s opacity, 2s filter;
+			z-index: 5;
+			&.active {
+				filter: blur(0);
+				opacity: 0.8;
+			}
+		}
+		#intro_overlay {
+			background: #000;
+			z-index: 3;
+  		animation-duration: 3s;
+  		animation-name: anim1;
+		}
+		.overlayMsg {
+			position: absolute;
+			color: #FFF;
+			width: fit-content;
+			white-space: nowrap;
+			left: 0;
+			user-select: none;
+			pointer-events: none;
+			translate: 100vw 0;
+			transition: translate 8s linear, text-align 8s linear;
+
+			@starting-style {
+				text-align: left;
+				translate: -100% 0;
+  			}
+		}
+
+		@keyframes anim1 {
+  		0% {
+  		  opacity: 1;
+  		}
+  		50% {
+  		  opacity: 1;
+  		}
+  		100% {
+  		  opacity: 0;
+  		}
+		}
+		@keyframes anim2 {
+  		0% {
+  		  translate: 0 200px;
+  		  margin-bottom: 48px;
+  		}
+  		50% {
+  		  translate: 0 200px;
+  		  margin-bottom: 48px;
+  		}
+  		100% {
+  		  translate: 0 0;
+  		  margin-bottom: 0px;
+  		}
+		}
+		@keyframes anim3 {
+  		0% {
+  		  opacity: 0;
+  		}
+  		100% {
+  		  opacity: 1;
+  		}
+		}
+
+		h1, h2, h3 {
+			margin: 0;
+		}
+
+		#graphics {
+			fill: #FFF;
+			transform: skew(-9deg, -8deg);
+			scale: 1;
+			cursor: default;
+			z-index: 3;
+			& #title {
+				font: 400 192px "Geo";
+				transition: 2s letter-spacing cubic-bezier(0,0,0,1);
+				letter-spacing: 0;
+				@starting-style {
+					letter-spacing: 200px;
+				}
+			}
+			& #countdown {
+				font: 400 64px "Geo";
+  			animation-duration: 3s;
+  			animation-name: anim3;
+			}
+			& #subtitle {
+				 animation-duration: 3s;
+  			animation-name: anim3;
+			}
+			transition: transform 3s cubic-bezier(0,0.3,0,1), scale 1s cubic-bezier(0,0,0,1);
+			@starting-style {
+				transform: skew(-11deg, -11deg) scale(1.3);
+			}
+		}
+		.info {
+			text-align: left;
+			font-size: 1.5em;
+			max-width: 600px;
+			margin: auto;
+			padding: 16px;
+			background: #000;
+			border: 2px solid #FFF;
+			transform: skew(0deg, -7.75deg);
+			&> div {
+				transform: skew(0deg, 0deg);
+			}
+			& a {
+				color: #FF0;
+			}
+			&.nav > span {
+				display: flex;
+				gap: 8px;
+				& div {
+					cursor: pointer;
+				}
+			}
+  		animation-duration: 3s;
+  		animation-name: anim2;
+		}
+		#graphicsBlock {
+			display: flex;
+			padding: 64px 0 96px;
+		}
+
+#mainContent {
+	max-width: 800px;
+	margin: auto;
+	filter: none;
+	transition: filter 0.2s cubic-bezier(0,0,0,1);
+	&.active {
+		& #loginBlock {
+			filter: blur(10px);
+			opacity: 1;
+		}
+		filter: blur(10px);
+	}
+	& *::selection {
+		background: #FF0;
+		color: #000;
+		fill: #000;
+	}
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #FFF; }
+::-webkit-scrollbar-thumb:hover { background: #FF0; }
+
+		@media (prefers-reduced-motion) {
+			#intro_overlay {
+				display: none;
+			}
+			#msgsOverlay {
+				display: none;
+			}
+			#graphics, #graphics #title {
+				transition: none;
+			}
+			#graphics #countdown, #graphics #subtitle, .info {
+				animation-name: none;
+			}
+		}
+	</style>
 </head>
 <body>
-<header>
-    <p>x3CTF 2025 will be happening 24th through 26th January 2025. Check the <a href="https://ctftime.org/event/2467">CTFtime</a> and join our <a href="https://discord.gg/WpFHfD6nqH">Discord</a>!</p>
-</header>
-<article>
-<h1>x3c.tf</h1>
-<div class="searches">
-    <p>Related searches</p>
-    <div><a href="https://open.ecsc2024.it/">openECSC</a></div>
-    <div><a href="https://downunderctf.com/">DownUnderCTF</a></div>
-    <div><a href="https://ctf.hitcon.org/">HITCON CTF</a></div>
-    <div><a href="https://cursedc.tf/">CursedCTF</a></div>
-    <div><a href="https://capturetheflag.withgoogle.com/">GoogleCTF</a></div>
+<div class="overlay" id="intro_overlay"></div>
+<div id="mainContent">
+	<div id="graphicsBlock">
+		<svg id="graphics" viewBox="0 0 512 256">
+  		<text x="50%" y="50%" id="title" dominant-baseline="middle" text-anchor="middle">x3CTF</text>
+  		<text x="50%" y="77%" id="countdown" dominant-baseline="middle" text-anchor="middle">7d 56:34:12</text>
+  		<text x="50%" y="87.5%" id="subtitle" dominant-baseline="middle" text-anchor="middle">until x3CTF 2025 (feat. mvm)</text>
+		</svg>
+	</div>
+<div class="info nav">
+	<span id="loggedOut"><div onclick="xD.login()">Login</div> | <div onclick="document.location.href='https://idp.x3c.tf/if/flow/berg-enrollment/'">Register</div></span>
+	<span id="loggedIn" style="display:none"><div style="cursor: default"></div> | <div onclick="xD.logout()">Logout</div></span>
 </div>
-<div class="search">
-    <form action="https://duckduckgo.com/">
-        <input type="text" name="q"><input type="submit" value="Hacker Search" name="">
-    </form>
+<br>
+<div class="info"><div>
+<h2>About</h2>
+
+<p>x3CTF is a cute little jeopardy-style CTF with web, pwn, rev, crypto, and misc challs!</p>
+
+<p>x3CTF 2025 (feat. mvm) will run from Jan 24th 18:00 UTC until Jan 26th 18:00 UTC (48h). Be here a few minutes early for a fun surprise ^_^.</p>
+
+<p>Check us out on <a href="https://ctftime.org/event/2467">CTFtime</a> and join our <a href="https://discord.gg/WpFHfD6nqH">Discord</a> server.</p>
+
+<h2>MVM</h2>
+
+<p>We're teaming up with MVM to accept community-submitted challenges. Submit a challenge <a href="https://ctf.mvm.lol/">here</a>.</p>
+
+<h2>Prizes</h2>
+
+<p>List of prizes:</p>
+
+<ul>
+<li>iPad  </li>
+<li>iPod  </li>
+<li>iPhone  </li>
+<li>Android phone for every person on the team (while supplies last)  </li>
+<li>Thinkpad (with socks and cat ears)</li>
+</ul>
+
+<p>The prizes are still being determined, so the list and conditions may still change. More information to come. Prizes will be signed.</p>
+
+<p>Each winning team will be able to pick one prize in scoreboard order. There will probably be alternate prizes for those who can't or wish not to receive a prize physically.</p>
+
+<p>We reserve the right to not send out a physical prize if shipping it would be prohibitively difficult or expensive (<a href="https://www.omniva.ee/public/files/failid/hinnakiri-rv-pakiteenused-era-est-en-2024.pdf">shipping costs</a> over 50€ will be decided on a case-by-case basis).</p>
+
+<h2>Rules</h2>
+
+<ol>
+<li>You are allowed to play either individually or with a team. When playing with a team, register and use a single account for the entire team.  
+<ol>
+<li>If playing on a team, you are allowed to also have 1 personal account, but you are not allowed to submit flags on the personal account.  </li>
+</ol></li>
+<li>There is no bruteforce or scanning of public infrastructure required to solve the challenges.  </li>
+<li>Attacking or abusing the organizers infrastructure is forbidden.<br />
+Valid challenge targets are located at:  
+<ol>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;1337  </li>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;31337  </li>
+<li>instances.x3c.tf:30000-65535 (tcp/udp)  </li>
+</ol></li>
+<li>Have fun!</li>
+</ol>
+
+<p><i>Note: The rules are still being determined and may change before the CTF begins.</i></p>
+
+<h2>Credits</h2>
+
+<p>The x3CTF team consists of <a href="https://blog.gk.wtf/">Coderion</a>, <a href="https://dagurb.com">DagurB</a>, Raptor, rdx4.2, <a href="https://lyra.horse">Rebane</a>, and ShadowCone.<br />
+We're using the Berg CTF Platform by <a href="https://norelect.ch/">NoRelect</a>, with a custom frontend by Rebane.<br />
+Thank you to all the MVM contributors for submitting additional challenges: alex_hcsc, boxmein, hackrrr, joneswastaken, ksaweryr, and xtea418.<br />
+Music: ??? (surprise!)</p>
+</div></div>
+<br>
+<div class="info">
+2025 nya~
 </div>
-</article>
-<footer>
-    <p>This webpage was set up by <a href="https://twitter.com/rebane2001">one of the organizers</a> using <a href="https://www.sublimetext.com/">Sublime Text</a>. Disclaimer: The links displayed on this page have no relation to x3CTF. They are literally just random CTFs we decided to put on this page for no reason.</p>
-    <details>
-        <summary>Privacy Policy</summary>
-        <p>
-            Hi we're not stealing your information yet.
-            <br>
-            Stay tuned for a new Privacy Policy for when we start collecting your information.
-        </p>
-    </details>
-</footer>
-<div class="modal">
-    <div>
-        <h1>We care about your privacy</h1>
-        <p>However, we <u>will</u> steal your CTF challenges and share them with our <u>841</u> partners (CTF players) worldwide.</p>
-        <p>That's right, x3CTF is teaming up with mvm to accept <b>your</b> challenge submissions for the next x3CTF event, x3CTF 2025 (feat. mvm).</p>
-        <a href="https://ctf.mvm.lol/" class="button">Submit a chall</a>
-        <a class="button decline" style="">Decline</a>
-    </div>
+<div style="height:64px"></div>
 </div>
+<div class="overlay" id="msgsOverlay"></div>
+<script>
+    // funny rebane oidc library
+    window.xD = (() => {
+        const REDIRECT_URI = "https://x3c.tf/";
+        const LOGOUT_URI = "https://idp.x3c.tf/if/flow/default-invalidation-flow/";
+        const CLIENT_ID = "berg-client";
+        const PRE = "uwu";
+        let refreshTimeout;
+
+        async function bufferToBase64(buffer) {
+          const base64url = await new Promise(r => {
+            const reader = new FileReader()
+            reader.onload = () => r(reader.result)
+            reader.readAsDataURL(new Blob([buffer]))
+          });
+          return base64url.slice(base64url.indexOf(',') + 1);
+        }
+    
+        function cryptoHex(bytes) {
+            return Array.from(crypto.getRandomValues(new Uint8Array(bytes)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+    
+        async function login() {
+            const state = cryptoHex(16);
+            const code_verifier = cryptoHex(32);
+            const code_verifier_enc = new TextEncoder().encode(code_verifier);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', code_verifier_enc);
+            const code_challenge = (await bufferToBase64(new Uint8Array(hashBuffer))).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+    
+            localStorage.setItem(`${PRE}-state`, state);
+            localStorage.setItem(`${PRE}-verifier`, code_verifier);
+    
+            const params = {
+                "client_id": CLIENT_ID,
+                "redirect_uri": REDIRECT_URI,
+                "response_type": "code",
+                "scope": "openid offline_access",
+                "state": state,
+                "code_challenge": code_challenge,
+                "code_challenge_method": "S256",
+                "response_mode": "query",
+            };
+            document.location = `/api/openid/authorize?${new URLSearchParams(params)}`;
+        }
+    
+        async function logout() {
+            localStorage.removeItem(`${PRE}-refresh`);
+            await fetch("https://x3c.tf/api/openid/end-session");
+            document.location.href = LOGOUT_URI;
+        }
+    
+        async function fetchAccessToken(code = null) {
+            const params = code ? {
+                "client_id": CLIENT_ID,
+                "code": code,
+                "redirect_uri": REDIRECT_URI,
+                "code_verifier": localStorage.getItem(`${PRE}-verifier`),
+                "grant_type": "authorization_code",
+            } : {
+                "client_id": CLIENT_ID,
+                "refresh_token": localStorage.getItem(`${PRE}-refresh`),
+                "grant_type": "refresh_token",
+            };
+            try {
+                const resp = await fetch("/api/openid/token", {
+                      "headers": { "content-type": "application/x-www-form-urlencoded" },
+                      "body": new URLSearchParams(params),
+                      "method": "POST",
+                    });
+                const {access_token, refresh_token, expires_in} = await resp.json();
+                if (refreshTimeout)
+                    clearTimeout(refreshTimeout);
+                refreshTimeout = setTimeout(() => fetchAccessToken(), expires_in*1000);
+                localStorage.setItem(`${PRE}-refresh`, refresh_token);
+                localStorage.setItem(`${PRE}-access`, access_token);
+                localStorage.setItem(`${PRE}-expires`, Math.floor(Date.now()/1000 + expires_in));
+                return access_token;
+            } catch (e) {
+                // idk some error, token probably expired
+                console.error(e);
+                localStorage.removeItem(`${PRE}-refresh`);
+            }
+        }
+
+        async function getAccessToken() {
+            const refresh_token = localStorage.getItem(`${PRE}-refresh`);
+            if (!refresh_token || refresh_token === "undefined") return localStorage.removeItem(`${PRE}-refresh`);
+            const expires_at = parseInt(localStorage.getItem(`${PRE}-expires`, 0));
+            if (!isNaN(expires_at) && Date.now()/1000 < expires_at) return localStorage.getItem(`${PRE}-access`);
+            return await fetchAccessToken();
+        }
+
+        async function getHeader() {
+            const access_token = await getAccessToken();
+            return access_token ? {"Authorization": `Bearer ${access_token}`} : {};
+        }
+        
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const state = localStorage.getItem(`${PRE}-state`);
+            if (state && urlParams.get("state") === state) {
+                const code = urlParams.get("code");
+                if (code) {
+                    history.pushState({}, "", "?");
+                    localStorage.removeItem(`${PRE}-state`);
+                    await fetchAccessToken(code);
+                }
+            }
+        }
+
+        return {init, login, logout, getHeader, getAccessToken};
+    })();
+
+	const PRE_WS_ENDPOINT = "wss://x3c.tf/irc/";
+	const PRE_SITE_VER = 1;
+	const TARGET_TIME = 1737741600*1000;
+	let time_offset = null;
+
+	const msgsOverlay = document.getElementById("msgsOverlay");
+	const countdownTime = document.getElementById("countdown");
+	const intro_title = document.getElementById("intro_title");
+	const mainContent = document.getElementById("mainContent");
+	let zeroTime = TARGET_TIME;
+
+function newDcMsg(msg) {
+	const msgEl = document.createElement("div");
+	msgEl.innerText = msg;
+	msgEl.classList.add("overlayMsg");
+	msgEl.style.fontSize = ((msg.length < 16 ? 36 : 24) + (Math.random()*8)) + "px";
+	msgEl.style.top = (Math.random()*100) + "vh";
+	msgsOverlay.appendChild(msgEl);
+	setTimeout(()=>msgEl.remove(), 8000);
+}
+
+function setTimeOffset(time) {
+	time_offset = Date.now() - time;
+}
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+// https://stackoverflow.com/a/23176223
+function ws_connect() {
+  const ws = new WebSocket(PRE_WS_ENDPOINT);
+  ws.onopen = () => ws.send("nya~");
+
+  ws.onmessage = function(e) {
+  	if (e.data.startsWith("uwu")) {
+  		newDcMsg(e.data.slice(4));
+  	} else {
+  		const [_w1, site_ver, _w2, current_time, secret] = e.data.split(" ");
+  		if (parseInt(site_ver) > PRE_SITE_VER) {
+  			document.location.reload();
+  		}
+  		setTimeOffset(parseInt(current_time));
+  		if (secret !== "mvm") {
+
+  		}
+		setTimeout(() => ws.send("meow"), 10000);
+  	}
+  };
+
+  ws.onclose = function(e) {
+    console.log('Socket closed, reconnecting... ', e.reason);
+    setTimeout(() => ws_connect(), 1000);
+  };
+
+  ws.onerror = function(err) {
+    console.error('Socket error: ', err.message, 'Closing socket');
+    ws.close();
+  };
+};
+
+function animate() {
+	const timeLeft = (TARGET_TIME-getOffsetTime(true))/1000;
+	const timeSplit = [Math.floor(timeLeft/24/60/60), (timeLeft/60/60)%24, (timeLeft/60)%60, timeLeft%60, timeLeft%1];
+	const timeText = 
+		(timeSplit[0] ? (`${timeSplit[0]}:`) : ``) +
+		timeSplit.slice(1,4).map(t => String(Math.floor(t)).padStart(2,"0")).join(":") +
+		(timeSplit[0] ? "" : ("." + String(timeSplit[4]).slice(2,5).padEnd(3,"0")));
+	countdownTime.textContent = timeText;
+	if (timeLeft <= 3600) {
+		document.location.reload();
+		return;
+	}
+}
+
+async function checkLogin() {
+	try {
+		document.querySelector("#loggedIn > div").innerText = (await (await fetch("/api/v2/players/current", {"headers": await xD.getHeader()})).json()).name;
+		document.querySelector("#loggedOut").style.display = "none";
+		document.querySelector("#loggedIn").style.display = "";
+	} catch {}
+}
+
+window.onload = async () => {
+	ws_connect();
+	animate();
+	setInterval(animate, 1000);
+	await xD.init();
+	checkLogin();
+};
+</script>
 </body>
 </html>
