@@ -7,7 +7,7 @@
   <meta content="x3CTF 2025 (feat. mvm)" property="og:title" />
   <meta content="\x3C/script>" property="og:description" />
   <meta content="https://x3c.tf/" property="og:url" />
-  <meta content="#FF849C" data-react-helmet="true" name="theme-color" />
+  <meta content="#0000AA" data-react-helmet="true" name="theme-color" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Geo:ital@0;1&display=block" rel="stylesheet">
@@ -177,6 +177,10 @@
 		#graphicsBlock {
 			display: flex;
 			padding: 64px 0 96px;
+			/* because Safari sucks */
+			& > svg {
+				width: 100%;
+			}
 		}
 
 #mainContent {
@@ -196,6 +200,8 @@
 		color: #000;
 		fill: #000;
 	}
+	/* ??? */
+	overflow: hidden;
 }
 
 ::-webkit-scrollbar { width: 10px; }
@@ -276,8 +282,8 @@
 <li>Attacking or abusing the organizers infrastructure is forbidden.<br />
 Valid challenge targets are located at:  
 <ol>
-<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;1337  </li>
-<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;31337  </li>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:1337  </li>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:31337  </li>
 <li>instances.x3c.tf:30000-65535 (tcp/udp)  </li>
 </ol></li>
 <li>Have fun!</li>
@@ -289,7 +295,7 @@ Valid challenge targets are located at:
 
 <p>The x3CTF team consists of <a href="https://blog.gk.wtf/">Coderion</a>, <a href="https://dagurb.com">DagurB</a>, Raptor, rdx4.2, <a href="https://lyra.horse">Rebane</a>, and ShadowCone.<br />
 We're using the Berg CTF Platform by <a href="https://norelect.ch/">NoRelect</a>, with a custom frontend by Rebane.<br />
-Thank you to all the MVM contributors for submitting additional challenges: alex_hcsc, boxmein, hackrrr, joneswastaken, ksaweryr, and xtea418.<br />
+Thank you to all the MVM contributors for submitting additional challenges: alex_hcsc, boxmein, hackrrr, joneswastaken, ksaweryr, natan.p, and xtea418.<br />
 Music: ??? (surprise!)</p>
 </div></div>
 <br>
