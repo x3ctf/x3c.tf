@@ -1084,6 +1084,7 @@ const drumsss = [
 	function animate_catch() {
 		try {
 			replay_ws();
+			updateScrub();
 			animate();	
 		} catch (e) {
 			console.error(e)
