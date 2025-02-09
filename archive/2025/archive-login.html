@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	html {
+		height: 100%;
+		background: #14191F;
+		background-image: url(a_mountain_range_with_snow_on_top_smol.jpg);
+		background-size: cover;
+		overflow: hidden;
+	}
+	body {
+		font-family: system-ui, sans-serif;
+		margin: 0;
+		color: #FFF;
+		text-align: center;
+		align-content: center;
+		height: 100%;
+		font-size: 14px;
+	}
+	.dialog {
+		text-align: center;
+		max-width: 464px;
+		background: #18191A;
+		margin: auto;
+		padding: 48px;
+		& img {
+			width: 150px;
+			height: 150px;
+			pointer-events: none;
+		}
+		& h1, p {
+			text-align: left;
+		}
+		& h1 {
+			font-size: 28px;
+			font-weight: 500;
+		}
+		& p {
+			font-weight: 700;
+			margin: 4px;
+		}
+		& select {
+			width: 100%;
+			background: #1C1E21;
+			color: #FFF;
+			font-size: 16px;
+			height: 36px;
+			border: 2px #0000 solid;
+			border-bottom-color: #8A8D90;
+			&:hover {
+				border-bottom-color: #0066CC;
+			}
+			&:active {
+				border-bottom-color: #0000;
+			}
+		}
+		& button {
+			background: #0066CC;
+			color: #FFF;
+			font-size: 16px;
+			width: 100%;
+			height: 36px;
+			border: none;
+			cursor: pointer;
+			margin-top: 24px;
+			border-radius: 3px;
+			&:hover {
+				background: #004080;
+			}
+		}
+	}
+	.powered {
+		font-size: 16px;
+	}
+</style>
+</head>
+<body>
+	<div class="dialog">
+		<img src="175555598.png">
+		<h1>x3CTF Login</h1>
+		<p>Username <span style="color:#C9190B;font-weight:400">*</span></p>
+		<select id="usernamePicker">
+			<option value="player" selected>player</option>
+		</select>
+		<button id="logInButton">Log in</button>
+	</div>
+	<p class="powered">Simulated archive login</p>
+<script>
+	let playersData = [];
+	let myTeam = "player";
+
+	const usernamePicker = document.getElementById("usernamePicker");
+	const logInButton = document.getElementById("logInButton");
+
+	function login(name, id) {
+		localStorage.setItem("x3c-username", name);
+		localStorage.setItem("x3c-userid", id);
+		document.location.href = (/^#[a-z0-9\-]+.html$/.test(document.location.hash)) ? document.location.hash.slice(1) : "../";
+	}
+
+	function populateUsernames() {
+		const players = playersData.map(e=>e.name).sort((a,b) => a.localeCompare(b));
+		usernamePicker.innerText = "";
+		for (const player of players) {
+			const option = document.createElement('option');
+			option.innerText = player;
+			option.value = player;
+			usernamePicker.appendChild(option);
+			if (player == myTeam)
+				usernamePicker.value = player;
+		}
+	}
+
+	logInButton.onclick = () => {
+		const username = usernamePicker.value;
+		const userid = playersData.find(p => p.name == username)?.id || "192e7433-6bb2-53be-8443-b60c273b2d8d";
+		login(username, userid);
+	}
+
+	function tryLoadUser() {
+		const username = localStorage.getItem("x3c-username");
+		const playerId = localStorage.getItem("x3c-userid");
+		if (!playerId || playerId === "undefined") return;
+		applyUser(username, playerId);
+	}
+
+	window.onload = async () => {
+		const data = await (await fetch("data.json")).json();
+		playersData = data["players"];
+		populateUsernames();
+	}
+</script>
+</body>

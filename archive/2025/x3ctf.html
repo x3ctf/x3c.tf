@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>x3CTF</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Lilita+One&display=block" rel="stylesheet">
+	<!-- Impact and Comic Sans fallbacks -->
+	<link href="https://fonts.googleapis.com/css2?family=Oswald&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+	<link rel="icon" type="image/png" href="favicon.png" />
+	<style>
+		:root {
+			/*
+			--accent: #FF9FB2;
+			--stroke: #FBDCE2;
+			--stroke: #FFF;
+			contrasty chall bg: #420034;
+			*/
+  			--accent: #ff849c;
+  			--stroke: #FFF;
+  			--text: #330049;
+  			--link: var(--stroke);
+  			--background: #ffa1c3;
+  			--alt-accent: var(--background);
+  			--bg-solved: #5FAD56;
+  			--bg-unsolved: #F2C14E;
+  			--bg-locked: #383F51;
+  			--points: #2D3142;
+  			--border-rad: 16px;
+  			--font-display-x3: "Cherry Bomb One", system-ui;
+  			--font-text-x3: "Lilita One", system-ui;
+  			--font-display-mvm: "Comic Sans MS", "Patrick Hand", cursive;
+  			--font-text-mvm: "Impact", "Oswald", sans-serif;
+  			--font-display: var(--font-display-x3);
+  			--font-text: var(--font-text-x3);
+  			--sb-mult: 0.5;
+		}
+		:root:has(#mvmSwitch:checked) {
+  			--accent: #F84FED;
+  			--stroke: #36008c;
+  			--text: #FFF;
+  			--link: var(--accent);
+  			--background: #474B79;
+  			--alt-accent: #ff0;
+  			/* --bg-solved: #F0F; */
+  			--bg-solved: #0F0;
+  			--bg-unsolved: #F2C14E;
+  			--bg-locked: #383F51;
+  			--points: #FFF;
+  			--border-rad: 0px;
+  			--font-display: var(--font-display-mvm);
+  			--font-text: var(--font-text-mvm);
+  			--sb-mult: 1.1;
+		}
+		:root:has(#mvmSwitch:checked) .x3only {
+			display: none;
+		}
+		:root:not(:has(#mvmSwitch:checked)) .mvmonly {
+			display: none;
+		}
+		:root:has(#mvmSwitch:checked) #menubar {
+			box-shadow: 0 0 0 #0000;
+			translate: 4px 4px;
+		}
+		html, body {
+			font-family: var(--font-text);
+			margin: 0;
+			max-width: 1200px;
+			/*margin: 0 auto;(/)*/
+		}
+		/* scrollbar-gutter breaks our cool modal overlay unfortunately :( 
+			[!] and the marquee text ;_;
+		html:not(:has(#active-challenges:checked)) {
+			scrollbar-gutter: stable both-edges;
+		}*/
+		body {
+			background: var(--background);
+			transition: 1s background cubic-bezier(0,0,0,1);
+			margin-bottom: 16px;
+		}
+		/*                -                *\
+		  this is an *extremely* cursed way
+		  of making the scrollbar not shift
+		  the layout - i'd use scrollbar-gu
+		| tter but it breaks the modal over |
+		  lays and the marquee text at the
+		  bottom :( i hope this fucked up c
+		  ode won't cause any issues 4 yall
+		\*                -                */
+		body {
+			width: 100%;
+			margin: 0;
+			padding-left: calc(calc(100vw - 100%) / 2);
+			overflow-x: hidden;
+		}
+		*::selection {
+			color:#FFF;
+			background:#ff849c;
+		}
+		h1 {
+			font-family: var(--font-display);
+			font-weight: 400;
+			font-size: 72px;
+			text-align: center;
+			color: #F7717D;
+		}
+		a {
+			color: var(--link);
+		}
+		code {
+			background: #000;
+			color: #FFF;
+			border-radius: calc(var(--border-rad) / 4);
+			padding: 0 2px;
+		}
+		.pageTitle {
+			font: 400 72px var(--font-display);
+			width: 100%;
+
+			& text {
+				stroke-dasharray: 1000, 1000;
+				fill: var(--accent); /* #F7717D */
+				paint-order: stroke;
+				stroke: var(--stroke); /* #E9F7CA */
+				transition:
+					2s stroke-width cubic-bezier(0,0,0,1),
+					1s opacity cubic-bezier(0,0,0,1),
+					2s letter-spacing cubic-bezier(0,0,0,1);
+				opacity: 100%;
+  				stroke-width: 14px;
+  				stroke-linecap: round;
+  				stroke-linejoin: round;
+				margin: auto;
+				letter-spacing: 0;
+				/*animation: 20s pulsate infinite;*/
+				@starting-style {
+					stroke-width: 0px;
+					letter-spacing: 10px;
+					opacity: 0;
+  				}
+			}
+
+			& #countdown {
+				font-size: 24px;
+				stroke-width: 4px;
+				@starting-style {
+					letter-spacing: 1px;
+  				}
+			}
+		}
+		@keyframes pulsate {
+  			50%{ stroke-width:9px }
+		}
+
+		.challenges {
+			display: flex;
+			justify-content: center;
+    		flex-wrap: wrap;
+    		gap: 18px 16px;
+
+			transition:
+				2s gap cubic-bezier(0,0,0,1);
+    		@starting-style {
+    			gap: 32px 16px;
+    		}
+
+    		&:has(#mvmSwitch:checked) {
+				& .x3 {
+					display: none;
+					opacity: 0;
+					translate: 0 -64px;
+					pointer-events: none;
+				}
+    		}
+    		&:not(:has(#mvmSwitch:checked)) {
+				& .mvm {
+					display: none;
+					opacity: 0;
+					translate: 0 -64px;
+					pointer-events: none;
+				}
+    		}
+
+    		&:has(.mvmSwitch:active) .challenge:not(.mvmSwitch) {
+    			opacity: 0;
+    		}
+
+    		&:has(> .challenge:hover) .tags {
+    			opacity: 0.5;
+    		}
+
+			& .challenge {
+				cursor: pointer;
+				user-select: none;
+
+				display: flex;
+        		flex-direction: column;
+        		justify-content: center;
+
+				transition:
+					2s rotate cubic-bezier(0,0,0,1),
+					1s opacity cubic-bezier(0,0,0,1),
+					1s background cubic-bezier(0,0,0,1),
+					1s border cubic-bezier(0,0,0,1),
+					2s scale cubic-bezier(0,0,0,1),
+					2s translate cubic-bezier(0,0,0,1);
+				translate: 0 0;
+				scale: 100%;
+				@starting-style {
+					translate: 0 20px;
+					opacity: 0;
+					rotate: 0deg!important;
+					scale: 90%;
+				}
+
+				width: 240px;
+				height: 120px;
+				/*background: var(--bg-unsolved);*/
+				background: var(--stroke);
+				border: 10px solid var(--stroke);
+				border-radius: var(--border-rad);
+
+				&:hover {
+					scale: 1.1;
+					& .tags {
+						opacity: 1;
+					}
+				}
+				
+				& .name {
+					font-size: 24px;
+					text-align:center;
+					color: var(--accent);
+				}
+				& .points {
+					font-size: 24px;
+					text-align:center;
+					color: var(--points);
+				}
+				& .tags {
+					opacity: 0;
+					color: var(--accent);
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: 0 auto -2px;
+					width: fit-content;
+					transition: 0.5s opacity cubic-bezier(0,0,0,1);
+				}
+
+				&.solved {
+					background: var(--bg-solved);
+					border-color: var(--bg-solved);
+					& .name, & .points, & .tags {
+						color: #FFF;
+					}
+				}
+				&.x3 {
+					font-family: var(--font-text-x3);
+				}
+				&.mvm {
+					font-family: var(--font-text-mvm);
+				}
+				&.mvmSwitch {
+					&:active {
+						scale: 2;
+					}
+					& .name, .points { color: #FFF }
+					&.x3 {
+						background: #474B79;
+						border-color: #474B79;
+					}
+					&.mvm {
+						background: #FFA1C3;
+						border-color: #FFA1C3;
+						border-radius: 16px;
+						rotate: -2deg;
+					}
+				}
+			}
+		}
+
+		#menubar {
+			display: flex;
+			font-size: 32px;
+			font-family: var(--font-display);
+
+			justify-content: space-around;
+    		align-items: center;
+    		/*color: #005391;*/
+    		color: var(--alt-accent);
+
+    		padding: 0 12px 6px;
+
+    		min-height: 64px;
+    		flex-wrap: wrap;
+    		gap: 0 8px;
+
+			background: var(--stroke);
+			margin: 32px 32px;
+			margin-bottom: 48px;
+			box-shadow: 8px 8px 0px var(--accent);
+			width:calc(100% - 64px - 16px - 8px);
+
+			transition:
+				1s opacity cubic-bezier(0,0,0,1),
+				1s background cubic-bezier(0,0,0,1),
+				2s box-shadow cubic-bezier(0,0,0,1),
+				2s translate cubic-bezier(0,0,0,1);
+			opacity: 1;
+			translate: 0;
+			@starting-style {
+				box-shadow: 0px 0px 0px var(--accent);
+				translate: 4px 4px;
+				opacity: 0;
+  			}
+
+  			& div {
+  				cursor: pointer;
+  			}
+  			& a {
+  				text-decoration: inherit;
+  				color: inherit;
+  			}
+		}
+
+		#marquee {
+			position: fixed;
+			z-index: -1;
+			text-align: left;
+			white-space: nowrap;
+			left: 0;
+			width: fit-content;
+			bottom: 32px;
+			animation: 4s marquee linear infinite;
+			user-select: none;
+			pointer-events: none;
+			color: var(--stroke);
+			font-size: 32px;
+			transition:
+					1s opacity cubic-bezier(0,0,0,1);
+			opacity: 1;
+			translate:-1% 0;
+			@starting-style {
+				opacity: 0;
+  			}
+  			&.static {
+  				animation: none;
+  				translate: -1% 0;
+  			}
+		}
+		@keyframes marquee {
+  			0%{ translate:0 0 }
+  			100%{ translate:-10% 0 }
+		}
+
+		#challengeModal {
+			display: flex;
+			justify-content: center;
+    		align-items: center;
+			position: fixed;
+			width:100%;
+			height:100%;
+			top: 0;
+			left: 0;
+			background: #0007;
+			z-index: 10;
+			transition:
+				0.5s background cubic-bezier(0,0,0,1);
+			& #challengeModalContent {
+				padding: 16px;
+				color: var(--text);
+				transition:
+					0.5s opacity cubic-bezier(0,0,0,1),
+					0.5s scale cubic-bezier(0,0,0,1);
+				scale: 1;
+				opacity: 1;
+				max-width: 540px;
+				max-height: 640px;
+				width: 90%;
+				height: fit-content;
+				background: var(--background);
+				border-radius: var(--border-rad);
+			}
+			&.hidden {
+				user-select: none;
+				pointer-events: none;
+				background: #0000;
+				& #challengeModalContent {
+					scale: 0.85;
+					opacity: 0;
+				}
+			}
+		}
+
+
+		#volumeControl {
+			-webkit-appearance: none;
+			border-radius: 16px;
+			background: var(--stroke);
+			padding: 1px;
+			&::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 8px;
+				height: 8px;
+				background: var(--accent);
+				border-radius:16px;
+			}
+			&::-moz-range-thumb {
+				width: 8px;
+				height: 8px;
+				background: var(--accent);
+				border-radius:16px;
+			}
+		}
+		.pageRadio, .scoreTabRadio {
+			display: none;
+		}
+
+		.info {
+		transition:
+			1s opacity cubic-bezier(0,0,0,1),
+			1s scale cubic-bezier(0,0,0,1);
+		opacity: 1;
+		scale: 1;
+		transform-origin: 50% 128px;
+		@starting-style {
+			opacity: 0;
+			scale: 0.95;
+  		}
+			background: var(--stroke);
+			color: var(--text);
+			padding: 16px;
+			margin: auto;
+			max-width: 800px;
+			border-radius: var(--border-rad);
+			h2, h3 {
+				margin: 0;
+				font-family: var(--font-display);
+				text-shadow: 1px 1px 1px var(--text);
+				color: var(--accent);
+			}
+			a {
+				color: var(--accent);
+			}
+		}
+
+		body > .toast {
+			position: fixed;
+			bottom: 32px;
+			top: 32px;
+			left: 0;
+			right: 0;
+			height: fit-content;
+			width: fit-content;
+			margin: auto;
+			background: var(--stroke);
+			color: var(--points);
+			text-align: center;
+			& .title {
+				margin: 0;
+				font-size: 2em;	
+			}
+			transition:
+				0.3s opacity cubic-bezier(0,0,0,1),
+				0.3s translate cubic-bezier(0,0,0,1);
+			border-radius: var(--border-rad);
+			padding: 4px 12px 12px;
+			box-shadow: 4px 4px 16px #0003;
+			z-index: 20;
+			@starting-style {
+				opacity: 0;
+				translate: 0 calc(100% + 32px);
+  		}
+		}
+
+	.bubblepop {
+		position: absolute;
+		translate: round(calc(-100% + 44px), 1px) round(calc(-100% - 18px), 1px);
+		font-family: "Tahoma", system-ui, sans-serif;
+		font-size: 14px;
+		color: #000;
+		background: #FFFFE1;
+		border-radius: 8px;
+		width: fit-content;
+		border: 1px solid #000;
+		padding: 6px 11px 11px;
+		filter: drop-shadow(5px 5px 5px #0002);
+		z-index: 20;
+		opacity: 1;
+		transition: 0.25s opacity linear;
+		@starting-style {
+			opacity: 0;
+		}
+		& *::selection {
+			color: #FFF;
+			background: #316AC5;
+		}
+		& .title {
+			font-weight: bold;
+			padding-right: 18px;
+		}
+		& p {
+			margin: 0;
+			cursor: default;
+		}
+		& .close {
+			position: absolute;
+			background: #FFFFF5;
+			border: 1px solid #C7BEA6;
+			color: #C7BEA6;
+			width: 14px;
+			height: 14px;
+			top: 4px;
+			left: round(calc(100% - 21px), 1px);
+			border-radius: 3px;
+			line-height: 11px;
+        	text-align: center;
+        	cursor: default;
+        	font-weight: bold;
+        	user-select: none;
+        	&:hover, &:active {
+        		background: radial-gradient(circle at 80% 80%, #FFDC18, #FFB13B, #FFD9A1 100%);
+        		color: #FFF;
+        		border-color: #FFF;
+        		filter: drop-shadow(0 0 1px #0003) drop-shadow(1px 1px 0px #0002);
+        		box-shadow: inset -1px -1px 2px #704F2044;
+        	}
+        	&:active {
+        		background: radial-gradient(circle at 80% 80%, #D89500, #CB7900, #8C5200 100%);
+        		color: #FFF7;
+        		box-shadow: inset 1px 1px 2px #704F2088;
+        	}
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			bottom: -20px;
+			right: 15px;
+			border: 10px solid #FFFFE1;
+			border: 10px solid #FFFFE1;
+			border-left-color:#0000;
+			border-bottom-color:#0000;
+			filter: drop-shadow(1px 1px 0 #000) drop-shadow(-0.9px 0 0 #000)
+		}
+	}
+
+		input#active-home:not(:checked)       ~ #page-home       { display: none; }
+		input#active-challenges:not(:checked) ~ #page-challs     { display: none; }
+		input#active-scoreboard:not(:checked) ~ #page-scoreboard { display: none; }
+		input#active-account:not(:checked)    ~ #page-account    { display: none; }
+
+		input#tab-scoreboard:not(:checked)    ~ #scoreboardTable { display: none; }
+		input#tab-activity:not(:checked)      ~ #activityLog     { display: none; }
+		input#tab-scoreboard:not(:checked)    ~ .tabs :first-child { opacity: 0.5; }
+		input#tab-activity:not(:checked)      ~ .tabs :last-child { opacity: 0.5; }
+	</style>
+</head>
+<body>
+<div id="menubar">
+	<label for="active-home"><a href="#home"><div style="color:var(--accent)"><span class="x3only">x3ctf</span><span class="mvmonly">mvm</span></div></a></label>
+	<label for="active-challenges"><a href="#challenges"><div>challenges</div></a></label>
+	<label for="active-scoreboard"><a href="#scoreboard"><div>scoreboard</div></a></label>
+	<label for="active-account"><a href="#account"><div id="link-account">log in</div></a></label>
+</div>
+<input type="radio" class="pageRadio" name="page" id="active-home" />
+<input type="radio" class="pageRadio" name="page" id="active-challenges" checked />
+<input type="radio" class="pageRadio" name="page" id="active-scoreboard" />
+<input type="radio" class="pageRadio" name="page" id="active-account" />
+<div class="page" id="page-home">
+<svg class="pageTitle" viewBox="0 0 850 100">
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"><tspan class="x3only">x3CTF</tspan><tspan class="mvmonly">mvm</tspan></text>
+  <text x="50%" y="88%" dominant-baseline="middle" text-anchor="middle" id="countdown">is running!</text>
+  <!-- <text x="50%" y="90%" dominant-baseline="middle" text-anchor="middle" id="countdown">48:23:01</text>TODO: add actual countdown -->
+</svg>
+<br/>
+<br/>
+<br/>
+<div class="info"><div>
+<h2>About</h2>
+
+<p>x3CTF is a cute little jeopardy-style CTF with web, pwn, rev, crypto, and misc challs!</p>
+
+<p>x3CTF 2025 (feat. mvm) will run from Jan 24th 18:00 UTC until Jan 26th 18:00 UTC (48h).</p>
+
+<p>Check us out on <a href="https://ctftime.org/event/2467">CTFtime</a> and join our <a href="https://discord.gg/WpFHfD6nqH">Discord</a> server.</p>
+
+<h2>MVM</h2>
+
+<p>We teamed up with mvm to accept community-submitted challenges for x3CTF. Challenge submissions have now been now closed, thank you for all the awesome contributions!</p>
+
+<h2>Prizes</h2>
+
+<p>List of prizes:</p>
+
+<ul>
+<li>iPad  </li>
+<li>iPod  </li>
+<li>iPhone  </li>
+<li>Android phone for every person on the team (while supplies last)  </li>
+<li>Thinkpad (with socks and cat ears)</li>
+</ul>
+
+<p>Prizes will be signed.</p>
+
+<p>Each winning team will be able to pick one prize in scoreboard order. There will probably be alternate prizes for those who can't or wish not to receive a prize physically.</p>
+
+<p>We reserve the right to not send out a physical prize if shipping it would be prohibitively difficult or expensive (<a href="https://www.omniva.ee/public/files/failid/hinnakiri-rv-pakiteenused-era-est-en-2024.pdf">shipping costs</a> over 50€ will be decided on a case-by-case basis).</p>
+
+<p>We also have a Windows Phone and we honestly have no idea what to do with it.</p>
+
+<h2>Rules</h2>
+
+<ol>
+<li>You are allowed to play either individually or with a team. When playing with a team, register and use a single account for the entire team. <br />
+<ol>
+<li>If playing on a team, you are allowed to also have 1 personal account to yourself, but you are not allowed to submit flags on it.  </li>
+</ol></li>
+<li>There is no bruteforce or scanning of public infrastructure required to solve the challenges.  </li>
+<li>Attacking or abusing the organizers infrastructure is forbidden. <br />
+Valid challenge targets are located at: <br />
+<ol>
+<li>https://&lt;UUID&gt;.x3c.tf​:1337  </li>
+<li>https://&lt;UUID&gt;.x3c.tf​:31337  </li>
+<li>challs.x3c.tf:30000-65535 (tcp/udp)  </li>
+</ol></li>
+<li>Don't share flags or discuss challenges outside of your team while the CTF is running. <br />
+<ol>
+<li>You are, of course, allowed to discuss the challenges and share solutions once the CTF has ended.  </li>
+</ol></li>
+<li>Community challenge authors (mvm) are allowed to participate in the CTF and even solve their own challenges. However, they (and their team) are not allowed first blood the challenges they contributed - they must wait for a different team to solve the challenge first.  </li>
+<li>Have fun! <br />
+<ol>
+<li>Let others have fun too! We're an inclusive CTF and discrimination or harassment will not be tolerated.</li>
+</ol></li>
+</ol>
+
+<h2>Credits</h2>
+
+<p>The x3CTF team consists of <a href="https://blog.gk.wtf/">Coderion</a>, <a href="https://dagurb.com">DagurB</a>, Raptor, rdx4.2, <a href="https://lyra.horse">Rebane</a>, and ShadowCone. <br />
+We're using the Berg CTF Platform by <a href="https://norelect.ch/">NoRelect</a>, with a custom frontend by Rebane. <br />
+Thank you to all the MVM contributors for submitting additional challenges: alex_hcsc, boxmein, hackrrr, joneswastaken, ksaweryr, musava_ribica, natan.p, and xtea418. <br />
+Vylet Pony - Girls Who Are Wizards</p>
+</div></div>
+</div>
+<div class="page" id="page-challs">
+	<svg class="pageTitle" viewBox="0 0 850 100">
+	  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"><tspan class="x3only">Welcome to x3CTF!</tspan><tspan class="mvmonly">mvm</tspan></text>
+	</svg>
+	<!-- ideally we'll prebuild this html with challs, and js will swap them out once the api catches out -->
+	<div class="challenges">
+		<div id="cid-24" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">mvm</div>
+			<div class="points">500</div>
+			<div class="tags">baby misc</div>
+		</div>
+		<div id="cid-23" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">babyrng</div>
+			<div class="points">500</div>
+			<div class="tags">easy crypto</div>
+		</div>
+		<div id="cid-22" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">curved-mvm</div>
+			<div class="points">500</div>
+			<div class="tags">easy crypto</div>
+		</div>
+		<div id="cid-21" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">man-vs-matrix</div>
+			<div class="points">500</div>
+			<div class="tags">easy crypto</div>
+		</div>
+		<div id="cid-20" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">sourceless-crypto</div>
+			<div class="points">500</div>
+			<div class="tags">easy crypto</div>
+		</div>
+		<div id="cid-19" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">devnull-as-a-service</div>
+			<div class="points">500</div>
+			<div class="tags">medium pwn</div>
+		</div>
+		<div id="cid-18" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">oh-my-gadt</div>
+			<div class="points">500</div>
+			<div class="tags">medium rev</div>
+		</div>
+		<div id="cid-17" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">pickle-season</div>
+			<div class="points">500</div>
+			<div class="tags">medium rev</div>
+		</div>
+		<div id="cid-16" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">mvmcheckers-inc</div>
+			<div class="points">500</div>
+			<div class="tags">hard web</div>
+		</div>
+		<div id="cid-15" class="challenge mvm" style="rotate: 0deg;">
+			<div class="name">storycreator</div>
+			<div class="points">500</div>
+			<div class="tags">hard web</div>
+		</div>
+		<div id="cid-14" class="challenge x3" style="rotate: 1deg;">
+			<div class="name">p11n-trophy</div>
+			<div class="points">500</div>
+			<div class="tags">baby misc sanity cert</div>
+		</div>
+		<div id="cid-13" class="challenge x3" style="rotate: -1deg;">
+			<div class="name">trophy-plus</div>
+			<div class="points">500</div>
+			<div class="tags">baby misc cert</div>
+		</div>
+		<div id="cid-12" class="challenge x3" style="rotate: 2deg;">
+			<div class="name">count-the-mvms</div>
+			<div class="points">500</div>
+			<div class="tags">easy misc cert</div>
+		</div>
+		<div id="cid-11" class="challenge x3" style="rotate: -2deg;">
+			<div class="name">foundations</div>
+			<div class="points">500</div>
+			<div class="tags">easy misc osint</div>
+		</div>
+		<div id="cid-10" class="challenge x3" style="rotate: 1deg;">
+			<div class="name">hydraulic-press</div>
+			<div class="points">500</div>
+			<div class="tags">easy misc</div>
+		</div>
+		<div id="cid-9" class="challenge x3" style="rotate: -2deg;">
+			<div class="name">notcrypto</div>
+			<div class="points">500</div>
+			<div class="tags">easy rev</div>
+		</div>
+		<div id="cid-8" class="challenge x3" style="rotate: 1deg;">
+			<div class="name">submission</div>
+			<div class="points">500</div>
+			<div class="tags">easy web</div>
+		</div>
+		<div id="cid-7" class="challenge x3" style="rotate: -1deg;">
+			<div class="name">trophy-plus64</div>
+			<div class="points">500</div>
+			<div class="tags">easy misc cert</div>
+		</div>
+		<div id="cid-6" class="challenge x3" style="rotate: 2deg;">
+			<div class="name">fastcrypto</div>
+			<div class="points">500</div>
+			<div class="tags">medium crypto</div>
+		</div>
+		<div id="cid-5" class="challenge x3" style="rotate: -2deg;">
+			<div class="name">kittyconvert</div>
+			<div class="points">500</div>
+			<div class="tags">medium web</div>
+		</div>
+		<div id="cid-4" class="challenge x3" style="rotate: 1deg;">
+			<div class="name">netmsg-1</div>
+			<div class="points">500</div>
+			<div class="tags">medium rev</div>
+		</div>
+		<div id="cid-3" class="challenge x3" style="rotate: -2deg;">
+			<div class="name">netmsg-2</div>
+			<div class="points">500</div>
+			<div class="tags">medium rev crypto</div>
+		</div>
+		<div id="cid-2" class="challenge x3" style="rotate: 1deg;">
+			<div class="name">omnibius</div>
+			<div class="points">500</div>
+			<div class="tags">medium misc</div>
+		</div>
+		<div id="cid-1" class="challenge x3" style="rotate: -1deg;">
+			<div class="name">blogdog</div>
+			<div class="points">500</div>
+			<div class="tags">hard web xssbot</div>
+		</div>
+		<div id="cid-0" class="challenge x3" style="rotate: 2deg;">
+			<div class="name">redacted</div>
+			<div class="points">500</div>
+			<div class="tags">hard misc</div>
+		</div>
+		<input type="checkbox" style="display:none" id="mvmSwitch">
+		<label for="mvmSwitch" class="x3only"><div class="challenge x3 mvmSwitch" style="rotate:2deg"><div class="name">mvm</div><div class="points">???</div></div></label>
+		<label for="mvmSwitch" class="mvmonly"><div class="challenge mvm mvmSwitch" style=""><div class="name">x3ctf</div><div class="points">???</div></div></label>
+	</div>
+</div>
+<div class="page" id="page-scoreboard">
+<style>
+	#scoreboardGraph {
+		margin: 16px;
+		transition:
+			1s opacity cubic-bezier(0,0,0,1),
+			1s scale cubic-bezier(0,0,0,1);
+		opacity: 1;
+		scale: 1;
+		@starting-style {
+			opacity: 0;
+			scale: 0.95;
+  		}
+
+		background: var(--stroke);
+		border-radius: var(--border-rad);
+		& line.score {
+			stroke-width: 1px;
+			transition: 0.2s stroke-width cubic-bezier(0,0,0,1);
+		}
+		& circle.solve {
+			cursor: pointer;
+			stroke-width: 2px;
+			transition: 0.2s stroke-width cubic-bezier(0,0,0,1);
+			&:hover {
+				stroke-width: 8px;
+			}
+		}
+		&:has(.sb-for-0:hover) .sb-for-0,
+		&:has(.sb-for-1:hover) .sb-for-1,
+		&:has(.sb-for-2:hover) .sb-for-2,
+		&:has(.sb-for-3:hover) .sb-for-3,
+		&:has(.sb-for-4:hover) .sb-for-4,
+		&:has(.sb-for-5:hover) .sb-for-5 {
+			circle.solve&, &.legend circle {
+				stroke-width: 8px;
+			}
+			line.score& {
+				stroke-linecap: round;
+				stroke-width: 3px;
+			}
+		}
+		& .legend text {
+			cursor: default;
+		}
+	}
+	#scoreboardTabs {
+		transition:
+			1s opacity cubic-bezier(0,0,0,1),
+			1s scale cubic-bezier(0,0,0,1);
+		opacity: 1;
+		scale: 1;
+		transform-origin: 50% -384px;
+		@starting-style {
+			opacity: 0;
+			scale: 0.95;
+  		}
+  	width: calc(100% - 32px);
+  	margin: 16px;
+		color: var(--text);
+		background: var(--stroke);
+		border-radius: var(--border-rad) var(--border-rad) 0 0;
+		& .tabs {
+			display: flex;
+			justify-content: space-around;
+			font-size: 24px;
+			font-family: var(--font-display);
+			color: var(--alt-accent);
+			padding-bottom: 3px;
+			& label {
+				cursor: pointer;
+			}
+		}
+	}
+	#scoreboardTable, #activityLog {
+		width: 100%;
+		border-collapse: collapse;
+		border: 1px solid var(--text);
+		text-align: center;
+		/*& td:last-child, & th:last-child {
+			text-align: left;
+		}*/
+		td {
+			border: 1px solid var(--text);
+		}
+		caption {
+		  caption-side: bottom;
+		  padding: 10px;
+		  font-weight: bold;
+		}
+		.noob {
+			& > :nth-child(3) {
+				opacity: 0.5;
+			}
+			& > :not(:nth-child(3)) {
+				opacity: 0;
+			}
+			td {
+				border-left: none;
+				border-right: none;
+			}
+		}
+		.blood {
+			background: #9E1C32;
+			color: #FFF;
+		}
+	}
+</style>
+<!--
+<svg class="pageTitle" viewBox="0 0 850 100">
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Scoreboard</text>
+</svg>
+-->
+<svg id="scoreboardGraph" viewBox="0 0 1280 720"></svg>
+
+
+<div id="scoreboardTabs">
+<input type="radio" class="scoreTabRadio" name="scoreTab" id="tab-scoreboard" checked />
+<input type="radio" class="scoreTabRadio" name="scoreTab" id="tab-activity" />
+<div class="tabs"><label for="tab-scoreboard">scoreboard</label>
+<label for="tab-activity">activity</label></div>
+<table id="activityLog">
+  <thead>
+    <tr>
+      <th scope="col">Time</th>
+      <th scope="col">Team</th>
+      <th scope="col">Chall</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<table id="scoreboardTable">
+  <thead>
+    <tr>
+      <th scope="col">Place</th>
+      <th scope="col">Score</th>
+      <th scope="col">Team</th>
+      <th scope="col">Solves</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+  <caption>
+    sorry idk how to make this table look good hope this works for u
+  </caption>
+</table>
+</div>
+<script>
+  /***********/
+ /* SCORING */
+/***********/
+
+const scoreboardGraph = document.getElementById("scoreboardGraph");
+
+function svgLine(x1,y1,x2,y2,stroke="black") {
+	const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+	line.setAttribute('x1',x1);
+	line.setAttribute('y1',y1);
+	line.setAttribute('x2',x2);
+	line.setAttribute('y2',y2);
+	line.setAttribute("stroke", stroke);
+	return line;
+}
+function svgCircle(x,y,r,fill="black") {
+	const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+	circle.setAttribute('cx',x);
+	circle.setAttribute('cy',y);
+	circle.setAttribute('r',r);
+	circle.setAttribute("fill", fill);
+	return circle;
+}
+function solveCircle(x,y,solve,fill="black") {
+	const circle = svgCircle(x,y,4,fill);
+	circle.setAttribute("stroke", fill);
+	circle.classList.add("solve");
+	return circle;
+}
+function solveLegend(x,y,color,playerName) {
+	const group = document.createElementNS('http://www.w3.org/2000/svg','g');
+	const circle = svgCircle(x,y,4,color);
+	circle.setAttribute("stroke", color);
+	circle.classList.add("solve");
+	group.appendChild(circle);
+	const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+	text.setAttribute('x',x+8);
+	text.setAttribute('y',y+5);
+	text.setAttribute('fill',`hsl(from ${color} h s calc(l * var(--sb-mult)))`);
+	text.textContent = playerName;
+	group.appendChild(text);
+	group.classList.add("legend");
+	return group;
+}
+function timeMarker(x,y1,y2,timeString,color="var(--text)") {
+	const group = document.createElementNS('http://www.w3.org/2000/svg','g');
+	const line1 = svgLine(x,y1,x,y2+4,color);
+	const line2 = svgLine(x,y2+4,x,y2+25,color);
+	line1.style.opacity = 0.3;
+	const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+	text.setAttribute('x',x+4);
+	text.setAttribute('y',y2+24);
+	text.setAttribute('fill',color);
+	text.textContent = timeString;
+	group.appendChild(line1);
+	group.appendChild(line2);
+	group.appendChild(text);
+	group.classList.add("timeMarker");
+	return group;
+}
+
+function getPlayerName(playerId) {
+	return playersData.find(p => p.id == playerId)?.name ?? playerId;
+}
+
+async function renderScoreboard() {
+	scoreboardGraph.innerHTML = "";
+
+	const sortedSolves = solvesData.sort((a,b)=>new Date(a.solvedAt).getTime()-new Date(b.solvedAt).getTime());
+	const startTime = new Date("2025-01-24T18:00:00.000Z");
+	const endTime = new Date("2025-01-26T18:00:00.000Z");
+	//const endTime = new Date();
+	const graphPlayerData = {};
+
+	await new Promise(resolve => requestAnimationFrame(resolve));
+	const sortedPlayers = [...new Set(solvesData.map(e => e.playerId))]
+		.map(e=>[e,playerScoreAtTime(e,-1)])
+		.sort((a,b)=>b[1]-a[1]);
+
+	const proPlayers = sortedPlayers.map(e=>e[0]);
+	if (playersData)
+		for (const megaNoobPlayer of playersData.filter(e=>!proPlayers.includes(e.id)).map(e=>[e.id,0])) sortedPlayers.push(megaNoobPlayer);
+
+	const scoreboardTable = document.getElementById("scoreboardTable");
+	const sbTbody = scoreboardTable.querySelector("tbody");
+	sbTbody.innerText = "";
+	for (const [i,player] of sortedPlayers.entries()) {
+		const tr = document.createElement("tr");
+		for (const val of [i+1,player[1],getPlayerName(player[0])]) {
+			const td = document.createElement("td");
+			td.innerText = val;
+			if (funnyMappings[val])
+				td.innerHTML = funnyMappings[val];
+			tr.appendChild(td);
+		}
+		const solves = document.createElement("td");
+		const playerSolves = sortedSolves.filter(e => e.playerId === player[0]);
+		solves.innerText = playerSolves.length;
+		solves.title = playerSolves.map(e => e.challengeName).join(" ");
+		if (!player[1] && !playerSolves.length) tr.classList.add("noob");
+		tr.appendChild(solves);
+		sbTbody.appendChild(tr);
+	}
+
+	const activityLog = document.getElementById("activityLog");
+	const activiTbody = activityLog.querySelector("tbody");
+	activiTbody.innerText = "";
+	const firstBloods = new Set();
+	for (const solve of sortedSolves) {
+		const isFirstBlood = !firstBloods.has(solve.challengeName);
+		firstBloods.add(solve.challengeName);
+		const tr = document.createElement("tr");
+		const dateStr = [["en-US","weekday","short"], ["et-ET","timeStyle","medium"]].map(([l,e,x]) => new Intl.DateTimeFormat(l, { [e]: x }).format(new Date(solve.solvedAt))).join(" ");
+		for (const val of [dateStr,getPlayerName(solve.playerId),solve.challengeName]) {
+			const td = document.createElement("td");
+			td.innerText = val;
+			if (funnyMappings[val])
+				td.innerHTML = funnyMappings[val];
+			tr.appendChild(td);
+		}
+		if (isFirstBlood)
+			tr.classList.add("blood");
+		activiTbody.prepend(tr);
+	}
+
+	const graphedPlayers = sortedPlayers.map(e=>e[0]).slice(0,5);
+	if (!graphedPlayers.length) return;
+	if (selfPlayerId && !graphedPlayers.includes(selfPlayerId)) graphedPlayers.push(selfPlayerId);
+	const p = 64;
+	const gB = [p,p,1280-p*2,720-p*2];
+	const graphYMult = gB[3]/sortedPlayers[0][1];
+
+	for (let i = 0; i < 11; i++) {
+		const date = new Date(startTime.getTime() + (endTime.getTime() - startTime.getTime())*(i/10));
+		const dateStr = [["en-US","weekday"], ["et-ET","timeStyle"]].map(([l,e]) => new Intl.DateTimeFormat(l, { [e]: "short" }).format(date)).join(" ");
+		scoreboardGraph.prepend(timeMarker(gB[0] + gB[2]*(i/10), gB[1], gB[1]+gB[3], i==10?"":dateStr,`hsl(from var(--accent) calc(h - ${20*(i-1)}) s l)`));
+	}
+
+	for (const [i,playerId] of graphedPlayers.entries()) {
+		graphPlayerData[playerId] = [0,0,`hsl(from var(--accent) calc(h - ${40*i}) s l)`];
+		const legend = solveLegend(gB[0] + 4, gB[1] + 4 + 16*i, graphPlayerData[playerId][2], getPlayerName(playerId));
+		legend.classList.add(`sb-for-${i}`);
+		scoreboardGraph.appendChild(legend);
+	}
+
+	for (const solve of sortedSolves) {
+		if (!graphedPlayers.includes(solve.playerId)) continue;
+		//const challPoints = getAllChallPointsAtTime(new Date(solve.solvedAt));
+		const t = (new Date(solve.solvedAt).getTime() - startTime.getTime())/(endTime.getTime() - startTime.getTime());
+		//if (!graphPlayerData[solve.playerId]) graphPlayerData[solve.playerId] = [0,0,getRandomColor()];
+		for (const [playerId,v] of Object.entries(graphPlayerData)) {
+			const newScore = playerScoreAtTime(playerId, new Date(solve.solvedAt));
+			const line = svgLine(gB[0]+v[0]*gB[2],(gB[1]+gB[3])-v[1]*graphYMult,gB[0]+t*gB[2],(gB[1]+gB[3])-newScore*graphYMult,v[2]);
+			line.classList.add(`score`);
+			line.classList.add(`sb-for-${graphedPlayers.indexOf(playerId)}`);
+			scoreboardGraph.prepend(line);
+			v[0] = t;
+			v[1] = newScore;
+		}
+		const circle = solveCircle(gB[0]+t*gB[2],(gB[1]+gB[3])-playerScoreAtTime(solve.playerId, new Date(solve.solvedAt))*graphYMult,solve,graphPlayerData[solve.playerId][2]);
+		circle.classList.add(`sb-for-${graphedPlayers.indexOf(solve.playerId)}`);
+		const title = document.createElementNS('http://www.w3.org/2000/svg','title');
+		title.textContent = `${solve.challengeName} solved by ${getPlayerName(solve.playerId)} at ${new Intl.DateTimeFormat("et-ET", { timeStyle: "short" }).format(new Date(solve.solvedAt))}`
+		circle.appendChild(title);
+		scoreboardGraph.appendChild(circle);
+		await new Promise(resolve => requestAnimationFrame(resolve));
+	}
+
+	for (const [playerId,v] of Object.entries(graphPlayerData)) {
+		const newScore = playerScoreAtTime(playerId, -1);
+		const line = svgLine(gB[0]+v[0]*gB[2],(gB[1]+gB[3])-v[1]*graphYMult,gB[0]+gB[2],(gB[1]+gB[3])-newScore*graphYMult,v[2]);
+		line.classList.add(`score`);
+		line.classList.add(`sb-for-${graphedPlayers.indexOf(playerId)}`);
+		scoreboardGraph.prepend(line);
+	}
+}
+
+
+function calculateChallPoints(challName) {
+	return calculateChallPointsAtTime(challName, -1);
+}
+
+let challPointsCache = {};
+function calculateChallPointsAtTime(challName, time) {
+	if (challPointsCache[challName+time]) return challPointsCache[challName+time];
+	const maxPoints = 500;
+	const minPoints = 50;
+	const solvesToMin = 100;
+	const solvesCount = solvesData.filter(e => e.challengeName == challName && (time == -1 || time >= new Date(e.solvedAt))).length;
+	// algorithm pinched from ecsc ^_^
+	const challPoints = Math.max(minPoints, Math.floor(maxPoints*Math.min(1, 8/(8+(solvesCount*(30/solvesToMin))-1))**1.5));
+	challPointsCache[challName+time] = challPoints;
+	return challPoints;
+}
+
+function playerScoreAtTime(playerId, time) {
+	const playerSolves = solvesData.filter(e => e.playerId == playerId && (time == -1 || time >= new Date(e.solvedAt)));
+	const playerScore = playerSolves.reduce((sum, e) => sum + calculateChallPointsAtTime(e.challengeName, time), 0);
+	return playerScore;
+}
+
+function isChallSolved(challName) {
+	try {
+		return solvesData.find(e => e.playerId == selfPlayerId && e.challengeName == challName);
+	} catch {
+		return false;
+	}
+}
+	
+</script>
+</div>
+<div class="page" id="page-account">
+	<div class="info">
+	<p>hi this page is very simple there are many buttons</p>
+	<button onclick="/*document.location.href='https://idp.x3c.tf/if/flow/berg-enrollment/'*/xD.login()">register button</button>
+	<button onclick="xD.login()">log in button</button>
+	<button onclick="xD.logout()">log out button</button>
+	<button onclick="/*document.location.href='https://idp.x3c.tf/if/flow/default-password-change/'*/showToast('Feature unavailable','Site in archive mode')">password change button</button>
+	<button onclick="/*document.location.href='https://idp.x3c.tf/if/flow/settings/'*/showToast('Feature unavailable','Site in archive mode')">account settings change button</button>
+	<button onclick="stopChallenge()">kill current instance</button>
+	<p>click the buttons to perform actions</p>
+	<p><input type="checkbox" id="marqueeToggle"><label for="marqueeToggle">Disable marquee text animation</label><br><i>If you'd like to disable all animations, turn on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion#user_preferences">reduced motion</a>.</i></p>
+	</div>
+</div>
+<style>
+#challengeModalContent {
+	font-size: 16px;
+	overflow: auto;
+	&:has(.submit.pop.solved) {
+		overflow: hidden;
+	}
+	&::-webkit-scrollbar {
+	  width: 8px;
+	}
+	&::-webkit-scrollbar-track {
+	  background: none;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: var(--border-rad);
+	  background: var(--accent);
+	  transition: background 1s;
+	}
+	&::-webkit-scrollbar-thumb:hover {
+	  background: var(--stroke);
+	}
+	& .close {
+		position: absolute;
+		cursor: pointer;
+		right: 16px;
+		user-select: none;
+		color: var(--stroke);
+	}
+	& .title {
+		font-size: 64px;
+		text-align: center;
+		margin-bottom: 0;
+		color: var(--stroke);
+	}
+	& .author {
+		text-align: center;
+		margin: -8px 0 4px;
+		color: var(--stroke);
+	}
+	& .badges {
+		display: flex;
+		justify-content: center;
+		gap: 4px;
+		margin-bottom: 8px;
+
+		& .badge {
+			user-select: none;
+			background: var(--stroke);
+			color: var(--accent);
+			padding: 2px 8px;
+			border-radius: calc(var(--border-rad) / 3);
+		}
+	}	
+	& .description {
+		code {
+			word-break: break-all;
+		}
+		margin-bottom: 8px;
+	}
+	& .handouts {
+		width: fit-content;
+		& a.attachment {
+			color: var(--text);
+			text-decoration: underline;
+			display: block;
+			&:before {
+				content: "📎";
+				margin-right: 3px;
+				text-decoration:none;
+				display:inline-block;
+			}
+		}
+	}
+	& .instances {
+		margin-top: 6px;
+
+		& #otherRunning {
+			border-radius: calc(var(--border-rad) / 3);
+			padding: 2px 8px;
+			color: #F00;
+			background: #000;
+			margin: 6px 0;
+		}
+		& #instanceLoading {
+			border-radius: calc(var(--border-rad) / 3);
+			padding: 3px 8px;
+			color: var(--accent);
+			background: var(--stroke);
+			margin: 6px 0;
+			&:after {
+   				content: "";
+   				width: 9px;
+   				height: 9px;
+   				background: var(--accent);
+   				display: block;
+   				border-radius: calc(var(--border-rad) / 4);
+   				margin: 4px 0;
+   				animation: 3s infinite running instanceLaunch;
+			}
+		}
+		& a.url {
+			display: block;
+			border-radius: calc(var(--border-rad) / 3);
+			padding: 2px 8px;
+			color: var(--accent);
+			background: var(--stroke);
+			margin: 6px 0;
+			&.pop {
+				transition: 
+					0.5s scale cubic-bezier(0,0,0,1),
+					0.5s font-size cubic-bezier(0,0,0,1);
+				font-size: inherit;
+				scale: 1;
+				@starting-style {
+					font-size: 0;
+					scale: 1;
+				}
+			}
+		}
+	}
+	& .btn {
+		user-select: none;
+		background: var(--stroke);
+		color: var(--accent);
+		padding: 2px 8px;
+		border-radius: calc(var(--border-rad) / 3);
+		border: none;
+		cursor: pointer;
+		transition: 0.25s filter;
+		&:hover {
+			filter: brightness(0.95);
+		}
+		&:active {
+			filter: brightness(0.8);
+		}
+	}
+	& .submit {
+		&.solved {
+			& #flagSubmit, & #flagText {
+				display: none;
+			}
+		 	& .solved {
+				display: block;
+				flex-grow: 1;
+				border-radius: calc(var(--border-rad) / 3);
+				padding: 2px 8px;
+				color: #FFF;
+				background: var(--bg-solved);
+				transition: 
+					8s outline, 1s filter;
+			}
+			&.pop .solved {
+				transition: 
+					2s transform cubic-bezier(0.25,1,0.7,1.1),
+					1s opacity cubic-bezier(0,1,0,1),
+					1s outline, 1s filter;
+				transform: none;
+				opacity: 1;
+				@starting-style {
+					opacity: 0;
+					transform: scale(4) rotate3d(0.75, 1, 1, 1241deg);
+				}
+			}
+		}
+		margin-top: 6px;
+		display: flex;
+		gap: 4px;
+		& .solved {
+			display: none;
+		}
+		& input {
+			flex-grow: 1;
+			padding: 4px 8px;
+		}
+		& button {
+		}
+		& input, & button {
+			font-family: var(--font-text);
+			
+			border-radius: calc(var(--border-rad) / 3);
+			border: none;
+		}
+	}
+}
+@keyframes instanceLaunch {
+	0% {
+		width: 8px;
+		margin-left: 0;
+	}
+	25% {
+		width: 100%;
+		margin-left: 0;
+	}
+	25.01% {
+		width: 100%;
+		margin-left: auto;
+	}
+	50% {
+		width: 8px;
+		margin-left: auto;
+	}
+	74.99% {
+		width: 100%;
+		margin-left: auto;
+	}
+	75% {
+		width: 100%;
+		margin-left: 0;
+	}
+	100% {
+		width: 8px;
+		margin-left: 0;
+	}
+}
+.none {
+	display: none;
+}
+</style>
+<style type="text/css">
+	/* Hopefully this is nicer to use for some people who prefer it this way */
+	@media (prefers-reduced-motion) {
+		.pageTitle text, #marquee, #menubar, .challenges, .challenges .challenge, #challengeModal, #challengeModal #challengeModalContent, #challengeModalContent .instances a.url.pop, body, .info, #scoreboardGraph, #scoreboardTable {
+			transition: none;
+			animation: none;
+		}
+		#challengeModalContent .instances #instanceLoading:after {
+			background: #FFF;
+			content: "Starting/stopping instance...";
+			width: fit-content;
+			animation: none;
+			margin: 0 0 8px;
+		}
+    .challenges:has(.mvmSwitch:active) .challenge:not(.mvmSwitch) {
+    	opacity: 1;
+    }
+    .challenges .challenge.mvmSwitch:active {
+    	scale: 1.1;
+    }
+		.challenges .challenge .tags, .challenges:has(> .challenge:hover) .tags {
+			opacity:1;
+		}
+	}
+</style>
+<div id="challengeModal" class="hidden">
+	<div id="challengeModalContent">
+		<div class="close">backsies</div>
+		<div class="title">Sample Chall</div>
+		<div class="author"></div>
+		<div class="badges">
+			<div class="badge difficulty">easy</div>
+			<div class="badge score">500</div>
+			<div class="badge tag">mvm</div>
+		</div>
+		<div class="description">This MVM is fucking with my brain...<br>mvm.</div>
+		<div class="handouts"></div>
+		<div class="instances">
+			<div class="btn start">Start instance</div>
+			<div id="instanceLoading"></div>
+			<div id="otherRunning">An instance of a different chall is running - stop it before starting this one.</div>
+			<div class="btn stop none">Stop instance</div>
+		</div>
+		<div class="submit">
+			<input type="text" id="flagText" name="flag" placeholder="mvm{mvm}"><button class="btn" id="flagSubmit">Submit</button>
+			<div class="solved">Yay, it's solved!</div>
+		</div>
+	</div>
+</div>
+<div id="marquee" scrolldelay=20 truespeed=1>ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute • ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute •  ur so cute • ur so cute • ur so cute • ur so cute • </div>
+<style>
+	/* ARCHIVE - fit github links better */
+	#challengeModal > #challengeModalContent > .instances > .url {
+		text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+	}
+</style>
+<script>
+	// ARCHIVE LOGIN UTILS
+	window.xD = (() => {
+		async function login() {
+			document.location.href = "archive-login.html#x3ctf.html";
+		}
+		async function logout() {
+			document.location.href = "archive-logout.html#x3ctf.html";
+		}
+		async function getAccessToken() {
+			return "";
+		}
+		async function getHeader() {
+			return {};
+		}
+		return {login, logout, getAccessToken, getHeader};
+	})();
+
+	// ARCHIVE CHALL EXTRA DATA
+	const archiveChallData = {
+	  "babyrng": {
+	    path: "crypto/babyrng/",
+	    flag: "MVM{4_M0n4D_15_jU5t_4_m0N01d_1n_Th3_c4t3G0Ry_0f_3ND0FUNCT0R5_:D}",
+	  },
+	  "curved-mvm": {
+	    path: "crypto/curved-mvm/",
+	    flag: "MVM{why_k_no_v3wwy_much_se3uw3????}",
+	  },
+	  "fastcrypto": {
+	    path: "crypto/fastcrypto/",
+	    flag: "x3{so_l0ng_and_th4nks_for_all_the_NTT_43274987298472398}",
+	  },
+	  "man-vs-matrix": {
+	    path: "crypto/man_vs_matrix/",
+	    flag: "MVM{l1n34r_fuNcT10n5_4r3_my_f4v}",
+	  },
+	  "much-vulnerable-machine-1": {
+	    path: "crypto/much-vulnerable-machine-1/",
+	    flag: "MVM{jus7_s0m3_n0rm4l_b1as3d_n0nce_3cds4_g01ng_brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr~}",
+	  },
+	  "much-vulnerable-machine-2": {
+	    path: "crypto/much-vulnerable-machine-2/",
+	    flag: "MVM{5t4nd4rd_p4dd1ng_0r4cle_g0_brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}",
+	  },
+	  "much-vulnerable-machine-3": {
+	    path: "crypto/much-vulnerable-machine-3/",
+	    flag: "MVM{sm4l_crt_3xp0nen7s_b4d_l0l}",
+	  },
+	  "rubiks-dsa": {
+	    path: "crypto/rubiks-dsa/",
+	    flag: "MVM{sp1cy_rUb1k5_ds4}",
+	  },
+	  "sourceless-crypto": {
+	    path: "crypto/sourceless-crypto/",
+	    flag: "MVM{aae30846_08b1_s0urc3less_crypt0_11ef_8010_30894a138cd3}",
+	  },
+	  "count-the-mvms": {
+	    path: "misc/count-the-mvms/",
+	    flag: "x3c{th3r3_4re_9336_MVMs_1n_my_c3rtif1cat3_2931355ee608d35463f2ef7847474858}",
+	  },
+	  "foundations": {
+	    path: "misc/foundations/",
+	    flag: "x3CTF{m4yb3_w3ll_m4ke_4_ch4ll3nge_0u7_0f_7h1s}",
+	  },
+	  "hydraulic-press": {
+	    path: "misc/hydraulic-press/",
+	    flag: "x3c{nesting_is_fun_IDOWxzs3}",
+	  },
+	  "mvm": {
+	    path: "misc/mvm/",
+	    flag: "MVM{MVM_BRAIN_IS_FUCKED_MVM}",
+	  },
+	  "omnibius": {
+	    path: "misc/omnibius/",
+	    flag: "x3c{v3ry_r3duc3d_1n57ructi0n_537}",
+	  },
+	  "p11n-trophy": {
+	    path: "misc/p11n-trophy/",
+	    flag: "This certificate does not grant the rank of Master.",
+	  },
+	  "redacted": {
+	    path: "misc/redacted/",
+	    flag: "x3c{b3c4u5e_p1x3l4710n_w0uldv3_b33n_2oo_e4sy_afdsjhsdf}",
+	  },
+	  "secure-snek": {
+	    path: "misc/secure-snek/",
+	    flag: "MVM{sn3k_n0t_50_53kur3}",
+	  },
+	  "trophy-plus": {
+	    path: "misc/trophy-plus/",
+	    flag: "x3c{i_d1dn't_kn0w_mvm_c0uld_be_us3d_f0r_b1n4ry_3nc0d1ng_l0l}",
+	  },
+	  "trophy-plus64": {
+	    path: "misc/trophy-plus64/",
+	    flag: "x3c{mu5t_b3_fun_typ1ng_th1s_by_h4nd_1375105304248361}",
+	  },
+	  "devnull-as-a-service": {
+	    path: "pwn/devnull-as-a-service/",
+	    flag: "MVM{r0p_4nd_sh3llc0d3_f0rm5_4_p3rf3c7_b4l4nc3}",
+	  },
+	  "pwny-heap": {
+	    path: "pwn/pwny-heap/",
+	    flag: "MVM{pwnpope_is_mining_xmr_on_your_machine_for_the_vatican}",
+	  },
+	  "secure-sandbox": {
+	    path: "pwn/secure-sandbox/",
+	    flag: "MVM{Wh0_N33ds_S3cc0mp_4nyw4y}",
+	  },
+	  "keystore-rs": {
+	    path: "rev/keystore-rs/",
+	    flag: "x3c{rust_r3v_paiiiin_:3}",
+	  },
+	  "netmsg-1": {
+	    path: "rev/netmsg-1/",
+	    flag: "x3c{h1dd3n_funct1on4lity_w00t_w00t}",
+	  },
+	  "netmsg-2": {
+	    path: "rev/netmsg-2/",
+	    flag: "x3c{3l1t3_crypt0_0nly_cough_cough_clickplc}",
+	  },
+	  "notcrypto": {
+	    path: "rev/notcrypto/",
+	    flag: "x3c{pwndbg_and_pwntools_my_belowed_573498532832}",
+	  },
+	  "oh-my-gadt": {
+	    path: "rev/oh_my_gadt/",
+	    flag: "MVM{::333:3:/::33::33/w0w_g4d75_n_ph4n70m5_y1pp33}",
+	  },
+	  "pickle-season": {
+	    path: "rev/pickle-season/",
+	    flag: "MVM{B0r3d0m_1n_P1ckl3_s34s0n}",
+	  },
+	  "mvmcheckers-inc": {
+	    path: "web/MVMCheckers-Inc/",
+	    flag: "MVM{c7f5_4r3_4_m461c_pl4c3_4r3n7_7h3y}",
+	  },
+	  "storycreator": {
+	    path: "web/StoryCreator/",
+	    flag: "MVM{pollution_is_bad}",
+	  },
+	  "blogdog": {
+	    path: "web/blogdog/",
+	    flag: "x3c{did_u_find_a_d0m9ur1fy_0d4y_0r_is_1t_ju57_4_51lly_br0w53r_qu1rk}",
+	  },
+	  "kittyconvert": {
+	    path: "web/kittyconvert/",
+	    flag: "x3c{b1tm4p5_4r3_s1mpl3_6u7_7h3_4lph4_1s_w31rd}",
+	  },
+	  "submission": {
+	    path: "web/submission/",
+	    flag: "x3c{4lw4y5_chm0d_y0ur3_f1l35_4_53cur17y}",
+	  }
+	};
+
+  /**********/
+ /* CONFIG */
+/**********/
+
+const API_URL = "/api";
+const WS_ENDPOINT = "wss://x3c.tf/irc/";
+const SITE_VER = 5;
+const funnyMappings = {
+	[`'"><h1>a/../b`]: `&#39;&quot;&gt;<h1>a/../b</h1>`,
+	["CrOwOatia"]: `<span style="background:linear-gradient(0deg, #1E1E99, #FFF, #FF0808);">CrOwOatia</span>`,
+	["pregnant maltese taxpayers"]: `<span style="background:linear-gradient(90deg, #FFF, #D00C27);">pregnant maltese taxpayers</span>`,
+	["Slovak Cyber Team"]: `<span style="background:linear-gradient(0deg,#1354A5,#EF232C);">Slovak Cyber Team</span>`,
+	["Latvian Lattice Lovers"]: `<span style="background:linear-gradient(0deg,#9E1C32,#9E1C32,#FFF,#9E1C32,#9E1C32);">Latvian Lattice Lovers</span>`,
+	["ECSC Estonia"]: `<span style="background:linear-gradient(0deg,#FFF,#000,#006EC8);">ECSC Estonia</span>`,
+	["HiDefinition"]: `<span style="filter: blur(0.5px)">HiDefinition</span>`,
+	["PLAY FOR FUN"]: `<span style="font-family:var(--font-display-mvm)">PLAY FOR FUN</span>`,
+	["YoloSw4g"]: `<span style="font-family:var(--font-display-mvm)">YoloSw4g</span>`,
+	["Redteam-TG"]: `<span style="color:red">Redteam-TG</span>`,
+	["Tech Strawberry"]: `<span style="color:red">Tech Strawberry</span>`,
+	["Blue Lock Eleven"]: `<span style="color:blue">Blue Lock Eleven</span>`,
+	["pinkpwnygirl"]: `<span style="color:pink">pinkpwnygirl</span>`,
+	["blackmoon"]: `<span style="color:black">blackmoon</span>`,
+	["mintcocs"]: `<span style="color:#8CFFDB">mintcocs</span>`,
+	["Shadow"]: `<span style="text-shadow:1px 1px 2px black">Shadow</span>`,
+	["Sh@dow"]: `<span style="text-shadow:1px 1px 2px black">Sh@dow</span>`,
+	["small"]: `<span style="font-size:0.75em">small</span>`,
+}
+
+  /*************/
+ /* DATA VARS */
+/*************/
+
+let currentChallenge = null;
+let selfData = null;
+let playersData = null;
+let challengesData = null;
+let metadataData = null;
+let instanceData = null;
+let solvesData = [];
+let loggedIn = null;
+let selfPlayerId = null;
+let runningInstance = null;
+let prefersReduced = getPrefersReducedMotion();
+
+  /********/
+ /* OIDC */
+/********/
+
+// DISABLED FOR ARCHIVE
+/*
+if (!window?.xD)
+    window.xD = (() => {
+        const REDIRECT_URI = document.domain.includes("lol") ? `https://${document.domain}/frontend/oidc-callback` : "https://x3c.tf/";
+        const LOGOUT_URI = "https://idp.x3c.tf/if/flow/default-invalidation-flow/";
+        const CLIENT_ID = "berg-client";
+        const PRE = "uwu";
+        let refreshTimeout;
+
+        async function bufferToBase64(buffer) {
+          const base64url = await new Promise(r => {
+            const reader = new FileReader()
+            reader.onload = () => r(reader.result)
+            reader.readAsDataURL(new Blob([buffer]))
+          });
+          return base64url.slice(base64url.indexOf(',') + 1);
+        }
+    
+        function cryptoHex(bytes) {
+            return Array.from(crypto.getRandomValues(new Uint8Array(bytes)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+    
+        async function login() {
+            const state = cryptoHex(16);
+            const code_verifier = cryptoHex(32);
+            const code_verifier_enc = new TextEncoder().encode(code_verifier);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', code_verifier_enc);
+            const code_challenge = (await bufferToBase64(new Uint8Array(hashBuffer))).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+    
+            localStorage.setItem(`${PRE}-state`, state);
+            localStorage.setItem(`${PRE}-verifier`, code_verifier);
+    
+            const params = {
+                "client_id": CLIENT_ID,
+                "redirect_uri": REDIRECT_URI,
+                "response_type": "code",
+                "scope": "openid offline_access",
+                "state": state,
+                "code_challenge": code_challenge,
+                "code_challenge_method": "S256",
+                "response_mode": "query",
+            };
+            document.location = `/api/openid/authorize?${new URLSearchParams(params)}`;
+        }
+    
+        async function logout() {
+            localStorage.removeItem(`${PRE}-refresh`);
+            await fetch("/api/openid/end-session");
+            document.location.href = LOGOUT_URI;
+        }
+    
+        async function fetchAccessToken(code = null) {
+            const params = code ? {
+                "client_id": CLIENT_ID,
+                "code": code,
+                "redirect_uri": REDIRECT_URI,
+                "code_verifier": localStorage.getItem(`${PRE}-verifier`),
+                "grant_type": "authorization_code",
+            } : {
+                "client_id": CLIENT_ID,
+                "refresh_token": localStorage.getItem(`${PRE}-refresh`),
+                "grant_type": "refresh_token",
+            };
+            try {
+                const resp = await fetch("/api/openid/token", {
+                      "headers": { "content-type": "application/x-www-form-urlencoded" },
+                      "body": new URLSearchParams(params),
+                      "method": "POST",
+                    });
+                const {access_token, refresh_token, expires_in} = await resp.json();
+                if (refreshTimeout)
+                    clearTimeout(refreshTimeout);
+                refreshTimeout = setTimeout(() => fetchAccessToken(), expires_in*1000);
+                localStorage.setItem(`${PRE}-refresh`, refresh_token);
+                localStorage.setItem(`${PRE}-access`, access_token);
+                localStorage.setItem(`${PRE}-expires`, Math.floor(Date.now()/1000 + expires_in));
+                return access_token;
+            } catch (e) {
+                // idk some error, token probably expired
+                console.error(e);
+                localStorage.removeItem(`${PRE}-refresh`);
+            }
+        }
+
+        async function getAccessToken() {
+            const refresh_token = localStorage.getItem(`${PRE}-refresh`);
+            if (!refresh_token || refresh_token === "undefined") return localStorage.removeItem(`${PRE}-refresh`);
+            const expires_at = parseInt(localStorage.getItem(`${PRE}-expires`, 0));
+            if (!isNaN(expires_at) && Date.now()/1000 < expires_at) return localStorage.getItem(`${PRE}-access`);
+            return await fetchAccessToken();
+        }
+
+        async function getHeader() {
+            const access_token = await getAccessToken();
+            return access_token ? {"Authorization": `Bearer ${access_token}`} : {};
+        }
+        
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const state = localStorage.getItem(`${PRE}-state`);
+            if (state && urlParams.get("state") === state) {
+                const code = urlParams.get("code");
+                if (code) {
+                    history.pushState({}, "", "?");
+                    localStorage.removeItem(`${PRE}-state`);
+                    await fetchAccessToken(code);
+                }
+            }
+        }
+
+        return {init, login, logout, getHeader, getAccessToken};
+    })();
+*/
+
+  /**********/
+ /* ASSETS */
+/**********/
+
+let modalAssetsLoaded = false;
+const bubblepopSound = new Audio();
+const wSound = new Audio();
+const szfHCI = new Audio();
+function loadModalAssets() {
+	if (modalAssetsLoaded) return
+	modalAssetsLoaded = true;
+	bubblepopSound.src = "sfx/bubblepop.wav";
+	wSound.src = "sfx/w.wav";
+	wSound.preservesPitch = false;
+	szfHCI.src = "sfx/szfHCI-hhWc.mp3";
+}
+
+
+  /*******/
+ /* DOM */
+/*******/
+
+const challsDiv = document.querySelector(".challenges");
+const challengeModal = document.getElementById("challengeModal");
+const challengeModalContent = document.getElementById("challengeModalContent");
+const challengeModalClose = challengeModalContent.querySelector(".close");
+const startChallBtn = challengeModalContent.querySelector(".start");
+const stopChallBtn = challengeModalContent.querySelector(".stop");
+const flagText = challengeModalContent.querySelector("#flagText");
+const flagSubmit = challengeModalContent.querySelector("#flagSubmit");
+const mvmSwitch = document.getElementById("mvmSwitch");
+const marqueeToggle = document.getElementById("marqueeToggle");
+
+challengeModalClose.onclick = closeChallengeModal;
+startChallBtn.onclick = startChallenge;
+stopChallBtn.onclick = stopChallenge;
+flagText.onkeyup = (e) => { if (e.keyCode === 13) { e.preventDefault(); submitFlag(); } };
+flagSubmit.onclick = submitFlag;
+
+mvmSwitch.onchange = () => {
+	const mvm = mvmSwitch.checked;
+	challengeModalClose.innerText = mvm ? "nvm" : "backsies";
+	if (!runningInstance) setMarqueeText(mvm ? getMvm() : "ur so cute");
+}
+
+document.addEventListener('keydown', (event) => {
+if (event.key === 'Escape') {
+	closeChallengeModal()
+}
+})
+
+  /*************************/
+ /* NETWORK/DATA HANDLING */
+/*************************/
+
+/*
+// DISABLED FOR ARCHIVE
+// https://stackoverflow.com/a/23176223
+async function berg_ws_connect() {
+  const access_token = await xD.getAccessToken();
+  if (!access_token) return setTimeout(() => berg_ws_connect(), 2000);
+  const ws = new WebSocket(`wss://${window.location.host}${API_URL}/v2/events?access_token=${encodeURIComponent(access_token)}`);
+  let message_counter = 0;
+
+  const schedulePing = () => setTimeout(() => ws.send(JSON.stringify({"type":"ping","message":++message_counter})), 2000);
+
+  ws.onopen = () => schedulePing();
+
+  ws.onmessage = function(e) {
+  	const data = JSON.parse(e.data);
+  	switch (data?.type) {
+  		case "current-player":
+  			selfPlayerId = data.message;
+  			break;
+  		case "pong":
+  			schedulePing();
+  			break;
+  		case "instance":
+  			instanceData = data.message;
+  			updateInstanceStuff();
+  			break;
+  		case "solve":
+  			solvesData = [...solvesData.filter(s => s.id !== data.message.id), data.message];
+  			renderChallenges();
+  			break;
+  		case "player":
+  			playersData = [...playersData.filter(p => p.id !== data.message.id), data.message];
+  			break;
+  		//case "challenge":
+  		//	challengesData = [...challengesData.filter(p => p.id !== data.message.id), data.message];
+  		//	renderChallenges();
+  		//	break;
+  		case "metadata":
+  			metadataData = data.message;
+  			break;
+  		default:
+  			break;
+  	}
+  	if (data?.type == "pong") {
+
+  	}
+  };
+
+  ws.onclose = function(e) {
+    console.log('[Berg-WS] Socket closed, reconnecting... ', e.reason);
+    setTimeout(() => berg_ws_connect(), 1000);
+  };
+
+  ws.onerror = function(err) {
+    console.error('[Berg-WS] Socket error: ', err.message, 'Closing socket');
+    ws.close();
+  };
+};
+
+function ws_connect() {
+  const ws = new WebSocket(WS_ENDPOINT);
+  ws.onopen = () => ws.send("nya~");
+
+  ws.onmessage = function(e) {
+  	if (e.data.startsWith("uwu")) {
+  		// newDcMsg(e.data.slice(4));
+  	} else {
+  		const [_w1, site_ver, _w2, current_time, mvm] = e.data.split(" ");
+  		if (parseInt(site_ver) > SITE_VER) {
+  			if (parseInt(site_ver)-SITE_VER < 10) {
+  				setTimeout(() => document.location.reload(), 600000*Math.random());
+  			} else {
+	  			document.location.reload();
+  			}
+  		}
+  		if (mvm !== "mvm") {
+  			setTimeout(()=>document.location.href = `/${mvm}/`, Math.max(0,1737914400*1000 - Date.now()));
+  		}
+  		setTimeOffset(parseInt(current_time));
+			setTimeout(() => ws.send("meow"), 10000);
+  	}
+  };
+
+  ws.onclose = function(e) {
+    console.log('Socket closed, reconnecting... ', e.reason);
+    setTimeout(() => ws_connect(), 1000);
+  };
+
+  ws.onerror = function(err) {
+    console.error('Socket error: ', err.message, 'Closing socket');
+    ws.close();
+  };
+};
+*/
+
+// outro stuff
+let time_offset = null;
+function setTimeOffset(time) {
+	time_offset = Date.now() - time;
+}
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+let pageOpen = Date.now();
+let hoursOffset = 1 + 47*Math.random();
+
+setInterval(()=>{
+	// const timeLeft = (1737914400*1000-getOffsetTime(true))/1000;
+	const timeLeft = ((pageOpen + 1000*3600*hoursOffset)-getOffsetTime(true))/1000;
+	const timeSplit = [Math.floor(timeLeft/24/60/60), (timeLeft/60/60)%24, (timeLeft/60)%60, timeLeft%60, timeLeft%1];
+	const timeText = timeSplit.slice(1,4).map(t => String(Math.floor(t)).padStart(2,"0")).join(":");
+	document.getElementById("countdown").textContent = timeText;
+}, 1000);
+// outro stuff end
+
+async function loadCtfData(all=true) {
+	if (!challengesData && window?.preCtfData) {
+		challengesData = window.preCtfData;
+		setTimeout(()=>loadCtfData(),2000+Math.random*5000);
+	} else {
+		try {
+			// ARCHIVE - mock data
+			const data = await (await fetch("data.json")).json();
+			solvesData = data["solves"];
+			challengesData = data["challenges"];
+			playersData = data["players"];
+			/*
+			if (all) {
+				[playersData, metadataData, solvesData, challengesData] = await Promise.all((await Promise.all([
+						fetch(`${API_URL}/v2/players`, { headers: await xD.getHeader() }),
+						fetch(`${API_URL}/v2/metadata`, { headers: await xD.getHeader() }),
+						fetch(`${API_URL}/v2/solves`, { headers: await xD.getHeader() }),
+						fetch(`${API_URL}/v2/challenges`, { headers: await xD.getHeader() }),
+				])).map(async (data) => await data.json()));
+			} else {
+				challengesData = await (await fetch(`${API_URL}/v2/challenges`, { headers: await xD.getHeader() })).json();
+			}
+			*/
+		} catch {
+			showToast("Error loading data", "Please refresh if stuff seems broken")
+		}
+	}
+	renderChallenges();
+}
+
+  /****************/
+ /* RANDOM STUFF */
+/****************/
+
+function getMvm() {
+	const mvm = [
+		// Original set of MVM meanings I came up with
+		"Matrix Vector Multiplication", "Much Valued Member", "Most Valuable Message", "Manual Volume Management", "Market Value Margin", "Mann Vs. Machine", "Million Vehicle Miles", "Most Valuable Member",  "Most Valuable Memer", "Malware Versus Machine", "Marketing Versus Management", "Me Versus Myself", "Mean Variance Model", "Microsoft Virtual Machine", "Medium Voltage Motor", "My Virtuous Mare", "Muffins Visits Maud", "Machias Valley Airport",
+		// Community submitted MVM meanings
+		"Market Value Margin", // xTEA418
+		"Multiple Virtual Machines", // DevChips
+		"Minecraft Version Manager", // musava_ribica
+		"https://mvm.hu/", // Alex
+		"Matrix Vector Multiplication", // Alex
+		"Multiple-Vendor Manager", // xTEA418
+		"Maltese Virtual Machine", // ksaweryr
+		"Mathematically Verified Model", // ksaweryr
+		"Microsoft vs Mankind", // ksaweryr
+		"mvm: venerated meme", // ksaweryr
+		"Mostly Viable Marketing", // xTEA418
+		"Mindows Vovie Maker", // lamp
+		"Modiran Vehicle Manufacturing", // Starlight
+		"mfactorio vspace mage", // boxmein
+		"mees vastu masinat", // boxmein
+		"MVM RACING SERVICES OÜ", // boxmein
+		"mann vs machine", // Highfire1
+		"most valued member", // musava_ribica
+		"most valued meme", // xTEA418
+		"rebamvm2001", // boxmein
+		"Modellraketenverein München", // xTEA418
+		"rebamvm2002", // xTEA418
+		"Multi Velel Marketing", // xTEA418
+		"Multinodal Veilid Mesh", // Starlight
+		"man vs man", // Jones
+		"Massive Vole Mode", // Sekoia
+		"machine vs machine", // ksaweryr
+		"man vs md5", // xTEA418
+		"massive vulnerability mocked", // Gravis
+		"most vulnerable machine", // xTEA418
+		"mostly variable mixture", // Natan
+		"most valuable mvm", // 0xLE
+		"mostly vacationing millionaire", // Herald_Semon
+		"most vulnerable machine", // ksaweryr
+		"mvm vmv mvm", // rdx4.2
+		"MonVolatile Memory express", // xTEA418
+		"Most vulnerable mac", // mailin47
+		"megacool very-epic mastermind", // \\matchaMilo
+		"Minimum Viable Mvm", // ksaweryr
+		"Man Vs Machine", // Mutant
+		"meow very meow", // bee
+		"mildly vagrant mildew", // \\matchaMilo
+		"most valuable mvm", // xTEA418
+		"mountain view morgue", // Highfire1
+		"youtu.be/8RJd-vbLih4" // Tonik
+	];
+	return mvm[Math.floor(Math.random()*mvm.length)].toLowerCase();
+}
+	
+function setMarqueeText(text) {
+	const marquee = document.querySelector("#marquee");
+	const targetText = (text + " • ").repeat(text.length > 12 ? 20 : 40);
+	if (marquee.innerText != targetText)
+		marquee.innerText = targetText;
+}
+
+function marqueeUpdate() {
+	const marquee = document.querySelector("#marquee");
+	localStorage.setItem("x3c-marquee-disabled", marqueeToggle.checked ? "so true bestie" : "no its enabled haha");
+	marquee.classList[marqueeToggle.checked ? "add" : "remove"]("static");
+}
+
+function loadSettings() {
+	marqueeToggle.checked = localStorage.getItem("x3c-marquee-disabled") === "so true bestie";
+	marqueeToggle.onchange = marqueeUpdate;
+	marqueeUpdate();
+}
+
+function updateUsername() {
+	const username = localStorage.getItem("x3c-username");
+	const playerId = localStorage.getItem("x3c-userid");
+	selfPlayerId = (playerId !== "undefined" && playerId) || null;
+	const accountLink = document.querySelector("#link-account");
+	accountLink.innerText = (username !== "undefined" && username) || "log in";
+	loggedIn = (username && username !== "undefined");
+	if (funnyMappings[username] && Math.random() > 0.9)
+		accountLink.innerHTML = funnyMappings[username];
+}
+
+function showToast(title,message) {
+	const toast = document.createElement("div");
+	const t1tle = document.createElement("p");
+	t1tle.innerText = title;
+	t1tle.classList.add("title");
+	toast.innerText = message;
+	toast.classList.add("toast");
+	toast.prepend(t1tle);
+	document.body.appendChild(toast);
+	setTimeout(() => {
+		toast.style.opacity = 0;
+		toast.style.translate = "0 calc(100% + 32px)";
+	}, 3500);
+	setTimeout(() => toast.remove(), 4000);
+}
+
+function showBubblepop(title, message, atEl) {
+	const bubblepop = document.createElement("div");
+	const closeBtn = document.createElement("div");
+	const titleEl = document.createElement("p");
+	const msgEl = document.createElement("p");
+	bubblepop.classList.add("bubblepop");
+	closeBtn.classList.add("close");
+	closeBtn.innerText = "x";
+	titleEl.classList.add("title");
+	msgEl.classList.add("body");
+	titleEl.innerText = title;
+	msgEl.innerText = message;
+	closeBtn.onclick = () => closeBubblepop(bubblepop);
+	bubblepop.appendChild(closeBtn);
+	bubblepop.appendChild(titleEl);
+	bubblepop.appendChild(msgEl);
+	const {top, left} = atEl.getBoundingClientRect();
+	bubblepop.style.top = Math.round(top) + "px";
+	bubblepop.style.left = Math.round(left) + "px";
+	document.body.appendChild(bubblepop);
+	bubblepopSound.currentTime = 0;
+	bubblepopSound.play();
+}
+
+function closeBubblepop(bubblepop) {
+	bubblepop.style.opacity = 0;
+	bubblepop.style.pointerEvents = "none";
+	setTimeout(()=>bubblepop.remove(), 500);
+}
+
+function getPrefersReducedMotion() {
+	const mediaQuery = window?.matchMedia?.('(prefers-reduced-motion: reduce)');
+	mediaQuery?.addEventListener?.('change', () => {
+	  prefersReduced = mediaQuery.matches;
+	});
+	return mediaQuery?.matches;
+}
+
+  /**************/
+ /* CHALLENGES */
+/**************/
+
+function openChallengeModal(chall) {
+	currentChallenge = chall;
+	challengeModalContent.querySelector(".title").innerText = chall.name;
+	challengeModalContent.querySelector(".author").innerText = chall?.author ?? "";
+	if (solvesData) {
+		const solvesCount = solvesData.filter(e => e.challengeName == chall.name).length;
+		challengeModalContent.querySelector(".author").innerText += " • " + solvesCount + " solve" + (solvesCount === 1 ? "" : "s");
+	}
+	const challPoints = calculateChallPoints(chall.name);
+	const badgesEl = challengeModalContent.querySelector(".badges");
+	badgesEl.innerText = "";
+	const badges = [
+			...[chall?.difficulty ? ["difficulty", chall.difficulty] : []],
+			["score", challPoints],
+			...chall.categories.map(cat => ["tag", cat]),
+		];
+	for (const [type, text] of badges) {
+		const badge = document.createElement("div");
+		badge.classList.add("badge");
+		badge.classList.add(type);
+		badge.innerText = text;
+		badgesEl.appendChild(badge);
+	}
+	// whoa nelly, make sure we trust the description html!
+	challengeModalContent.querySelector(".description").innerHTML = chall?.description ?? "(no description)";
+	const handouts = challengeModalContent.querySelector(".handouts");
+	handouts.innerText = "";
+	for (const {fileName, downloadUrl} of (chall?.attachments ?? [])) {
+		const attachment = document.createElement("a");
+		attachment.classList.add("attachment");
+		attachment.innerText = "" + fileName;
+		// ARCHIVE - download from a different path
+		// attachment.href = downloadUrl;
+		attachment.href = `./handouts/${fileName}`
+		attachment.target = "_blank";
+		handouts.appendChild(attachment);
+	}
+	handouts.style.display = chall?.attachments ? "block" : "none";
+
+
+	challengeModalContent.querySelector(".instances").style.display = chall?.hasRemote ? "block" : "none";
+	updateInstanceStuff();
+	flagText.placeholder = chall?.flagFormat ?? "(no flag format defined)";
+	flagText.value = "";
+
+	challengeModalContent.querySelector(".submit").classList.remove("pop");
+	challengeModalContent.querySelector(".submit").classList[isChallSolved(chall.name) ? "add" : "remove"]("solved");
+
+	challengeModal.classList.remove("hidden");
+	loadModalAssets();
+}
+
+function closeChallengeModal() {
+	challengeModal.classList.add("hidden");
+	document.querySelectorAll(".bubblepop").forEach(closeBubblepop);
+}
+
+function challengeSolved() {
+	const h = currentChallenge?.difficulty?.startsWith?.("h") && !prefersReduced;
+	const sub = challengeModalContent.querySelector(".submit");
+	if (!h) {
+		if (!prefersReduced)
+			sub.classList.add("pop");
+		sub.classList.add("solved");		
+	}
+
+	if (h) {
+		sub.style.outline = "10000px solid #0000";
+		sub.style.transition = "6s outline, 6s filter, 1s background";
+		sub.style.filter = "blur(0px) brightness(1)";
+		sub.style.backgroundColor = "#000";
+		challengeModalContent.style.overflow = "visible";
+
+		setTimeout(()=>{
+			sub.style.outlineColor = "#000";
+			sub.style.filter = "blur(2px) brightness(0)";
+		},100);
+
+		setTimeout(()=> {
+			let c = 8;
+			try {
+				c = s.currentTime;
+			} catch {}
+			setTimeout(()=> {
+				const sl = sub.querySelector(".solved");
+				sl.remove();
+				sub.appendChild(sl);
+				sub.classList.add("solved");
+				sub.classList.add("pop");
+				sub.style.transition = "1s outline, 1s filter, 1s background";
+				sub.style.outlineColor = "#0000";
+				sub.style.backgroundColor = "";
+				sub.style.filter = "blur(0px) brightness(1.3)";
+				setTimeout(()=> {
+					challengeModalContent.style.overflow = "";
+					sub.style.filter = "";
+				}, 1000);
+				setTimeout(()=> {
+					challengeModalContent.style.overflow = "";
+					sub.style.outline = "";
+					sub.style.transition = "";
+				}, 2000);
+			},1000*Math.min(0,Math.max(8.2-c,1)));
+		}, 8000)
+	}
+
+	// ARCHIVE - SKIP
+	//loadCtfData();
+	renderChallenges();
+
+	const s = h ? szfHCI : wSound;
+	s.currentTime = 0;
+	s.play();
+}
+
+let rateLimitCount = 0;
+async function submitFlag() {
+	if (!loggedIn) return showBubblepop("Not logged in", "You need to log in to submit a flag", flagSubmit);
+	if (isChallSolved(currentChallenge.name)) return;
+	if (/{f(a|4)k(e|3).?f(1|l|7)(a|4)g}/i.exec(flagText.value)) {
+		window.open("https://www.youtube.com/watch?v=G7NdqWbnv4o?autoplay=1", "_blank", `left=${screenLeft+(outerWidth-1280)/2},top=${screenTop+(outerHeight-720)/2},width=1280,height=720`);
+		return;
+	}
+	const postData = {
+		challenge: currentChallenge.name,
+		flag: flagText.value,
+	};
+	// const response = await fetch(`${API_URL}/v2/solves`, {"body": JSON.stringify(postData), "method": "POST", "headers": {"content-type": "application/json", ...(await xD.getHeader())}});
+	// const respJson = await response.json();
+	// ARCHIVE - mock submitting flag
+	let respJson = { title: "Invalid flag", detail: "The flag you have provided is incorrect." };
+	let response = { ok: false };
+	if (!postData.flag.length) {
+		respJson = { title: "Bad Request", detail: "Flag can't be empty." };
+	} else if (rateLimitCount < 10) {
+		if (postData.flag.trim().toLowerCase() === archiveChallData[postData.challenge].flag.trim().toLowerCase()) {
+			response.ok = true;
+			respJson = { "id": Math.random(), "playerId": selfPlayerId, "solvedAt": new Date().toISOString(), "challengeName": postData.challenge};
+		} else {
+			rateLimitCount++;
+			setTimeout(()=>rateLimitCount--, 60000);
+		}
+	} else {
+		respJson = { title: "Too many requests", detail: "You have reached the minute submission limit." };
+	}
+	if (response.ok)  {
+		solvesData = [...solvesData.filter(s => s.id !== respJson.id), respJson];
+		challengeSolved();
+		renderChallenges();
+	} else {
+		showBubblepop((respJson?.title ?? "error"), respJson?.detail ?? respJson, flagSubmit);
+	}
+}
+
+async function startChallenge() {
+	if (!loggedIn) return showBubblepop("Not logged in", "You need to log in to start a challenge", startChallBtn);
+	const postData = {
+		challenge: currentChallenge.name,
+	};
+	startChallBtn.style.pointerEvents = "none";
+	startChallBtn.style.filter = "saturate(0.25)";
+	setTimeout(() => {
+		startChallBtn.style.pointerEvents = "";
+		startChallBtn.style.filter = "none";
+	}, 1000);
+	// await (await fetch(`${API_URL}/v2/instances/current`, {"body": JSON.stringify(postData), "method": "POST", "headers": {"content-type": "application/json", ...(await xD.getHeader())}})).json();
+	// ARCHIVE - mock starting instance
+	setTimeout(() => {
+		instanceData = {"id":"00000000-0000-0000-0000-000000000000","name":currentChallenge.name,"status":1,"services":[],"timeout":null};
+		updateInstanceStuff();
+	}, Math.random()*500);
+	setTimeout(() => {
+		instanceData = {"id":"00000000-0000-0000-0000-000000000000","name":currentChallenge.name,"status":2,"services":[{"name":null,"hostname":`github.com/x3ctf/challenges-2025/tree/main/${archiveChallData[currentChallenge.name].path}#`,"port":0,"protocol":"tcp","appProtocol":"http","tls":true}],"timeout":"2025-01-01T00:00:00Z"};
+		updateInstanceStuff();
+	}, 1000 + Math.random()*4000);
+	fetchSelfData();
+}
+
+async function stopChallenge() {
+	if (!loggedIn) return;
+	// await (await fetch(`${API_URL}/v2/instances/current`, {"method": "DELETE", "headers": {"content-type": "application/json", ...(await xD.getHeader())}})).json();
+	// ARCHIVE - mock stopping instance
+	setTimeout(() => {
+		instanceData = {"id":"00000000-0000-0000-0000-000000000000","name":currentChallenge.name,"status":3,"services":[],"timeout":null};
+		updateInstanceStuff();
+	}, Math.random()*500);
+	setTimeout(() => {
+		instanceData = {"id":null,"name":"","status":0,"services":[],"timeout":null};
+		updateInstanceStuff();
+	}, 1000 + Math.random()*4000);
+	fetchSelfData();
+}
+
+
+function renderChallenges() {
+	const difficulties = [
+		"leet",
+		"hard",
+		"medium",
+		"easy",
+		"baby",
+	];
+	const challenges = challengesData.sort(
+		(a,b) =>
+			(Math.min(0,b.categories.indexOf("mvm")) - Math.min(0,a.categories.indexOf("mvm"))) ||
+			(difficulties.indexOf(b.difficulty) - difficulties.indexOf(a.difficulty)) ||
+			a.name.localeCompare(b.name)
+	).reverse();
+	// NOTE: This system breaks if you *remove* challs - needs extra code to handle that situation.
+	for (const [i, challenge] of challenges.entries()) {
+		const challDomId = `cid-${i}`;
+		const chall = challsDiv.querySelector(`#${challDomId}`) || document.createElement("div");
+		chall.id = challDomId;
+		chall.classList.add("challenge");
+		chall.classList.remove(!challenge.categories.includes("mvm") ? "mvm" : "x3");
+		chall.classList.add(challenge.categories.includes("mvm") ? "mvm" : "x3");
+		chall.style.rotate = challenge.categories.includes("mvm") ? "0deg" : `${[2,-1,1,-2,1,-2][i%6]}deg`;
+		chall.classList[isChallSolved(challenge.name) ? "add" : "remove"]("solved");
+		const challName = chall.querySelector(".name") || document.createElement("div");
+		challName.classList.add("name");
+		challName.innerText = challenge.name;
+		if (!chall.contains(challName)) chall.appendChild(challName);
+		const challPoints = chall.querySelector(".points") || document.createElement("div");
+		challPoints.classList.add("points");
+		challPoints.innerText = calculateChallPoints(challenge.name);
+		if (!chall.contains(challPoints)) chall.appendChild(challPoints);
+		const challTags = chall.querySelector(".tags") || document.createElement("div");
+		challTags.classList.add("tags");
+		challTags.innerText = [challenge.difficulty, ...challenge.categories.filter(e=>e!=="mvm")].join(" ");
+		if (!chall.contains(challTags)) chall.appendChild(challTags);
+		chall.onclick = () => openChallengeModal(challenge);
+		if (!challsDiv.contains(chall)) challsDiv.prepend(chall);
+	}
+}
+
+  /*************/
+ /* "ROUTING" */
+/*************/
+
+function switchToPage(page) {
+	document.getElementById(`active-${page}`).checked = true;
+	document.location.hash = `#${page}`;		
+	if (page === "scoreboard") renderScoreboard();
+	return false;
+}
+
+function hashchange() {
+	const currentHash = window.location.hash?.substring?.(1);
+	if (!document.getElementById(`active-${currentHash}`).checked) switchToPage(currentHash);
+}
+
+  /*************/
+ /* INSTANCES */
+/*************/
+
+async function fetchSelfData() {
+	/*
+	try {
+		const selfReq = await fetch(`${API_URL}/v2/players/current`, { headers: await xD.getHeader() });
+		if (selfReq.status === 401) {
+			// logged out
+			selfData = {};
+			instanceData = {};
+			loggedIn = false;
+		} else {
+			selfData = await (selfReq).json();
+			instanceData = await (await fetch(`${API_URL}/v2/instances/current`, { headers: await xD.getHeader() })).json();
+		}
+	} catch {
+		return;
+	}
+	loggedIn = !!selfData?.name;
+	localStorage.setItem("x3c-username", selfData?.name);
+	localStorage.setItem("x3c-userid", selfData?.id);
+	*/
+	updateUsername();
+	updateInstanceStuff();
+}
+
+function getServiceURL(service) {
+	if (service.appProtocol === "http") return `http${service.tls?"s":""}://${service.hostname}:${service.port}`;
+	if (service.appProtocol === "tcp") return `${service.tls?"ncat --ssl":"nc"} ${service.hostname} ${service.port}`;
+	if (service.appProtocol === "ssh") return `ssh ${service.hostname} -p ${service.port}`;
+	console.error(`unknown appProtocol ${service.appProtocol}!`);
+	return `${service.hostname}:${service.port}`;
+}
+
+function updateInstanceStuff() {
+	if (instanceData?.status) {
+		runningInstance = {
+			name: instanceData.name,
+			status: instanceData.status,
+			urls: instanceData.services.map(getServiceURL),
+			timeout: instanceData.timeout,
+		}
+		setMarqueeText(["","launching ","playing ","stopping "][instanceData.status] + instanceData.name);
+	} else {
+		if (runningInstance)
+			setMarqueeText(mvmSwitch.checked ? getMvm() : "ur so cute")
+		runningInstance = null;
+	}
+
+	const instances = challengeModalContent.querySelector(".instances");
+	const startBtn = instances.querySelector(".start");
+	const stopBtn = instances.querySelector(".stop");
+	const instanceLoading = instances.querySelector("#instanceLoading");
+	const otherRunning = instances.querySelector("#otherRunning");
+	const oldInstanceUrls = instances.querySelectorAll(".url");
+	oldInstanceUrls.forEach(e => e.remove());
+	if (!loggedIn) {
+		otherRunning.innerText = "Not logged in";
+		otherRunning.classList.remove("none");
+		startBtn.classList.add("none");
+		stopBtn.classList.add("none");
+		instanceLoading.classList.add("none");
+		return
+	}
+	if (!runningInstance) {
+		startBtn.classList.remove("none");
+		otherRunning.classList.add("none");
+		stopBtn.classList.add("none");
+		instanceLoading.classList.add("none");
+		return;
+	}
+	startBtn.classList.add("none");
+	stopBtn.classList[(runningInstance?.status === 2) ? "remove" : "add"]("none");
+	otherRunning.innerText = (runningInstance?.status === 3) ? "Another challenge is being stopped..." : "An instance of a different chall is running - stop it before starting this one.";
+	if (currentChallenge?.name === runningInstance?.name) {
+		instanceLoading.classList[(runningInstance?.status !== 2) ? "remove" : "add"]("none");
+		otherRunning.classList.add("none");
+		for (const [i, url] of runningInstance.urls.entries()) {
+			const urlEl = document.createElement("a");
+			urlEl.classList.add("url");
+			if (oldInstanceUrls.length < i+1) urlEl.classList.add("pop");
+			urlEl.innerText = url;
+			if (url.startsWith("http")) {
+				urlEl.href = url;
+			} else {
+				// TODO: only implement if we have toast
+				// urlEl.onclick = () => navigator.clipboard.writeText(url);
+			}
+			
+			urlEl.target = "_blank";
+			instances.prepend(urlEl);
+		}
+	} else {
+		otherRunning.classList.remove("none");
+		instanceLoading.classList.add("none");
+	}
+}
+
+  /********/
+ /* INIT */
+/********/
+
+async function init() {
+	loadSettings();
+	// if (!window?.preCtfData)
+	//	await xD.init();
+	const currentPage = window.location.hash?.substring?.(1) || "challenges";
+	switchToPage(currentPage);
+	window.addEventListener("hashchange", hashchange);
+	document.getElementById("menubar").querySelectorAll("label").forEach(e => e.onclick = () => switchToPage(e.htmlFor.split("-")[1]));
+	updateUsername();
+	challengeModal.onclick = (e) => e.target === challengeModal && closeChallengeModal() || true;
+	await loadCtfData();
+
+	await fetchSelfData();
+
+	if (currentPage === "scoreboard") requestAnimationFrame(() =>renderScoreboard());
+
+	// DISABLED FOR ARCHIVE
+	// await berg_ws_connect();
+	// await ws_connect();
+}
+init();
+</script>
+</body>
+</html>

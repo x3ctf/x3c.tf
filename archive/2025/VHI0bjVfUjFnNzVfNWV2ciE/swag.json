@@ -1,0 +1,490 @@
+[
+    {
+        "name": "babyrng",
+        "displayName": "babyrng",
+        "author": "ksaweryr",
+        "description": "A flag has been stolen, destroyed and buried underground in a random location.\nSystem.Random was used, so it should be impossible to recover the flag... right?\n",
+        "categories": [
+            "mvm",
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "babyrng.tar.gz",
+                "downloadUrl": "/api/v2/challenges/babyrng/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "blogdog",
+        "displayName": "blogdog",
+        "author": "rebane2001",
+        "description": "I'm starting a new website where we can blog about dogs!<br />\nCould you write us an article?<br />\n<br />\nNote: The website is at http://localhost:3000/ for the xssbot.\n",
+        "categories": [
+            "web",
+            "xssbot"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "hard",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "blogdog.tar.gz",
+                "downloadUrl": "/api/v2/challenges/blogdog/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "count-the-mvms",
+        "displayName": "count-the-mvms",
+        "author": "shadowcone",
+        "description": "Your task is simple: Count all occurrences of MVM in your personalized trophy. I heard AI is supreme at OCR tasks, so this should be trivial in 2025.<br/>\n<br/>\n<b>Rules:</b><br/>\n<ul>\n<li>only count MVM</li>\n<li>font does not matter</li>\n<li>MVM lookalikes should not be counted</li>\n<li>only count non-overlapping MVM</li>\n<li>you get extra brownie points if your solution finds the flag in under 5 seconds (brownie points do not affect scoring)</li>\n<li>There is a custom flag format for this challenge: x3c{th3r3_4re_[number]_MVMs_1n_my_c3rtif1cat3_[md2]} where [number] should be replaced by the decimal representation of your MVM count, and [md2] should be the MD2 representation of the string representation of the number. For example, if you found 100 MVMs in your certificate, the corresponding flag would be x3c{th3r3_4re_100_MVMs_1n_my_c3rtif1cat3_e39096f2d59363a0b177a2773ac6aa0e}.</li>\n</ul>\n<br/>\nIf you are unsure whether your solution counts the correct number, kindly ask your most junior player to double check manually. It should only take a couple hours to check this number by hand.<br/>\n",
+        "categories": [
+            "misc",
+            "cert"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3c{...}",
+        "attachments": [],
+        "hasRemote": false
+    },
+    {
+        "name": "curved-mvm",
+        "displayName": "curved-mvm",
+        "author": "xtea418",
+        "description": "mvm cwypto chall for funny users.\n",
+        "categories": [
+            "mvm",
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "curved-mvm.tar.gz",
+                "downloadUrl": "/api/v2/challenges/curved-mvm/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "devnull-as-a-service",
+        "displayName": "devnull-as-a-service",
+        "author": "alex_hcsc",
+        "description": "A few months ago, I came across <a href=\"https://devnull-as-a-service.com/\">this</a> website. Inspired by it, I decided to recreate the service in C to self-host it.<br>\nTo avoid any exploitable vulnerabilities, I decided to use a very strict seccomp filter. Even if my code were vulnerable, good luck exploiting it.<br>\nPS: You can find the flag at <code>/home/ctf/flag.txt</code> on the remote server.\n",
+        "categories": [
+            "mvm",
+            "pwn"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "devnull-as-a-service.tar.gz",
+                "downloadUrl": "/api/v2/challenges/devnull-as-a-service/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "fastcrypto",
+        "displayName": "fastcrypto",
+        "author": "dagurb",
+        "description": "Python's integer multiplication is actually insanely slow, therefore I decided to make my own <br />\n",
+        "categories": [
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "x3{...}",
+        "attachments": [
+            {
+                "fileName": "fastcrypto.tar.gz",
+                "downloadUrl": "/api/v2/challenges/fastcrypto/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "foundations",
+        "displayName": "foundations",
+        "author": "rebane2001",
+        "description": "I wonder what the first ever x3CTF flag was...<br>\n<br>\nNote: The flag format on this challenge is slightly different because we can't go back to 2024 and change it. This challenge does not require any active attacks.\n",
+        "categories": [
+            "misc",
+            "osint"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3CTF{...}",
+        "attachments": [],
+        "hasRemote": false
+    },
+    {
+        "name": "hydraulic-press",
+        "displayName": "hydraulic-press",
+        "author": "rdx4.2",
+        "description": "Just decode and decompress this a couple of times and get the flag! Might contain some padding :3\n",
+        "categories": [
+            "misc"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "hydraulic-press.tar.gz",
+                "downloadUrl": "/api/v2/challenges/hydraulic-press/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "kittyconvert",
+        "displayName": "kittyconvert",
+        "author": "rebane2001",
+        "description": "Need to convert a file? Our kittens have got you covered!\n",
+        "categories": [
+            "web"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "kittyconvert.tar.gz",
+                "downloadUrl": "/api/v2/challenges/kittyconvert/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "man-vs-matrix",
+        "displayName": "man-vs-matrix",
+        "author": "alex_hcsc",
+        "description": "I've just built an RNG algorithm from scratch. Can you break it?\n",
+        "categories": [
+            "mvm",
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "man_vs_matrix.tar.gz",
+                "downloadUrl": "/api/v2/challenges/man-vs-matrix/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "mvm",
+        "displayName": "mvm",
+        "author": "mvm",
+        "description": "This MVM is fucking with my brain...\n",
+        "categories": [
+            "mvm",
+            "misc"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "baby",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "mvm.tar.gz",
+                "downloadUrl": "/api/v2/challenges/mvm/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "mvmcheckers-inc",
+        "displayName": "mvmcheckers-inc",
+        "author": "joneswastaken",
+        "description": "Welcome new employee! As you are aware, we at <s>SpellCheckers</s> MVMCheckers Inc. are the foremost experts at creating magical days for\nour clients. Please fell free to explore our administration application. Be aware that we are currently rebuilding the\nsystem using our proprietary, cutting edge interpreter.\n",
+        "categories": [
+            "mvm",
+            "web"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "hard",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "MVMCheckers-Inc.tar.gz",
+                "downloadUrl": "/api/v2/challenges/mvmcheckers-inc/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "netmsg-1",
+        "displayName": "netmsg-1",
+        "author": "rdx4.2",
+        "description": "You managed to got your hands on a secure commandline messaging application used by some suspicious people, along with the username/password `delta_star` / `whiskey_demon`.<br />\nReportedly, there is some hidden functionality in the backend that has been since removed from the client. Figure out a way to access it to get the flag.\n",
+        "categories": [
+            "rev"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "netmsg-1.tar.gz",
+                "downloadUrl": "/api/v2/challenges/netmsg-1/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "netmsg-2",
+        "displayName": "netmsg-2",
+        "author": "rdx4.2",
+        "description": "Besides the netmsg application itself, you also managed to get your hands on a packet capture of one of the users of the service. Don't ask.<br />\nTry your hand at cracking the strong encryption used to secure the traffic (see netmsg-1 for the client application).\n",
+        "categories": [
+            "rev",
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "netmsg-2.tar.gz",
+                "downloadUrl": "/api/v2/challenges/netmsg-2/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "notcrypto",
+        "displayName": "notcrypto",
+        "author": "dagurb",
+        "description": "You shouldn't need to call your crypto teammate for this challenge lol.\n",
+        "categories": [
+            "rev"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "notcrypto.tar.gz",
+                "downloadUrl": "/api/v2/challenges/notcrypto/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "oh-my-gadt",
+        "displayName": "oh-my-gadt",
+        "author": "natan.p",
+        "description": "We had our unpaid intern make an uncrackable key checker.\nThey quit because of \"inadequate pay\", but they took the source code and the keys with them.\nWe really need these keys!\n",
+        "categories": [
+            "mvm",
+            "rev"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "oh_my_gadt.tar.gz",
+                "downloadUrl": "/api/v2/challenges/oh-my-gadt/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "omnibius",
+        "displayName": "omnibius",
+        "author": "rebane2001",
+        "description": "I found an old game cartridge for an obscure video game console at a yard sale. I don't have the console, but I found a PDF online describing the hardware. Could you help me get the game running?\n",
+        "categories": [
+            "misc"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "omnibius.tar.gz",
+                "downloadUrl": "/api/v2/challenges/omnibius/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "p11n-trophy",
+        "displayName": "p11n-trophy",
+        "author": "shadowcone",
+        "description": "By popular demand of a singular person, we have partnered with Let's Encrypt and obtained a limited number of personalized participation certificates. Available as long as supplies last. Out of fairness to other teams, please only download this certificate <b>once</b> per team.<br/><br/>\nThe flag for this challenge is the very last sentence of this certificate, in full (includes capitalization and punctuation).<br/>\n",
+        "categories": [
+            "misc",
+            "sanity",
+            "cert"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "baby",
+        "flagFormat": "(no flag format)",
+        "attachments": [],
+        "hasRemote": true
+    },
+    {
+        "name": "pickle-season",
+        "displayName": "pickle-season",
+        "author": "hackrrr",
+        "description": "It is that ~~silly~~ pickle season again... Nothing happens, no CTF challenges, just boredom. And so I created this challenge to fight that and help you to get through this season.<br>\nI just hope you are not afraid of pickles.\n",
+        "categories": [
+            "mvm",
+            "rev"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "medium",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "pickle-season.tar.gz",
+                "downloadUrl": "/api/v2/challenges/pickle-season/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "redacted",
+        "displayName": "redacted",
+        "author": "rebane2001",
+        "description": "We put the challenge in a zip file and redacted it.<br/>\n<br/>\nNote: This challenge is fully solvable both on Windows and Linux, although it's slightly easier on the former.\n",
+        "categories": [
+            "misc"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "hard",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "redacted.tar.gz",
+                "downloadUrl": "/api/v2/challenges/redacted/handout/0"
+            }
+        ],
+        "hasRemote": false
+    },
+    {
+        "name": "sourceless-crypto",
+        "displayName": "sourceless-crypto",
+        "author": "xtea418",
+        "description": "\uD83D\uDE07\uD83D\uDE07\uD83D\uDE07\n",
+        "categories": [
+            "mvm",
+            "crypto"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "MVM{...}",
+        "attachments": [],
+        "hasRemote": true
+    },
+    {
+        "name": "storycreator",
+        "displayName": "storycreator",
+        "author": "boxmein",
+        "description": "Make your own instagram stories using this useful tool!\n",
+        "categories": [
+            "mvm",
+            "web"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "hard",
+        "flagFormat": "MVM{...}",
+        "attachments": [
+            {
+                "fileName": "StoryCreator.tar.gz",
+                "downloadUrl": "/api/v2/challenges/storycreator/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "submission",
+        "displayName": "submission",
+        "author": "rebane2001",
+        "description": "Could you help us out?\n",
+        "categories": [
+            "web"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3c{...}",
+        "attachments": [
+            {
+                "fileName": "submission.tar.gz",
+                "downloadUrl": "/api/v2/challenges/submission/handout/0"
+            }
+        ],
+        "hasRemote": true
+    },
+    {
+        "name": "trophy-plus",
+        "displayName": "trophy-plus",
+        "author": "shadowcone",
+        "description": "We got a little bored, so we hid another flag in the personalized certificate of participation for you. Good luck hunting ^_^!<br/><br/>\nNote: You'll need the certificate from p11n-trophy for this challenge \uD83D\uDE09<br/>\n",
+        "categories": [
+            "misc",
+            "cert"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "baby",
+        "flagFormat": "x3c{...}",
+        "attachments": [],
+        "hasRemote": false
+    },
+    {
+        "name": "trophy-plus64",
+        "displayName": "trophy-plus64",
+        "author": "shadowcone",
+        "description": "We got a little bored, so we hid another flag in the personalized certificate of participation for you. Good luck hunting ^_^!<br/><br/>\nNote: You'll need the certificate from p11n-trophy for this challenge \uD83D\uDE09<br/>\n",
+        "categories": [
+            "misc",
+            "cert"
+        ],
+        "tags": [],
+        "event": "",
+        "difficulty": "easy",
+        "flagFormat": "x3c{...}",
+        "attachments": [],
+        "hasRemote": false
+    }
+]

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>x3CTF</title>
+	<link rel="icon" type="image/png" href="../favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Doto:wght@100..900&family=Geo:ital@0;1&family=Patrick+Hand&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=UnifrakturCook:wght@700&display=block" rel="stylesheet">
+
+<style>
+	html, body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+	.splash-regular {
+	  font-family: "Splash", serif;
+	  font-weight: 400;
+	  font-style: normal;
+	}
+	.abs {
+		position: absolute;
+		pointer-events: none;
+	}
+	.absc {
+		position: absolute;
+		pointer-events: none;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  margin: auto;
+	}
+	.full100 {
+		width: 100%;
+		height: 100%;
+	}
+	.full {
+		width: 300%;
+		height: 300%;
+		translate: -33.333% -33.333%;
+	}
+	#challCreds {
+		z-index: 40;
+		border-radius: 64px;
+		width: calc(1920px - 32px);
+		height: calc(1080px - 32px);
+		background: linear-gradient(0deg, #080033, #1C00AB);
+	}
+</style>
+</head>
+<body>
+		<canvas id="canvas" style="width: 100%;" width="1920" height="1080"></canvas>
+		<canvas id="offCanvas" style="display: none" width="1920" height="1080"></canvas>
+<script type="text/javascript">
+  /**********/
+ /* CONFIG */
+/**********/
+
+const SITE_VER = 99;
+let TARGET_TIME = 1737914400*1000;
+
+	let myTeam = "player";
+	let selfPlayerId = "192e7433-6bb2-53be-8443-b60c273b2d8d";
+	let processedScoreboard = [];
+	let solvesData = [];
+	let playersData = [];
+	let challengesData = [];
+
+let prefersReduced = getPrefersReducedMotion();
+function getPrefersReducedMotion() {
+	const mediaQuery = window?.matchMedia?.('(prefers-reduced-motion: reduce)');
+	mediaQuery?.addEventListener?.('change', () => {
+	  prefersReduced = mediaQuery.matches;
+	});
+	return mediaQuery?.matches;
+}
+
+  /***********/
+ /* SCORING */
+/***********/
+
+function getPlayerName(playerId) {
+	return playersData.find(p => p.id == playerId)?.name ?? playerId;
+}
+
+async function populateScoreboard() {
+	processedScoreboard = [];
+	const sortedSolves = solvesData.sort((a,b)=>new Date(a.solvedAt).getTime()-new Date(b.solvedAt).getTime());
+
+	const sortedPlayers = [...new Set(solvesData.map(e => e.playerId))]
+		.map(e=>[e,playerScoreAtTime(e,-1)])
+		.sort((a,b)=>b[1]-a[1]);
+
+	for (const [i,player] of sortedPlayers.entries()) {
+		processedScoreboard.push({
+			name: getPlayerName(player[0]),
+			score: player[1],
+			solved: sortedSolves.filter(e => e.playerId === player[0]).map(e => e.challengeName),
+			placement: i+1,
+		})
+	}
+}
+
+
+function calculateChallPoints(challName) {
+	return calculateChallPointsAtTime(challName, -1);
+}
+
+let challPointsCache = {};
+function calculateChallPointsAtTime(challName, time) {
+	if (challPointsCache[challName+time]) return challPointsCache[challName+time];
+	const maxPoints = 500;
+	const minPoints = 50;
+	const solvesToMin = 100;
+	const solvesCount = solvesData.filter(e => e.challengeName == challName && (time == -1 || time >= new Date(e.solvedAt))).length;
+	// algorithm pinched from ecsc ^_^
+	const challPoints = Math.max(minPoints, Math.floor(maxPoints*Math.min(1, 8/(8+(solvesCount*(30/solvesToMin))-1))**1.5));
+	challPointsCache[challName+time] = challPoints;
+	return challPoints;
+}
+
+function playerScoreAtTime(playerId, time) {
+	const playerSolves = solvesData.filter(e => e.playerId == playerId && (time == -1 || time >= new Date(e.solvedAt)));
+	let playerScore = playerSolves.reduce((sum, e) => sum + calculateChallPointsAtTime(e.challengeName, time), 0);
+
+	///////////////////////////////////////////////////////////////////
+	// these are here for automatic "emergency" tiebreaking
+	//
+	// in case of a tie we may decide for a different tiebreak
+	// than this here, but this is just so if we don't notice
+	// a tie in time we can have an automatic decision made temporarily
+	const orderScores = {
+		'a3de8247-8d22-5ff7-be5b-1b7fa0bb175a': 0.05,
+		'eeb328fc-454f-5dbd-a2a2-945312be08e4': 0.04,
+		'd493428d-aa1d-5a6a-9bff-4b7646fe000b': 0.03,
+		'fff1f183-f662-505d-bb62-582f48580431': 0.02,
+		'63b61eec-4431-5dbe-aa1d-4fb7d2729631': 0.01,
+		'398aec93-c271-52cb-b061-298e2df23a28': 0.009,
+		'762642e3-d30b-50db-a000-91a783ad59ef': 0.009,
+	}
+	if (orderScores[playerId]) playerScore+=orderScores[playerId];
+	return playerScore;
+}
+
+  /***************/
+ /* Epic "Auth" */
+/***************/
+
+function applyUser(playerName, playerId=null) {
+	selfPlayerId = playerId || playersData.find(p => p.name == playerName)?.id || "192e7433-6bb2-53be-8443-b60c273b2d8d";
+	myTeam = playerName;
+}
+
+function tryLoadUser() {
+	const username = localStorage.getItem("x3c-username");
+	const playerId = localStorage.getItem("x3c-userid");
+	if (!playerId || playerId === "undefined") return applyUser("player");
+	applyUser(username, playerId);
+}
+
+  /*******/
+ /* DOM */
+/*******/
+
+	const canvas = document.getElementById("canvas");
+	let ctx = canvas.getContext("2d");
+	const offCanvas = document.getElementById("offCanvas");
+	const offCtx = offCanvas.getContext("2d");
+
+  /*************/
+ /* WEBSOCKET */
+/*************/
+
+let cursors = {};
+let myWsId = "";
+let lastWsTimes = Array(10).fill(0).map(e=>Date.now());
+
+
+  /***********/
+ /* UTILITY */
+/***********/
+
+function mulberry32(a) {
+  return function() {
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function checkWithin(boundsA, boundsB) {
+	if (boundsA[0]<boundsB[0]||boundsA[0]+boundsA[2]>boundsB[0]+boundsB[2]) return false;
+	if (boundsA[1]<boundsB[1]||boundsA[1]+boundsA[3]>boundsB[1]+boundsB[3]) return false;
+	return true;
+}
+
+function checkOverlap(boundsA, boundsB) {
+	if (boundsA[0]>boundsB[0]+boundsB[2]) return false;
+	if (boundsA[1]>boundsB[1]+boundsB[3]) return false;
+	if (boundsB[0]>boundsA[0]+boundsA[2]) return false;
+	if (boundsB[1]>boundsA[1]+boundsA[3]) return false;
+	return true;
+}
+
+  /**********/
+ /* TIMING */
+/**********/
+
+
+let time_offset = null;
+function setTimeOffset(time) {
+	time_offset = Date.now() - time;
+}
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+  /*********/
+ /* OUTRO */
+/*********/
+
+	const SONG_BPM = 94;
+	function beat2time(beat, bpm=SONG_BPM) {
+    	return (beat*4)/(bpm/60.);
+	}
+	function time2beat(t, bpm=SONG_BPM) {
+    	return (t/4)*(bpm/60.);
+	}
+
+
+		const parts = [
+			{
+				name: "Vylet Pony - Flair for the Dramatic",
+				link: "https://vyletpony.bandcamp.com/track/flair-for-the-dramatic",
+				start: 15*60,
+				bpm: 94, // SONG_BPM
+				beatOff: 0,
+			},
+		];
+
+
+
+	let SW = 1920;
+	let SH = 1080;
+	let SX = 0;
+	let SY = 0;
+
+	let lastRatio = 16/9;
+	function setCanvasSize() {
+		const ratio = window.innerWidth/window.innerHeight;
+		if (lastRatio == ratio) return;
+		lastRatio = ratio;
+		if (ratio*1080>1920) {
+			SH = 1080;
+			SW = ratio*1080;
+			SX = (SW-1920)/2;
+			SY = 0;
+		} else {
+			SH = 1920/ratio;
+			SW = 1920;
+			SX = 0;
+			SY = (SH-1080)/2;
+		}
+		canvas.width = SW;
+		canvas.height = SH;
+		offCanvas.width = SW;
+		offCanvas.height = SH;
+	}
+
+
+	let lastEvents = {};
+
+	function getCurrentBeat() {
+		return time2beat(((getOffsetTime(true) - TARGET_TIME)/1000)-15*60);
+	}
+
+	function f(t,i=0) {
+		if ((lastEvents[i] ?? 0) >= t) return false;
+		if (getCurrentBeat() < t) return false;
+		lastEvents[i] = t;
+		return true;
+	}
+
+	function r(a,l) {
+		const currentBeat = getCurrentBeat();
+		if (currentBeat < a) return false;
+		if (currentBeat >= a + l) return false;
+		return true;
+	}
+
+	function m(a,b,t) {
+		return a*(1-t)+b*t;
+	}
+
+	function s(v) {
+		if (isNaN(v)) return 0;
+		return Math.max(Math.min(v,1),0);
+	}
+
+	function bg(style) {
+		ctx.fillStyle = style;
+		ctx.fillRect(-canvas.width,-canvas.height,canvas.width*8,canvas.height*8);
+	}
+
+	const filters = [];
+	function pushFilter(filter) {
+		filters.unshift(filter);
+		ctx.filter = filters.join(" ");
+	}
+	function popFilter() {
+		filters.shift();
+		ctx.filter = filters.length ? filters.join(" ") : "none";
+	}
+
+	const gradientCache = {}
+	function gradientY(start, end) {
+		if (gradientCache[start+end]) return gradientCache[start+end];
+		const gradient = ctx.createLinearGradient(0, 0, 0, SH);
+		gradient.addColorStop(0, start);
+		gradient.addColorStop(1, end);
+		gradientCache[start+end] = gradient;
+		return gradient;
+	}
+
+	function font(i, px=null) {
+		const fonts = {
+			"cherry": '200px "Cherry Bomb One"',
+			"comic": '200px "Comic Sans MS", "Patrick Hand", cursive',
+			"teamname": '256px "UnifrakturCook"',
+			"placement": '64px "Space Mono"',
+			"chall": '32px "Doto"',
+			"times": '64px "Times New Roman", serif',
+			//"teamname": '256px "Geo"',
+		}
+		if (px) {
+			ctx.font = px + "px " + fonts[i].split("px ")[1];
+		} else {
+			ctx.font = fonts[i];
+		}
+		return ctx.font;
+	}
+
+	function animate_catch() {
+		try {
+			animate();	
+		} catch (e) {
+			console.error(e)
+		}
+		requestAnimationFrame(animate_catch);
+	}
+
+	let lastPlacements = -1;
+	let challPlacements = [];
+	function animate() {
+
+		const targetAudioTime = (getOffsetTime(true) - TARGET_TIME)/1000;
+		if (targetAudioTime > (15*60 + beat2time(32+2*4))) {
+			TARGET_TIME += beat2time(2*4)*1000;
+			return;			
+		}
+
+
+		const currentPartIdx = parts.findLastIndex(e => e.start <= targetAudioTime) ?? 0;
+		const currentPart = parts[currentPartIdx];
+
+		setCanvasSize();
+
+		const currentBeat = prefersReduced ? Math.floor(getCurrentBeat()/2)*2+1.5 : getCurrentBeat();
+		
+		for (let i = 0; i < 4; i++) {
+			const baseBeat = 32 + i*2;
+			if (r(baseBeat,2)) {
+				if (canvas.width > SW/1.5) {
+					canvas.width = SW/6;
+					canvas.height = SH/6;
+					ctx.resetTransform();
+					ctx.scale(0.5/3, 0.5/3);
+					offCanvas.width = SW/6;
+					offCanvas.height = SH/6;
+					offCtx.resetTransform();
+					offCtx.scale(0.5/3, 0.5/3);
+				}
+				const teamNameColor = gradientY(`hsl(from #FF0000 calc(h + ${i*40}) s l)`, `hsl(from #FFFF00 calc(h + ${i*40}) s l)`)
+				const teamName = processedScoreboard[3-i].name;
+				const t = (currentBeat-baseBeat)/2;
+				const tE = easeOutExpo(t);
+				const tEx = m(tE,easeOutExpo(tE),0.5);
+
+				pushFilter(`saturate(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.5)}%) contrast(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-t))*6)}%)`);
+				bg(gradientY(`hsl(from #080031 calc(h + ${i*40}) s l)`, `hsl(from #9900B0 calc(h + ${i*40}) s l)`))
+
+				ctx.save();
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				font("teamname");
+				const textWidthMult = Math.min(1.5,(1920*0.8)/ctx.measureText(teamName).width);
+				const scl = (1 + (1-tEx)*15)*textWidthMult;
+				ctx.translate(-SW/2, -SH/2);
+				ctx.scale(scl, scl);
+				ctx.letterSpacing = `${200*(1-tEx)}px`;
+				ctx.globalCompositeOperation = "screen";
+				ctx.fillStyle = teamNameColor;
+				ctx.fillText(teamName, SW/scl, SH/scl);
+				pushFilter('blur(8px)');
+				ctx.fillText(teamName, SW/scl, SH/scl);
+				popFilter();
+				ctx.globalCompositeOperation = "source-over";
+				ctx.letterSpacing = "0";
+				ctx.restore();
+
+				ctx.save();
+				offCtx.textAlign = "left";
+				offCtx.textBaseline = "top";
+				offCtx.font = font("chall");
+				if (lastPlacements != i) {
+					lastPlacements == i;
+					challPlacements = [];
+					const allowedPadding = 32;
+					const allowedAreas = [
+						// [0,0,SW,SH/2 - textWidthMult*128],
+						// [0,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						// [SW/3*2,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						[0,0,SW,SH/2 - textWidthMult*128],
+						[0,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						//[SW/3,SH/2 + textWidthMult*128,SW/3,(SH/2 - textWidthMult*128)/2],
+						//[SW/3 - allowedPadding*2,SH/2 + textWidthMult*128 + (SH/2 - textWidthMult*128)/3,SW/3 + allowedPadding*4,(SH/2 - textWidthMult*128)/3*2],
+						[SW/3 - allowedPadding*2,SH/2 + textWidthMult*128 + (SH/2 - textWidthMult*128)/5,SW/3 + allowedPadding*4,(SH/2 - textWidthMult*128)/5*4],
+						[SW/3*2,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						//[SW/3*2,SH/3*2 + textWidthMult*128,SW/3,SH/3 - textWidthMult*128],
+					].map(e => [e[0]+allowedPadding,e[1]+allowedPadding,e[2]-allowedPadding*2,e[3]-allowedPadding*2]);
+					const disallowedAreas = [];
+					const getRand = mulberry32(1337+i);
+					const solves = processedScoreboard[3-i].solved;
+
+					for (const chall of solves) {
+						const tWidth = Math.round(offCtx.measureText(chall).width);
+						const tHeight = 32;
+						let tB;
+						for (let j = 0; j < 100; j++) {
+							tB = [getRand()*SW, getRand()*SH, tWidth, tHeight];
+							if (checkWithin(tB,allowedAreas[0]) || checkWithin(tB,allowedAreas[1]) || checkWithin(tB,allowedAreas[2]) || checkWithin(tB,allowedAreas[3])) {
+								if (!disallowedAreas.find(e => checkOverlap(tB, e))) break;
+							}
+							if (j==99) console.warn("Coudln't find spot for text, will cause overlap");
+						}
+						disallowedAreas.push(tB);
+						challPlacements.push({
+							x: tB[0],
+							y: tB[1],
+							text: chall,
+						});
+					}
+				}
+				offCtx.clearRect(0,0,SW,SH);
+				for (const [j,place] of challPlacements.entries()) {
+					const placeT = Math.max(0,(t-(0.1+0.5*j/challPlacements.length))*2);
+					if (!placeT) continue;
+					const placeTe = easeOutExpo(placeT);
+					offCtx.fillStyle = "#FFF";
+					offCtx.fillText(place.text.slice(0,Math.ceil(placeTe*place.text.length)), place.x, place.y);
+				}
+				offCtx.save();
+				offCtx.fillStyle = "#FFF";
+				offCtx.textAlign = "center";
+				offCtx.textBaseline = "middle";
+				offCtx.font = font("placement");
+				offCtx.letterSpacing = `${(400*(1-tE)+20)}px`;
+				offCtx.fillText(`${['4th', '3rd', '2nd', '1st'][i]} place`, SW/2, SH*0.65);
+				offCtx.restore();
+				ctx.globalCompositeOperation = "screen";
+				ctx.drawImage(offCanvas, 0, 0, SW, SH);
+				ctx.restore();
+
+				popFilter();
+			}
+		}
+	}
+function easeInExpo(x) {
+return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
+}
+function easeOutExpo(x) {
+return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+}
+let hasInit = false;
+async function init() {
+	if (hasInit) return;
+	hasInit = true;
+	tryLoadUser();
+	try {
+		const data = await (await fetch("data-simple.json")).json();
+		solvesData = data["solves"];
+		challengesData = data["challenges"];
+		playersData = data["players"];
+	} catch (e) {
+		console.log(e)
+		hasInit = false;
+		return;
+	}
+	await populateScoreboard();
+	TARGET_TIME=Date.now() - (15*60 + beat2time(32))*1000;
+	animate_catch();
+}
+window.onload = () => init();
+</script>
+</body>
+</html>

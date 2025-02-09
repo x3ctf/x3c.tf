@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	html, body {
+		font-family: "Geo", system-ui, sans-serif;
+		background: #14191F;
+		color: #FFF;
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+	<h1>x3CTF Archive</h1>
+	<p>Logging out...</p>
+<script>
+	localStorage.removeItem("x3c-username");
+	localStorage.removeItem("x3c-userid");
+	document.location.href = (/^#[a-z0-9\-]+.html$/.test(document.location.hash)) ? document.location.hash.slice(1) : "../";
+</script>
+</body>

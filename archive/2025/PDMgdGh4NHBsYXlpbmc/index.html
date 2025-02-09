@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>x3CTF</title>
+	<link rel="icon" type="image/png" href="../favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Doto:wght@100..900&family=Geo:ital@0;1&family=Patrick+Hand&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=UnifrakturCook:wght@700&display=block" rel="stylesheet">
+
+<style>
+	html, body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		cursor: url("assets/cursor.png"), auto;
+	}
+	.splash-regular {
+	  font-family: "Splash", serif;
+	  font-weight: 400;
+	  font-style: normal;
+	}
+	.abs {
+		position: absolute;
+		pointer-events: none;
+	}
+	.absc {
+		position: absolute;
+		pointer-events: none;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  margin: auto;
+	}
+	.full100 {
+		width: 100%;
+		height: 100%;
+	}
+	.full {
+		width: 300%;
+		height: 300%;
+		translate: -33.333% -33.333%;
+	}
+	#teamname {
+	  font-family: "UnifrakturCook", serif;
+	  font-weight: 400;
+	  font-size: 256px;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  width: 300%;
+	  height: 300%;
+	  margin: auto;
+	  display: flex;
+	  align-items: center;
+	  text-align: center;
+      justify-content: center;
+      /*translate: 0 -3.5%;*/
+      translate: -33.333% calc(-3.5% / 3);
+          line-height: 256px;
+      white-space: nowrap;
+  	  -webkit-background-clip: text!important;
+  	  -webkit-text-fill-color: transparent!important;
+	}
+	#renderArea {
+		width: 1920;
+		height: 1080;
+		position: absolute;
+	  top: 0;
+	  left: 0;
+	  transform-origin: 0 0;
+	  overflow: visible;
+	}
+	#solvedChallTexts div {
+	  font-family: "Doto", serif;
+	  font-weight: 400;
+	  font-size: 48px;
+	  color: #FFF;
+	  position: absolute;
+	  text-align: center;
+	  translate: -50% 0;
+  font-variation-settings:
+    "ROND" 0;
+    font-optical-sizing: auto;
+    scale: 1;
+    opacity: 1;
+    transition: opacity 4s cubic-bezier(0,0,0,1), scale 4s cubic-bezier(0,0,0,1);
+    white-space: nowrap;
+    		@starting-style {
+    			opacity: 0;
+				scale: 0.5;
+  			}
+	}
+	#x3text {
+		font: 400 200px "Cherry Bomb One", system-ui;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		width: fit-content;
+		height: fit-content;
+		background:red;
+		color:lemonchiffon;
+		    padding: 74px 128px 109px;
+		line-height: 0;
+	}
+	#challCreds {
+		z-index: 40;
+		border-radius: 64px;
+		width: calc(1920px - 32px);
+		height: calc(1080px - 32px);
+		background: linear-gradient(0deg, #080033, #1C00AB);
+	}
+	#flair {opacity:0;pointer-events:none;user-select:none;display:none;
+		/*&:hover{opacity:0.1}*/}
+	#nowplaying {
+		font-family: "Geo", monospace;
+			display: block;
+			position: fixed;
+			bottom: 16px;
+			left: 0;
+			right: 0;
+			margin: 0 auto;
+			width: fit-content;
+			z-index: 50;
+			transition: opacity 8s;
+			pointer-events: none;
+			user-select: none;
+			& a {
+				pointer-events: all;
+				color: inherit;
+				text-decoration: underline;
+			}
+		}
+		#volumeControl {
+			-webkit-appearance: none;
+			border-radius: 16px;
+			background: #FFF;
+			padding: 1px;
+			&::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 8px;
+				height: 8px;
+				background: #000;
+				border-radius:16px;
+			}
+			&::-moz-range-thumb {
+				width: 8px;
+				height: 8px;
+				background: #000;
+				border-radius:16px;
+			}
+		}
+		#loginThing {
+			position: absolute;
+			display: block;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 100;
+			background: #14191F;
+			color: #FFF;
+			opacity: 1;
+			transition: background 1s, color 1s;
+			@starting-style {
+			background: #000;
+			color: #0000;
+			}
+			font: 400 32px "Space Mono";
+
+    	& > div {
+    		display: flex;
+			width: 100%;
+			height: 100%;
+    	justify-content: center;
+    	align-items: center;
+    	flex-direction: column;
+    	}
+		}
+		#scrub {
+			z-index: 777;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 32px;
+			background: #FFF7;
+			transition: opacity 0.3s;
+			opacity: 0;
+			&:hover {
+				opacity: 0.9;	
+			}
+			&:active, &:has(:active) {
+				opacity: 1;	
+			}
+			& > div {
+				background: #FF849C;
+				width: 0%;
+				height: 100%;
+			}
+		}
+</style>
+</head>
+<body>
+	<div id="scrub" style="display:none"><div></div></div>
+	<!--if i set it to display:none it breaks firefox for some reason???? */-->
+	    <svg style="position:absolute;opacity:0;top:-99999;left:-99999;pointer-events:none;z-index:-9999" width=1920 height=1080 viewBox="0 0 1920 1080">
+	        <defs color-interpolation="linearRGB">
+	            <filter id="turb">
+	                <feTurbulence id="feTurb" baseFrequency="0.001" numOctaves="3" seed="1337"/>
+	                <feGaussianBlur id="feGaus" in="feTurb" stdDeviation="1" />
+	                <feDisplacementMap id="feDis" in="SourceGraphic" in2="feGaus" scale="0"/>
+	                <!--<feGaussianBlur stdDeviation="0.5" />
+	                <feConvolveMatrix order="3" kernelMatrix="2.3 -2.3  2.3 -2.3 -1 -2.3 2.3  -2.3  2.3" />
+					<feGaussianBlur stdDeviation="2.5" />
+	                <feConvolveMatrix order="3" kernelMatrix="3.3 -3.3  3.3 -3.3 -.25 -3.3 3.3  -3.3  3.3" />-->
+	
+	            </filter>
+
+  				<filter id='noiseFilter1'>
+  				  <feTurbulence 
+  				  	id="noise-feTurb"
+  				    type='fractalNoise' 
+  				    baseFrequency='0.7' 
+  				    numOctaves='3' 
+  				    stitchTiles='stitch'/>
+  				    <feBlend in="SourceGraphic" in2="noise-feTurb" mode="multiply" />
+  				</filter>
+  				<filter id='noiseFilter2'>
+  				  <feTurbulence 
+  				  	id="noise-feTurb"
+  				    type='fractalNoise' 
+  				    baseFrequency='0.65' 
+  				    numOctaves='3' 
+  				    stitchTiles='stitch'/>
+  				    <feBlend in="SourceGraphic" in2="noise-feTurb" mode="multiply" />
+  				</filter>
+  				<filter id='glow1'>
+  				  <feGaussianBlur id="glow1feBlur" in="SourceGraphic" stdDeviation="4" color-interpolation-filters="linearRGB" />
+  				    <feBlend in="SourceGraphic" in2="glow1feBlur" mode="screen" color-interpolation-filters="linearRGB" />
+  				</filter>
+  				<filter id='glowFadeF'>
+  				  <feGaussianBlur id="glowFadeB" in="SourceGraphic" stdDeviation="0" color-interpolation-filters="linearRGB" />
+  				</filter>
+	        </defs>
+	    </svg>
+	<div id="fontPreload">
+		<span style='font: 400 32px "Cherry Bomb One"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<span style='font: 400 32px "Doto"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<span style='font: 400 32px "Patrick Hand"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<span style='font: 400 32px "Geo"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<span style='font: 400 32px "UnifrakturCook"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<span style='font: 400 32px "Space Mono"'>x3CTF abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ^-^</span>
+		<div id="performanceTestResults">Waiting for performance test...</div>
+	</div>
+	<!--
+	<div id="renderArea" style="border: 2px solid #000">
+		<div id="challCreds" style="display:none" class="absc"></div>
+		<div class="abs" style="display:none" id="x3text">x3CTF</div>
+		<div class="abs" style="display:none;z-index:40;filter:url('#glow1')" id="teamname">xD</div>
+		<div class="abs full100" style="z-index:30;filter:url('#glow1')" id="solvedChallTexts"></div>
+		<div class="abs full" style="display:none;z-index:100;backdrop-filter:url('#turb')" id="turbulent"></div>
+		<div class="abs full" style="display:none;z-index:95;backdrop-filter:url('#noiseFilter1');opacity:0.6" id="noise1"></div>
+		<div class="abs full" style="display:none;z-index:20;backdrop-filter:url('#noiseFilter2');opacity:0.5" id="noise2"></div>
+		<div class="abs full" style="display:none;background:#FFF0;z-index:110;/*backdrop-filter:url('#glowFadeF')*/" id="glowFade"></div>
+
+
+	</div>
+-->
+	<video
+          id="hdrwhite"
+          style="display:none;position: absolute;z-index: -1;width: 100%; height: 100%; top: 0; left: 0;object-fit: fill"
+          muted
+          playsinline
+          disableRemotePlayback
+          loop
+        ></video>
+		<audio id="flair" style="width:100%" controls preload="auto" src="x3tro.mp3"></audio>
+		<button id="startBtn" onclick="outro(2)">Play (Ultra Quality)</button>
+		<button id="startBtn2" onclick="outro(1)">Play (Medium Quality)</button>
+		<button id="startBtn3" onclick="outro(0)">Play (Ultra-Low Quality)</button>
+		<button id="debugBtn" onclick="TARGET_TIME=Date.now()">DEBUG</button><!--TODO: REMOVE-->
+		<div id="loginThing">
+
+			<div id="loggedOutThing">
+				<h2>x3CTF goodbye experience</h2>
+				<p>You are currently logged out.<br>Pick your name from the list to "log in".</p>
+				<span style="font-size: 0.5em;margin:-28px 0 20px">(there is no authentication 💀)</span>
+				<select id="usernamePicker">
+  					<option value="player" selected>player</option>
+				</select>
+				<button id="logInButton">Log in</button>
+			</div>
+			<div id="loggedInThing" style="display:none">
+				<h2>x3CTF goodbye experience</h2>
+				<p id="loggedInMsg">Loading...</p>
+				<span style="font-size: 0.5em;margin:-28px 0 20px">Not your team account? <a href="#" onclick="changeAccount()" style="color:#FF0">Change account</a>.</span>
+				<button id="startThingButton" disabled>Replay experience</button>
+				<p style="font-size: 0.5em">
+				This experience contains intense visuals (flashing lights etc).<br>
+				<a href="#" onclick="document.documentElement.requestFullscreen()" style="color:#FF0">Fullscreen</a> on a 16:9 monitor recommended for best experience.<br>
+				<br>
+				Chromium-based browsers recommended for best experience.<br>
+				Firefox <span style="color:yellow">will work</span>, but it will be laggy and have some performance-intensive effects disabled.<br>
+				Safari <span style="color:red">will not work</span>. Do not even try. If you wanna use Safari next time then buy me a Mac.<br>
+			</p>
+			</div>
+		</div>
+		<canvas id="canvas" style="width: 100%;" width="1920" height="1080"></canvas>
+		<canvas id="offCanvas" style="display: none" width="1920" height="1080"></canvas>
+		<div id="nowplaying" style="opacity:0;display:none">now playing: <a target="_blank"></a></div>
+<script type="text/javascript">
+	// ARCHIVE - CONTROLS
+	function updateScrub() {
+		document.querySelector("#scrub>div").style.width = `${(Date.now()-TARGET_TIME)/(1000*60*20)*100}%`;
+	}
+	function scrubScrub(t) {
+		if (t < 0 || t >= 1) return;
+		const currentT = (Date.now()-TARGET_TIME)/(1000*60*20);
+		const newTime = (TARGET_TIME-1000*60*20*(1-currentT)+1000*60*20*(1-t));
+		const delta = newTime - TARGET_TIME;
+		flair.currentTime += delta;
+		// flair.play();
+		TARGET_TIME = newTime;
+		updateScrub();
+	}
+	document.querySelector("#scrub").onmousemove = (e) => (e.buttons == 1) && scrubScrub(e.pageX/e.currentTarget.offsetWidth);
+	document.querySelector("#scrub").onmousedown = (e) => scrubScrub(e.pageX/e.currentTarget.offsetWidth);
+	window.onkeydown = ({code}) => {
+		switch(code) {
+			case "ArrowLeft":
+				TARGET_TIME+=10000;
+				break;
+			case "ArrowRight":
+				TARGET_TIME-=10000;
+				break;
+			default:
+				break;
+		}
+	}
+
+  /**********/
+ /* CONFIG */
+/**********/
+
+const WS_ENDPOINT = "wss://x3c.tf/irc/";
+//const WS_ENDPOINT = "ws://127.0.0.1:8899/";
+const SITE_VER = 99;
+let TARGET_TIME = 1737914400*1000;
+
+
+	const hdrwhite = document.getElementById("hdrwhite");
+	const flair = document.getElementById("flair");
+	const startBtn = document.getElementById("startBtn");
+	const startBtn2 = document.getElementById("startBtn2");
+	const startBtn3 = document.getElementById("startBtn3");
+	const debugBtn = document.getElementById("debugBtn");
+	const teamname = document.getElementById("teamname");
+	const renderArea = document.getElementById("renderArea");
+	const solvedChallTexts = document.getElementById("solvedChallTexts");
+	const loggedInMsg = document.getElementById("loggedInMsg");
+	const logInButton = document.getElementById("logInButton");
+	const usernamePicker = document.getElementById("usernamePicker");
+
+	const cursorImg = new Image();
+	cursorImg.src = "assets/cursor.png";
+	const teamPics = {};
+	["thehackerscrew","Carixo nr. 1","FluxFingers","RedRocket","chat are we cooked","possed frnexh skateboarding bards",].forEach(e => {
+		const img = new Image();
+		img.src = `assets/teams/${e}.png`;
+		teamPics[e] = img;
+	});
+
+	let ultra = 2;
+
+	let myTeam = "player";
+	let selfPlayerId = "192e7433-6bb2-53be-8443-b60c273b2d8d";
+	let processedScoreboard = [];
+	let solvesData = [];
+	let playersData = [];
+	let challengesData = [];
+
+  /***********/
+ /* SCORING */
+/***********/
+
+function getPlayerName(playerId) {
+	return playersData.find(p => p.id == playerId)?.name ?? playerId;
+}
+
+async function populateScoreboard() {
+	processedScoreboard = [];
+	const sortedSolves = solvesData.sort((a,b)=>new Date(a.solvedAt).getTime()-new Date(b.solvedAt).getTime());
+
+	const sortedPlayers = [...new Set(solvesData.map(e => e.playerId))]
+		.map(e=>[e,playerScoreAtTime(e,-1)])
+		.sort((a,b)=>b[1]-a[1]);
+
+	const proPlayers = sortedPlayers.map(e=>e[0]);
+	if (playersData)
+		for (const megaNoobPlayer of playersData.filter(e=>!proPlayers.includes(e.id)).map(e=>[e.id,0])) sortedPlayers.push(megaNoobPlayer);
+
+	for (const [i,player] of sortedPlayers.entries()) {
+		processedScoreboard.push({
+			name: getPlayerName(player[0]),
+			score: player[1],
+			solved: sortedSolves.filter(e => e.playerId === player[0]).map(e => e.challengeName),
+			placement: i+1,
+		})
+	}
+}
+
+
+function calculateChallPoints(challName) {
+	return calculateChallPointsAtTime(challName, -1);
+}
+
+let challPointsCache = {};
+function calculateChallPointsAtTime(challName, time) {
+	if (challPointsCache[challName+time]) return challPointsCache[challName+time];
+	const maxPoints = 500;
+	const minPoints = 50;
+	const solvesToMin = 100;
+	const solvesCount = solvesData.filter(e => e.challengeName == challName && (time == -1 || time >= new Date(e.solvedAt))).length;
+	// algorithm pinched from ecsc ^_^
+	const challPoints = Math.max(minPoints, Math.floor(maxPoints*Math.min(1, 8/(8+(solvesCount*(30/solvesToMin))-1))**1.5));
+	challPointsCache[challName+time] = challPoints;
+	return challPoints;
+}
+
+function playerScoreAtTime(playerId, time) {
+	const playerSolves = solvesData.filter(e => e.playerId == playerId && (time == -1 || time >= new Date(e.solvedAt)));
+	let playerScore = playerSolves.reduce((sum, e) => sum + calculateChallPointsAtTime(e.challengeName, time), 0);
+
+	///////////////////////////////////////////////////////////////////
+	// these are here for automatic "emergency" tiebreaking
+	//
+	// in case of a tie we may decide for a different tiebreak
+	// than this here, but this is just so if we don't notice
+	// a tie in time we can have an automatic decision made temporarily
+	const orderScores = {
+		'a3de8247-8d22-5ff7-be5b-1b7fa0bb175a': 0.05,
+		'eeb328fc-454f-5dbd-a2a2-945312be08e4': 0.04,
+		'd493428d-aa1d-5a6a-9bff-4b7646fe000b': 0.03,
+		'fff1f183-f662-505d-bb62-582f48580431': 0.02,
+		'63b61eec-4431-5dbe-aa1d-4fb7d2729631': 0.01,
+		'398aec93-c271-52cb-b061-298e2df23a28': 0.009,
+		'762642e3-d30b-50db-a000-91a783ad59ef': 0.009,
+	}
+	if (orderScores[playerId]) playerScore+=orderScores[playerId];
+	return playerScore;
+}
+
+function isChallSolved(challName) {
+	try {
+		return solvesData.find(e => e.playerId == selfPlayerId && e.challengeName == challName);
+	} catch {
+		return false;
+	}
+}
+
+  /***************/
+ /* Epic "Auth" */
+/***************/
+
+function applyUser(playerName, playerId=null) {
+	selfPlayerId = playerId || playersData.find(p => p.name == playerName)?.id || "192e7433-6bb2-53be-8443-b60c273b2d8d";
+	myTeam = playerName;
+	document.getElementById("loggedOutThing").style.display = "none";
+	document.getElementById("loggedInThing").style.display = "flex";
+	if (!startThingButton.disabled)
+		loggedInMsg.innerText = `Hi ${myTeam}, press the button below to start :3`;
+}
+
+logInButton.onclick = () => {
+	applyUser(usernamePicker.value);
+}
+
+function populateUsernames() {
+	const players = playersData.map(e=>e.name).sort((a,b) => a.localeCompare(b));
+	usernamePicker.innerText = "";
+	for (const player of players) {
+		const option = document.createElement('option');
+		option.innerText = player;
+		option.value = player;
+		usernamePicker.appendChild(option);
+		if (player == myTeam)
+			usernamePicker.value = player;
+	}
+}
+
+function changeAccount() {
+	document.getElementById("loggedOutThing").style.display = "flex";
+	document.getElementById("loggedInThing").style.display = "none";
+}
+
+function tryLoadUser() {
+	const username = localStorage.getItem("x3c-username");
+	const playerId = localStorage.getItem("x3c-userid");
+	if (!playerId || playerId === "undefined") return;
+	applyUser(username, playerId);
+}
+
+  /*******/
+ /* DOM */
+/*******/
+
+	const canvas = document.getElementById("canvas");
+	let ctx = canvas.getContext("2d");
+	const offCanvas = document.getElementById("offCanvas");
+	const offCtx = offCanvas.getContext("2d");
+
+	const performanceTestResults = document.getElementById("performanceTestResults");
+	const feTurb = document.getElementById("feTurb");
+	const feDis = document.getElementById("feDis");
+	const noise1 = document.getElementById("noise1");
+	const noise2 = document.getElementById("noise2");
+	const turbulent = document.getElementById("turbulent");
+	const fontPreload = document.getElementById("fontPreload");
+
+	const glowFade = document.getElementById("glowFade");
+	const glowFadeB = document.getElementById("glowFadeB");
+
+	const x3text = document.getElementById("x3text");
+
+	const nowplaying = document.getElementById("nowplaying");
+	const startThingButton = document.getElementById("startThingButton");
+
+  /*************/
+ /* WEBSOCKET */
+/*************/
+
+let cursors = {};
+let myWsId = "";
+let lastWsTimes = Array(10).fill(0).map(e=>Date.now());
+let wsLog = [];
+let wsLogIdx = 0;
+fetch("ws_replay.jsonl").then(r=>r.text()).then(r=>wsLog=r.split("\n").map(e=>JSON.parse(e)));
+function replay_ws() {
+	if (!wsLog.length) return;
+	const currentWsTime = getOffsetTime(true) - TARGET_TIME + 1737914400*1000;
+	while (wsLogIdx && wsLog[wsLogIdx-1]["time"] > currentWsTime) wsLogIdx--;
+	while (wsLog.length > wsLogIdx && wsLog[wsLogIdx]["time"] < currentWsTime) {
+		const e = wsLog[wsLogIdx];
+		wsLogIdx++;
+
+  	if (e.data.startsWith("uwui")) {
+  		myWsId = e.data.split(" ")[1];
+  	} else if (e.data.startsWith("uwuc")) {
+  		if (wsLog[wsLogIdx]["time"] < currentWsTime - 10000) continue;
+  		lastWsTimes.shift();
+  		lastWsTimes.push(Date.now());
+  		if (getCurrentBeat() >= 32 && getCurrentBeat < 40)
+  			continue;
+  		for (const cursor of e.data.split(" ").slice(1)) {
+  			const cursorId = cursor.slice(0,8);
+
+  			if (cursorId == myWsId) continue;
+  			if (cursorId.length !== 8) continue;
+  			const cursorPos = cursor.slice(8).split("x").map(z=>parseInt(z));
+  			const oldCursorPos = cursors[myWsId] ? [cursors[myWsId][0], cursors[myWsId][1]] : [...cursorPos];
+  			cursors[cursorId] = [...cursorPos,...oldCursorPos,Date.now()];
+  		}
+  		//cursors = e.data.split(" ").map(x=>x.split("x").map(z=>parseInt(z))).filter(e=>e[0]!=lastWsCursor[0]||e[1]!=lastWsCursor[1]);
+  		if (lastWsCursor[0] !== lastMouseCoords[0] || lastWsCursor[1] !== lastMouseCoords[1]) {
+  			lastWsCursor = [...lastMouseCoords];
+				//ws.send(`cur ${Math.floor(lastMouseCoords[0]/window.innerWidth*SW-SX)} ${Math.floor(lastMouseCoords[1]/window.innerHeight*SH-SY)}`);
+  		}
+  	} else if (e.data.startsWith("uwu")) {
+  		if (wsLog[wsLogIdx]["time"] < currentWsTime - 1000) continue;
+  		newDcMsg(e.data.slice(4));
+  	}
+  }
+}
+
+function ws_connect() {
+	// live ws code - disabled
+	/*
+  const ws = new WebSocket(WS_ENDPOINT);
+  //ws.onopen = () => ws.send("nya~");
+  ws.onopen = () => ws.send("cur -100 -100");
+
+  ws.onmessage = function(e) {
+  	if (e.data.startsWith("uwui")) {
+  		myWsId = e.data.split(" ")[1];
+  	} else if (e.data.startsWith("uwuc")) {
+  		lastWsTimes.shift();
+  		lastWsTimes.push(Date.now());
+  		if (getCurrentBeat() >= 32 && getCurrentBeat < 40)
+  			return;
+  		for (const cursor of e.data.split(" ").slice(1)) {
+  			const cursorId = cursor.slice(0,8);
+
+  			if (cursorId == myWsId) continue;
+  			if (cursorId.length !== 8) continue;
+  			const cursorPos = cursor.slice(8).split("x").map(z=>parseInt(z));
+  			const oldCursorPos = cursors[myWsId] ? [cursors[myWsId][0], cursors[myWsId][1]] : [...cursorPos];
+  			cursors[cursorId] = [...cursorPos,...oldCursorPos,Date.now()];
+  		}
+  		//cursors = e.data.split(" ").map(x=>x.split("x").map(z=>parseInt(z))).filter(e=>e[0]!=lastWsCursor[0]||e[1]!=lastWsCursor[1]);
+  		if (lastWsCursor[0] !== lastMouseCoords[0] || lastWsCursor[1] !== lastMouseCoords[1]) {
+  			lastWsCursor = [...lastMouseCoords];
+				ws.send(`cur ${Math.floor(lastMouseCoords[0]/window.innerWidth*SW-SX)} ${Math.floor(lastMouseCoords[1]/window.innerHeight*SH-SY)}`);
+  		}
+  	} else if (e.data.startsWith("uwu")) {
+  		newDcMsg(e.data.slice(4));
+  	} else {
+  		const [_w1, site_ver, _w2, current_time, mvm] = e.data.split(" ");
+  		if (parseInt(site_ver) > SITE_VER) {
+  			if (parseInt(site_ver)-SITE_VER < 10) {
+  				setTimeout(() => document.location.reload(), 600000*Math.random());
+  			} else {
+	  			document.location.reload();
+  			}
+  		}
+  		setTimeOffset(parseInt(current_time));
+			setTimeout(() => ws.send("meow"), 10000);
+  	}
+  };
+
+  ws.onclose = function(e) {
+    console.log('Socket closed, reconnecting... ', e.reason);
+    setTimeout(() => ws_connect(), 1000);
+  };
+
+  ws.onerror = function(err) {
+    console.error('Socket error: ', err.message, 'Closing socket');
+    ws.close();
+  };
+  */
+};
+
+
+  /***********/
+ /* UTILITY */
+/***********/
+
+function mulberry32(a) {
+  return function() {
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function checkWithin(boundsA, boundsB) {
+	if (boundsA[0]<boundsB[0]||boundsA[0]+boundsA[2]>boundsB[0]+boundsB[2]) return false;
+	if (boundsA[1]<boundsB[1]||boundsA[1]+boundsA[3]>boundsB[1]+boundsB[3]) return false;
+	return true;
+}
+
+function checkOverlap(boundsA, boundsB) {
+	if (boundsA[0]>boundsB[0]+boundsB[2]) return false;
+	if (boundsA[1]>boundsB[1]+boundsB[3]) return false;
+	if (boundsB[0]>boundsA[0]+boundsA[2]) return false;
+	if (boundsB[1]>boundsA[1]+boundsA[3]) return false;
+	return true;
+}
+
+function createVolumeControl(opacity) {
+	const volumeControl = document.createElement("input");
+	volumeControl.type = "range";
+	volumeControl.min = "0";
+	volumeControl.step = "0.01";
+	volumeControl.max = "1";
+	volumeControl.value = flair.volume;
+	volumeControl.id = "volumeControl";
+	volumeControl.style.opacity = opacity;
+	volumeControl.style.transition = "1s opacity";
+	volumeControl.style.position = "fixed";
+	volumeControl.style.bottom = "12px";
+	volumeControl.style.right = "12px";
+	volumeControl.onchange = () => flair.volume = volumeControl.value;
+	document.body.appendChild(volumeControl);
+	return volumeControl;
+}
+
+let discordMessages = [];
+function newDcMsg(msg) {
+	try {
+	if (msg.length<512) 
+		discordMessages = [...discordMessages.filter(e=>e[3]>Date.now()-10000), [...msg.split(" ").slice(0,2).map(e=>parseInt(e)),msg.split(" ").slice(2).join(" "),Date.now()]];
+	} catch {}
+}
+
+  /***********/
+ /* DRAWING */
+/***********/
+
+  /***********/
+ /* CURSORS */
+/***********/
+
+let lastMouseCoords = [0,0];
+let preLastMouseCoords = [0,0];
+let lastWsCursor = [0,0];
+canvas.oncontextmenu = (e) => {e.preventDefault(); e.stopPropagation();};
+canvas.onmousemove = ({clientX, clientY}) => {
+	lastMouseCoords = [clientX, clientY];
+};
+
+function drawMouse(ctx) {
+	if (ultra && (preLastMouseCoords[0] !== lastMouseCoords[0] || preLastMouseCoords[1] !== lastMouseCoords[1])) {
+		const motionBlurSamples = 32;
+		ctx.save();
+		const originalAlpha = ctx.globalAlpha;
+		for (let i = 0; i < motionBlurSamples; i++) {
+			const t = i/motionBlurSamples;
+			const mouseCoords = [preLastMouseCoords[0]*(1-t)+lastMouseCoords[0]*t,preLastMouseCoords[1]*(1-t)+lastMouseCoords[1]*t];
+			//ctx.globalAlpha = (originalAlpha/motionBlurSamples)*2*t;
+			ctx.globalAlpha = (originalAlpha/motionBlurSamples);
+			// ctx.globalAlpha = 1;
+			ctx.drawImage(cursorImg, mouseCoords[0]/window.innerWidth*SW, mouseCoords[1]/window.innerHeight*SH);
+		}
+		ctx.restore();
+		preLastMouseCoords = [...lastMouseCoords];
+	} else {
+		ctx.drawImage(cursorImg, lastMouseCoords[0]/window.innerWidth*SW, lastMouseCoords[1]/window.innerHeight*SH);	
+	}
+}
+
+//const cursors = Array(4000).fill(0).map(e => [1920*Math.random(),1080*Math.random()]);
+//const cursors = Array(500).fill(0).map(e => [1920*Math.random(),1080*Math.random()]);
+
+// TODO: remove
+//setInterval(()=>{
+//	for (let i = 0; i<200;i++) {
+//		cursors[i] = [Math.random()*1920, Math.random()*1080, cursors[i]?.[0] ?? 0, cursors[i]?.[1] ?? 0, Date.now()];
+//	}
+//},1000);
+function drawCursors(ctx, opacity=1) {
+	const avgWebsocketResponse = (lastWsTimes[9]-lastWsTimes[0])/9;
+	const oldAlpha = ctx.globalAlpha;
+	ctx.globalAlpha = opacity;
+	let curCount = 0;
+	for (const [key, cursor] of Object.entries(cursors)) {
+		if (curCount++ > 10000) break;
+		if (cursor[4] < Date.now()-1000*10) {
+			ctx.globalAlpha = s(((cursor[2]+1000) - Date.now()-1000*10)/1000);
+		}
+		//cursor[0] = Math.max(0,Math.min(1920,cursor[0] + Math.random()*4 - 2));
+		//cursor[1] = Math.max(0,Math.min(1080,cursor[1] + Math.random()*4 - 2));
+		const t = s((Date.now() - cursor[4])/avgWebsocketResponse);
+		ctx.drawImage(cursorImg, cursor[0]*t+cursor[2]*(1-t) + SX, cursor[1]*t+cursor[3]*(1-t) +SY);
+		if (cursor[4] < Date.now()-1000*10) {
+			ctx.globalAlpha = opacity;
+			if (cursor[4] < Date.now()-1000*11) {
+				delete cursors[key];
+			}
+		}
+	}
+	ctx.globalAlpha = oldAlpha;
+}
+
+  /**********/
+ /* TIMING */
+/**********/
+
+
+let time_offset = null;
+function setTimeOffset(time) {
+	time_offset = Date.now() - time;
+}
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+// yes, i manually type these out from what the song sounds like to sync it :3
+const drumsss = [
+	[0+0/16,0],[0+8/16,1],[1+0/16,0],[1+4/16,0],[1+8/16,1],[1+14/16,0],[2+0/16,0],[2+8/16,1],[2+14/16,0],[3+2/16,1],[3+6/16,0],[3+8/16,1],[3+14/16,0],[4+0/16,0],
+	[4+8/16,1],[4+14/16,0],[5+0/16,0],[5+4/16,0],[5+8/16,1],[5+14/16,0],[6+0/16,0],[6+8/16,1],[7+4/16,0],[7+8/16,1],[7+14/16,1],[8+0/16,0],
+	[8+4/16,0],[8+8/16,1],[8+14/16,0],[9+0/16,0],[9+8/16,1],[10+0/16,0],[10+4/16,0],[10+8/16,1],[10+14/16,1],[11+2/16,0],[11+4/16,0],[11+8/16,1],[11+14/16,1],[12+0/16,0],
+	[12+8/16,1],[12+14/16,1],[13+0/16,0],[13+4/16,0],[13+8/16,1],[14+0/16,0],[14+4/16,0],[14+8/16,1],[14+14/16,0],[15+2/16,1],[15+6/16,1],[15+7/16,1],[15+8/16,1],[15+10/16,1],[15+12/16,0],[15+14/16,0],
+].map(e=>[e[0]/2,e[1]])
+
+  /*********/
+ /* OUTRO */
+/*********/
+
+	const SONG_BPM = 94;
+	function beat2time(beat, bpm=SONG_BPM) {
+    	return (beat*4)/(bpm/60.);
+	}
+	function time2beat(t, bpm=SONG_BPM) {
+    	return (t/4)*(bpm/60.);
+	}
+
+
+		const parts = [
+			{
+				name: "",
+				link: "",
+				start: 0,
+				bpm: 160,
+				beatOff: 0,
+			},
+			{
+				name: "_skott.y and nicki minaj - this one is for the boys in the polos ૮꒰ ˶• ༝ •˶꒱ა",
+				link: "https://soundcloud.com/soulsweepmusic/this-one-is-for-the-boys-in-the-polos",
+				start: 19.94,
+				bpm: 88.152,
+				beatOff: 2,
+			},
+			{
+				name: "crafter2011 - bozo? bozo!",
+				link: "https://deskrat.bandcamp.com/track/bozo-bozo",
+				start: 2*60+41.51,
+				bpm: 92.5,
+				beatOff: 0,
+			},
+			{
+				name: "Black Dresses - CARTOON NETWORK",
+				link: "https://blackdresses.bandcamp.com/track/cartoon-network",
+				start: 4*60+18.36,
+				bpm: 102,
+				beatOff: 0,
+			},
+			{
+				name: "Patricia Taxxon - Boys",
+				link: "https://patriciataxxon.bandcamp.com/track/boys",
+				start: 7*60+31.53 - beat2time(24, 139),
+				bpm: 139,
+				beatOff: 8,
+			},
+			{
+				name: "Karnaboy - Dance With You",
+				link: "https://karnaboy.bandcamp.com/track/dance-with-you",
+				start: 11*60+56.91-beat2time(1, 107.5),
+				bpm: 107.5,
+				beatOff: 1,
+			},
+			{
+				name: "Vylet Pony - Flair for the Dramatic",
+				link: "https://vyletpony.bandcamp.com/track/flair-for-the-dramatic",
+				start: 15*60,
+				bpm: 94, // SONG_BPM
+				beatOff: 0,
+			},
+		];
+
+
+
+	let SW = 1920;
+	let SH = 1080;
+	let SX = 0;
+	let SY = 0;
+
+	let noiseTex = new Image();
+	function generateNoiseTex() {
+		ctx.filter = `url('#noiseFilter1')`;
+		ctx.fillStyle = `#FFF`;
+		ctx.fillRect(0,0,SW,SH);
+		ctx.filter = `none`;
+		noiseTex.src = canvas.toDataURL("image/png");
+		ctx.fillStyle = `#000`;
+		ctx.fillRect(0,0,SW,SH);
+	}
+
+	let lastRatio = 16/9;
+	function setCanvasSize() {
+		const ratio = window.innerWidth/window.innerHeight;
+		if (lastRatio == ratio) return;
+		console.log("resizing canvas");
+		lastRatio = ratio;
+		if (ratio*1080>1920) {
+			SH = 1080;
+			SW = ratio*1080;
+			SX = (SW-1920)/2;
+			SY = 0;
+		} else {
+			SH = 1920/ratio;
+			SW = 1920;
+			SX = 0;
+			SY = (SH-1080)/2;
+		}
+		canvas.width = SW;
+		canvas.height = SH;
+		offCanvas.width = SW;
+		offCanvas.height = SH;
+		generateNoiseTex();
+	}
+
+
+	let lastEvents = {};
+
+	function getCurrentBeat() {
+		return time2beat(flair.currentTime-15*60);
+	}
+
+	function f(t,i=0) {
+		if ((lastEvents[i] ?? 0) >= t) return false;
+		if (getCurrentBeat() < t) return false;
+		lastEvents[i] = t;
+		return true;
+	}
+
+	function r(a,l) {
+		const currentBeat = getCurrentBeat();
+		if (currentBeat < a) return false;
+		if (currentBeat >= a + l) return false;
+		return true;
+	}
+
+	function m(a,b,t) {
+		return a*(1-t)+b*t;
+	}
+
+	function s(v) {
+		if (isNaN(v)) return 0;
+		return Math.max(Math.min(v,1),0);
+	}
+
+	function bg(style) {
+		ctx.fillStyle = style;
+		ctx.fillRect(-canvas.width,-canvas.height,canvas.width*3,canvas.height*3);
+	}
+
+	const filters = [];
+	function pushFilter(filter) {
+		filters.unshift(filter);
+		ctx.filter = filters.join(" ");
+	}
+	function popFilter() {
+		filters.shift();
+		ctx.filter = filters.length ? filters.join(" ") : "none";
+	}
+
+	const gradientCache = {}
+	function gradientY(start, end) {
+		if (gradientCache[start+end]) return gradientCache[start+end];
+		const gradient = ctx.createLinearGradient(0, 0, 0, SH);
+		gradient.addColorStop(0, start);
+		gradient.addColorStop(1, end);
+		gradientCache[start+end] = gradient;
+		return gradient;
+	}
+
+	function font(i, px=null) {
+		const fonts = {
+			"cherry": '200px "Cherry Bomb One"',
+			"comic": '200px "Comic Sans MS", "Patrick Hand", cursive',
+			"teamname": '256px "UnifrakturCook"',
+			"placement": '64px "Space Mono"',
+			"chall": '32px "Doto"',
+			"times": '64px "Times New Roman", serif',
+			//"teamname": '256px "Geo"',
+		}
+		if (px) {
+			ctx.font = px + "px " + fonts[i].split("px ")[1];
+		} else {
+			ctx.font = fonts[i];
+		}
+		return ctx.font;
+	}
+
+	function th(n) {
+		if (n>3 && n<21) return `${n}th`;
+		if (n%10 == 1) return `${n}st`;
+		if (n%10 == 2) return `${n}nd`;
+		if (n%10 == 3) return `${n}rd`;
+		return `${n}th`;
+	}
+
+	function sampleRender() {
+		const teamName = "sample-render";
+		const t = 0.1 + Math.random()*0.05;
+		const tE = easeOutExpo(t);
+		const tEx = m(tE,easeOutExpo(tE),0.5);
+
+		feDis.setAttribute("scale", (1-tE)*(1500));
+		feDis.setAttribute("baseFrequency", 0.001 + (1-t)*0.0003);
+		ctx.filter = `url('#turb') ${ultra?`blur(${easeInExpo(Math.max(0,1-t*2))*128}px)`:''} saturate(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.5)}%) contrast(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-t))*6)}%)`;
+		bg(gradientY(`hsl(from #080031 calc(h + ${40}) s l)`, `hsl(from #9900B0 calc(h + ${40}) s l)`))
+
+		ctx.globalAlpha = 0.4;
+		ctx.globalCompositeOperation = "multiply";
+		ctx.drawImage(noiseTex, 0, 0, SW, SH, -150, -150, SW+300, SH+300);
+		ctx.globalCompositeOperation = "source-over";
+		ctx.globalAlpha = 1;
+
+		ctx.save()
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		font("teamname");
+		const textWidthMult = Math.min(1.5,(1920*0.8)/ctx.measureText(teamName).width);
+		const scl = (1 + (1-tEx)*15)*textWidthMult;
+		ctx.translate(-SW/2, -SH/2);
+		ctx.scale(scl, scl);
+		ctx.letterSpacing = `${200*(1-tEx)}px`;
+		ctx.globalCompositeOperation = "screen";
+		ctx.fillStyle = gradientY(`hsl(from #FF0000 calc(h + ${40}) s l)`, `hsl(from #FFFF00 calc(h + ${40}) s l)`);
+		ctx.fillText("SampleText", SW/scl, SH/scl);
+		ctx.filter = "blur(8px) " + ctx.filter;
+		ctx.fillText("SampleText", SW/scl, SH/scl);
+		ctx.globalCompositeOperation = "source-over";
+		ctx.letterSpacing = "0";
+		ctx.restore()
+
+		ctx.globalAlpha = 0.2;
+		ctx.globalCompositeOperation = "multiply";
+		ctx.drawImage(noiseTex, 0, 0, SW, SH, -150, -150, SW+300, SH+300);
+		ctx.globalCompositeOperation = "source-over";
+		ctx.globalAlpha = 1;
+		ctx.filter = "none";
+		ctx.globalAlpha = 0.99;
+		bg("#000");
+		ctx.globalAlpha = 1;
+	}
+
+	async function testPerformance() {
+		setCanvasSize();
+		await new Promise(resolve => requestAnimationFrame(resolve));
+		let start = performance.now();
+		for (let i = 0; i < 5; i++) {
+			if (performance.now()-start > 2000) {
+				console.warn("Warning: exiting early from performance test init!")
+				break;
+			}
+			sampleRender();
+			await new Promise(resolve => requestAnimationFrame(resolve));
+		}
+		const frameCount = 10;
+		start = performance.now();
+		for (let i = 0; i < frameCount; i++) {
+			if (performance.now()-start > 2000) {
+				console.warn("Warning: performance test timed out!")
+				return 1000/((performance.now()-start)/i);
+			}
+			sampleRender();
+			await new Promise(resolve => requestAnimationFrame(resolve));
+		}
+		const fps = 1000/((performance.now()-start)/frameCount);
+		console.log(`Test: ${fps}fps`);
+		return fps
+	}
+
+	function npsSurvey(currentBeat) {
+		ctx.save();
+		const sqSize = 128;
+		const padd = sqSize+8;
+		const originalAlpha = ctx.globalAlpha;
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		font("times");
+		for (let i = 0; i<11; i++) {
+			ctx.strokeStyle = "#2B5F10";
+			ctx.fillStyle = "#ECD963";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			const buttonPos = [SW/2 + (i-5)*padd,SH/2];
+			ctx.roundRect(buttonPos[0]-sqSize/2, buttonPos[1]-sqSize/2, sqSize, sqSize, 8);
+			ctx.globalAlpha = originalAlpha*(((currentBeat>=16&&currentBeat<144&&Math.floor((currentBeat*4)%2)==i%2))?1-((currentBeat*4)%1):0);
+			ctx.fill();
+			ctx.globalAlpha = originalAlpha;
+			ctx.stroke();
+			ctx.fillStyle = "#2B5F10";
+			ctx.fillText(`${i}`, ...buttonPos);
+		}
+		ctx.restore();
+	}
+
+	function drawDiscordMessages() {
+		const originalAlpha = ctx.globalAlpha;
+		for (const discordMessage of discordMessages) {
+			try {
+				ctx.globalAlpha = originalAlpha*s(1-((Date.now()-discordMessage[3]-5000)/5000));
+				ctx.fillText(discordMessage[2],SX+discordMessage[0],SY+discordMessage[1]);
+			} catch {}
+		}
+		ctx.globalAlpha = originalAlpha;
+	}
+
+	function animate_catch() {
+		try {
+			replay_ws();
+			animate();	
+		} catch (e) {
+			console.error(e)
+		}
+		requestAnimationFrame(animate_catch);
+	}
+
+	let lastPlacements = -1;
+	let challPlacements = [];
+	function animate() {
+
+		const targetAudioTime = (getOffsetTime(true) - TARGET_TIME)/1000;
+		if (Math.abs(flair.currentTime-targetAudioTime) > 0.1 && flair.currentTime < 1 || Math.abs(flair.currentTime-targetAudioTime) > 2)
+			flair.currentTime = targetAudioTime;
+
+		const currentPartIdx = parts.findLastIndex(e => e.start <= flair.currentTime) ?? 0;
+		const currentPart = parts[currentPartIdx];
+
+		nowplaying.querySelector("a").innerText = currentPart.name;
+		nowplaying.querySelector("a").href = currentPart.link;
+
+		setCanvasSize();
+
+		if (currentPartIdx < 6) {
+			nowplaying.style.opacity = "1";
+			nowplaying.style.display = "block";
+			document.getElementById("volumeControl").style.opacity = 1;
+			const currentBeat = time2beat(flair.currentTime-currentPart.start,currentPart.bpm)-currentPart.beatOff;
+			document.title = `x3CTF | ${currentPart.name.split(" - ").at(-1)}`;
+			if (currentPartIdx == 0) {
+				ctx.save();
+				bg("#000");
+				ctx.fillStyle = "#FFF";
+				font("cherry",24)
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				const t = s(1-(parts[1].start-flair.currentTime));
+				ctx.fillText(`${Math.floor(60*15-flair.currentTime)}s until winner announcements`, SW/2, SH/2+128*easeInExpoF(t));
+				ctx.restore();
+			}
+			if (currentPartIdx == 1) {
+				//const calm = (currentBeat >= 34 && currentBeat < 46)
+				ctx.save();
+				bg("#C6599B");
+				font("cherry",256)
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.translate(SW/2,SH/2);
+				let scl = 1-0.01*(4*currentBeat%1);
+				//if (!calm)
+				if (currentBeat >= 0)
+					ctx.scale(scl,scl);
+				ctx.translate(-SW/2,-SH/2);
+				ctx.lineWidth = 32;
+				ctx.strokeStyle = "#FFF";
+				ctx.strokeText("x3CTF", SW/2, SH/2-8);
+				drawCursors(ctx, easeOutExpoF(s(currentBeat))*0.9);
+				drawMouse(ctx);
+				ctx.fillStyle = "#A71CFF";
+				ctx.fillText("x3CTF", SW/2, SH/2-8);
+				ctx.fillStyle = "#FFF";
+				font("cherry",24)
+				ctx.fillText(`${Math.floor(60*15-flair.currentTime)}s until winner announcements`, SW/2, SH/2+128);
+				drawDiscordMessages();
+				ctx.restore();
+			}
+			if (currentPartIdx == 2) {
+				//const calm = (currentBeat >= 34 && currentBeat < 46)
+				ctx.save();
+				bg("#7FC757");
+				font("cherry",256)
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.translate(SW/2,SH/2);
+				let scl = 1+0.01*(2*currentBeat%1);
+				//if (!calm)
+				ctx.scale(scl,scl);
+				ctx.translate(-SW/2,-SH/2);
+				ctx.lineWidth = 32;
+				ctx.strokeStyle = "#3D2F22";
+				ctx.strokeText("x3CTF", SW/2, SH/2-8);
+				drawCursors(ctx, easeOutExpoF(s(currentBeat))*0.9);
+				drawMouse(ctx);
+				ctx.fillStyle = "#81FF38";
+				ctx.fillText("x3CTF", SW/2, SH/2-8);
+				ctx.fillStyle = "#3D2F22";
+				font("cherry",24)
+				ctx.fillText(`${Math.floor(60*15-flair.currentTime)}s until winner announcements`, SW/2, SH/2+128);
+				drawDiscordMessages();
+				ctx.restore();
+			}
+			if (currentPartIdx == 3) {
+				const calm = (currentBeat >= 34 && currentBeat < 46)
+				ctx.save();
+				bg("#E9F988");
+				font("cherry",256)
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.translate(SW/2,SH/2);
+				let scl = 1+0.01*(2*currentBeat%1);
+				if (!calm)
+					ctx.scale(scl,scl);
+				ctx.translate(-SW/2,-SH/2);
+				ctx.lineWidth = 32;
+				ctx.strokeStyle = "#348085";
+				ctx.strokeText("x3CTF", SW/2, SH/2-8);
+				drawCursors(ctx, easeOutExpoF(s(currentBeat))*0.9);
+				drawMouse(ctx);
+				ctx.fillStyle = "#2DF1F4";
+				ctx.fillText("x3CTF", SW/2, SH/2-8);
+
+				ctx.fillStyle = "#348085";
+				font("cherry",24)
+				ctx.fillText(`${Math.floor(60*15-flair.currentTime)}s until winner announcements`, SW/2, SH/2+128);
+				drawDiscordMessages();
+
+				if (currentBeat >= 34 && currentBeat < 45.5) {
+					ctx.globalAlpha = (currentBeat-34)/16;
+					bg("#FFF");
+				}
+				ctx.restore();
+				if (currentBeat >= 45.5 && currentBeat < 46)
+					bg("#000");
+				if (currentBeat >= 64)
+					bg("#E9F988");
+			}
+			if (currentPartIdx == 4) {
+				bg("#000");
+				ctx.globalAlpha = s(currentBeat/4 + 1);
+				bg("#fee0ff");
+				drawCursors(ctx, 0.1 + s(currentBeat-15.5)*0.8);
+				font("times");
+				ctx.fillStyle = "#2B5F10";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				if (currentBeat<0) {
+					//
+				} else if (currentBeat<2) {
+					ctx.fillText("hi there ;3",SW/2,SH/2);
+				} else if (currentBeat<6) {
+					ctx.fillText("we're gonna collect some data for the shareholders",SW/2,SH/2);
+				} else if (currentBeat<12) {
+					const t = s(currentBeat-8);
+					const tE = easeOutExpoF(t);
+					font("times");
+					ctx.fillText("how was the ctf?",SW/2,SH/2 - 108*tE);
+					ctx.globalAlpha = tE;
+					font("times", 32);
+					ctx.fillText("(move your cursor to rate)",SW/2,SH/2 + 96*tE);
+					npsSurvey(currentBeat);
+				} else if (currentBeat<14) {
+					font("times");
+					ctx.fillText("thanks",SW/2,SH/2-16);
+					font("times", 32);
+					ctx.fillText("(please vote on ctftime though)",SW/2,SH/2+24);
+				} else if (currentBeat<16) {
+					font("times");
+					ctx.fillText("alright lets see what u thought of the challenges!",SW/2,SH/2);
+				} else if (currentBeat<148) {
+					const currentChallengeIdx = Math.floor((currentBeat-16)/4);
+					const difficulties = [
+							"leet",
+							"hard",
+							"medium",
+							"easy",
+							"baby",
+						];
+					const challenges = challengesData.sort(
+							(a,b) =>
+								(Math.min(0,a.categories.indexOf("mvm")) - Math.min(0,b.categories.indexOf("mvm"))) ||
+								(difficulties.indexOf(b.difficulty) - difficulties.indexOf(a.difficulty)) ||
+								a.name.localeCompare(b.name)
+						);
+					const currentChallenge = challenges[currentChallengeIdx] ?? challenges.at(-1);
+					const nextChallenge = challenges[currentChallengeIdx+1];
+
+					const qtTrain = `
+   23 4 5 6 7...      __________________________
+  1     ____          |                        |
+ ][_n_i_| (   ooo___  | CUTIE PATOOTIE CURSORS |
+(__________|_[______]_|________________________|
+  0--0--0      0  0      0       0          0   `;
+					
+  				font("placement", 32);
+  				ctx.textAlign = "left";
+  				const replacements = ["O","O","O","o","o","o","O","O","O","o","o","o","O","O","O"].slice(6-Math.floor((currentBeat*4)%6));
+  				const trainText = qtTrain.split("\n").map(e=>e.replace("1",replacements[0]).replace("2",replacements[1]).replace("3",replacements[2]).replace("4",replacements[3]).replace("5",replacements[4]).replace("6",replacements[5]).replace("7",replacements[6]));
+  				for (let i = 0; i < 6; i++) {
+  					if (currentBeat>30)
+  						ctx.fillText(trainText[i],2500-4500*((currentBeat/12 - 0.5)%1),1080 - 5*32 - 10 + i*32 + SY);
+  				}
+  				ctx.textAlign = "center";
+					
+					font("times",96);
+					ctx.fillText("x3CTF Res:3arch",SW/2,SH/2 - 400);
+					font("times");
+					if (currentChallenge) {
+						const reccs = [
+							"a friend or colleague",
+							"a friend or puppygirl",
+							"yourself",
+							"a friend or foe",
+							"a catgirl",
+							"twilight sparkle",
+							"the winners",
+							];
+						const theText = [`would you recommend `,`${currentChallenge.name}`,` to ${reccs[currentChallengeIdx%reccs.length]}?`];
+						ctx.textAlign = "left";
+						const tWidths = [ctx.measureText(theText.join("")).width, ...theText.map(e=>ctx.measureText(e).width)];
+						ctx.fillText(theText[0],SW/2 - tWidths[0]/2,SH/2 - 108 - 48);
+						ctx.fillText(theText[2],SW/2 - tWidths[0]/2 + tWidths[1] + tWidths[2],SH/2 - 108 - 48);
+						ctx.fillStyle = "#000";
+						ctx.fillText(theText[1],-0.5+SW/2 - tWidths[0]/2 + tWidths[1],SH/2 - 108 - 48);
+						ctx.fillText(theText[1],0.5+SW/2 - tWidths[0]/2 + tWidths[1],SH/2 - 108 - 48);
+						ctx.fillStyle = "#2B5F10";
+						ctx.textAlign = "center";
+						font("times", 32);
+						ctx.fillText(`(${[currentChallenge.difficulty, ...currentChallenge.categories.filter(e=>e!=="mvm")].join(", ")})`,SW/2,SH/2 - 108);
+					}
+					if (nextChallenge)
+						ctx.fillText(`(next up: ${nextChallenge.name})`,SW/2,SH/2 + 96);
+					npsSurvey(currentBeat);
+				} else {
+					ctx.fillText("thank you!",SW/2,SH/2);
+				}
+				if (currentBeat > 148) {
+					ctx.globalAlpha = (currentBeat-148)/20;
+					bg("#444597");
+					//168	
+				}
+				
+				ctx.globalAlpha = 1;
+				drawMouse(ctx);
+				if (currentBeat < -6)
+					bg("#E9F988");
+			}
+			if (currentPartIdx == 5) {
+				ctx.save();
+				bg("#444597");
+				font("cherry",256)
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				ctx.strokeStyle = "#85256D";
+
+				if (currentBeat >= 0) {
+					const calm = (currentBeat >= 40 && currentBeat < 48) || currentBeat >= 68;
+					const b = calm ? 2 : ((currentBeat*6)%3);
+					ctx.translate(SW/2,SH/2);
+					let scl = 1+0.01*easeOutSine(b<2?1*(1-(b%1)):0);
+					if (currentBeat >= 40 && currentBeat < 48) {
+						scl = 1 + 0.8*easeInCubic((currentBeat-40)/8);
+					} else if (currentBeat >= 48 && currentBeat < 49) {
+						scl -= 0.2*(1-easeOutExpo(easeOutSine(currentBeat-48)));
+					}
+					ctx.scale(scl,scl);
+					ctx.translate(-SW/2,-SH/2);
+					ctx.lineWidth = 32 + (b<2?8*(1-(b%1)):0);
+					ctx.strokeText("x3CTF", SW/2, SH/2-8);
+
+					ctx.fillStyle = "#85256D";
+					font("cherry",24)
+					ctx.fillText(`${Math.floor(60*15-flair.currentTime)}s until winner announcements`, SW/2, SH/2+128);
+					drawDiscordMessages();
+					font("cherry",256)
+
+
+					ctx.fillStyle = "#407";
+					ctx.fillText("x3CTF", SW/2, SH/2-8);
+					drawCursors(ctx, easeOutExpoF(s(currentBeat))*0.9);
+					drawMouse(ctx);
+					//ctx.clip();
+					if (ultra)
+						ctx.filter = "blur(8px)";
+					ctx.fillStyle = "#6B4CC3";
+					ctx.fillText("x3CTF", SW/2, SH/2-8);
+					if (ultra)
+						ctx.filter = "none";
+					if (currentBeat >= 48 && !calm) {
+						ctx.save()
+						ctx.fillStyle = "#FFF";
+						ctx.globalCompositeOperation = "screen";
+						ctx.globalAlpha = (b<2?(1-(b%1)):0);
+						ctx.fillText("x3CTF", SW/2, SH/2-8);
+						ctx.restore();
+					}
+					if (currentBeat >= 47 && currentBeat < 48) {
+						const t = currentBeat-47;
+						const t2 = (t<12/16) ? 1-((t*16)%1) : (
+							(t<14/16) ? 1-((t*32)%1) : 1-((t*8)%1)
+							);
+						const t3 = t*t2;
+						ctx.globalAlpha = t3;
+						ctx.fillStyle = "#FFF";
+						ctx.fillText("x3CTF", SW/2, SH/2-8);
+						ctx.resetTransform();
+						//ctx.filter = `blur(${32*t3}px) brightness(${100+100*t3})`;
+						ctx.filter = `blur(${32*t3}px) brightness(${100+100*t3}%)`;
+						ctx.globalCompositeOperation = "screen";
+						ctx.globalAlpha = t3;
+						ctx.drawImage(canvas, 0, 0, SW, SH);
+						ctx.drawImage(canvas, 0, 0, SW, SH);
+						ctx.filter = "none";
+					}
+				}
+				if (currentBeat >= 68) {
+					ctx.globalAlpha = s((currentBeat-68)/10);
+					bg("#000");
+					drawMouse(ctx);
+				}
+				ctx.restore();
+			}
+			//return requestAnimationFrame(animate);
+			return;
+		}
+
+		nowplaying.style.opacity = "0";
+		document.getElementById("volumeControl").style.opacity = 0;
+
+		const currentBeat = getCurrentBeat();
+		
+		//document.body.style.background = currentBeat%2 < 1 ? "red" : "pink" ;
+
+
+		//if (f(1)) {
+		//	bg("red");
+		//}
+		if (r(0,16-2/16)) {
+			document.title = `x3CTF`;
+			ctx.save();
+			bg("#101019");
+			font("chall");
+			ctx.fillStyle = "#EEE";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			drawCursors(ctx);
+			const texts = [
+				"alright, it is time",
+				"x3ctf 2025 (feat. mvm) is coming to a close",
+				"so we're gonna announce the winners",
+				"enjoy the show!",
+				];
+			ctx.fillText(texts[Math.floor(currentBeat/4)], SW/2, SH/2);
+			drawMouse(ctx);
+			ctx.globalAlpha = s(1-currentBeat);
+			bg("#000");
+			ctx.restore();
+		}
+
+		if (r(16-2/16,2/16)) {
+			const t = (currentBeat-(16-2/16))/(2/16);
+			ctx.save();
+			bg(t > 0.5 ? "#36008C" : '#F84FED');
+			ctx.translate(SW/2, SH/2);
+			ctx.scale(0.9,0.9);
+			ctx.roundRect(SX+968/2 -SW/2, SY+64 -SH/2, 1920-968, 1080-128, 64);
+			ctx.fillStyle = t > 0.5 ? "#FFF" : '#FF849C';
+			ctx.fill();
+			ctx.restore();
+		}
+		//if (f(16-2/16)) bg("#00F");
+		//if (f(16-1/16)) bg("#FF0");
+		//if (f(16)) bg("#000");
+		if (r(16,14+1.5)) {
+			const t = (currentBeat-16)/14;
+			const latestDrumA = currentBeat%8 - ((drumsss.findLast(e => e[0] < currentBeat%8 && e[1] == 0)?.[0] ?? (drumsss.findLast(e => e[1] == 0)[0]-8)));
+			const latestDrumAIdx = drumsss.filter(e=>e[1]==0).findLastIndex(e => e[0] < currentBeat%8) ?? -1;
+			const latestDrumB = currentBeat%8 - ((drumsss.findLast(e => e[0] < currentBeat%8 && e[1] == 1)?.[0] ?? (drumsss.findLast(e => e[1] == 1)[0]-8)));
+			const latestDrumBIdx = drumsss.filter(e=>e[1]==1).findLastIndex(e => e[0] < currentBeat%8) ?? -1;
+			const drumEaseA = currentBeat >= 31.1 ? 0 : easeInExpoF(Math.max(0,1-latestDrumA));
+			const drumEaseB = currentBeat >= 31.25 ? 0 : easeInExpoF(Math.max(0,1-latestDrumB));
+			ctx.save();
+			const mvmvm = currentBeat > 24;
+			//bg("#050505");
+			bg("#101019");
+			ctx.beginPath();
+			ctx.translate(SW/2, SH/2);
+			ctx.rotate((0.5*drumEaseA*(latestDrumAIdx%2?1:-1) * Math.PI) / 180);
+
+			offCtx.clearRect(0,0,SW,SH);
+
+			drawCursors(offCtx, 0.1);
+			if (ultra)
+				pushFilter("blur(3px)");
+			ctx.drawImage(offCanvas, -SW/2, -SH/2, SW, SH);
+			if (ultra)
+				popFilter();
+
+			//const beatRRScale = -4 + 4*drumEaseA;
+			const beatRRScale = 16 + -16*drumEaseA;
+			ctx.scale(1+drumEaseA*0.01,1+drumEaseA*0.01);
+			const additionalScale = 0.9 - easeInExpoF(Math.max(0,currentBeat-30.5))*0.7
+			ctx.scale(additionalScale,additionalScale);
+			//ctx.roundRect(SX+968/2, SY+64, 1920-968, 1080-128, 64);
+			//ctx.roundRect(SX+968/2 +SW/2, SY+64 +SH/2, 1920-968, 1080-128, 64);
+			//ctx.roundRect(SX+968/2, SY+64, 1920-968, 1080-128, 64);
+			ctx.roundRect(SX+968/2 -SW/2 -beatRRScale, SY+64 -SH/2 -beatRRScale, 1920-968 +beatRRScale*2, 1080-128 +beatRRScale*2, 64);
+			ctx.fillStyle = "#474B79";
+			if (ultra) {
+			pushFilter("blur(16px)");
+			ctx.fill();
+			popFilter();
+			}
+			//ctx.fillStyle = "red";
+			//ctx.fill();
+
+			ctx.clip();
+			//ctx.rotate((-0.5*drumEaseA*(latestDrumAIdx%2?1:-1) * Math.PI) / 180);
+			ctx.translate(-SW/2, -SH/2);
+
+			if (ultra)
+				pushFilter("blur(32px)");
+			if (currentBeat < 24.25)
+				bg("#FFA1C3");
+			ctx.globalAlpha = easeInOutExpoF(s((currentBeat-23.75)*2));
+			bg("#474B79");
+			if (ultra)
+				popFilter();
+			ctx.globalAlpha = 1;
+			ctx.fillStyle = mvmvm ? "#36008C" : "#FFF";
+			font(mvmvm ? "comic" : "cherry", 64);
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			const difficulties = [
+					"leet",
+					"hard",
+					"medium",
+					"easy",
+					"baby",
+				];
+			const challenges = challengesData.sort(
+					(a,b) =>
+						(Math.min(0,a.categories.indexOf("mvm")) - Math.min(0,b.categories.indexOf("mvm"))) ||
+						(difficulties.indexOf(b.difficulty) - difficulties.indexOf(a.difficulty)) ||
+						a.name.localeCompare(b.name)
+				);
+			// for (const [i,chall] of challenges.entries()) {
+			// 	ctx.fillText(chall.name,0,(i/challenges.length)*SW*10-t*SW*10)
+			// }
+			const currentSlice = Math.floor((currentBeat-16)/2)*4;
+			const currentChalls = challenges.slice(currentSlice,currentSlice==28?currentSlice+5:currentSlice+4);
+			const cT = (currentBeat/2)%1;
+			const cTX = easeOutExpoF(cT);
+			const cTXIA = cT<0.5?easeOutExpoF(cT*2):easeOutExpoF(2-cT*2);
+			const cTXIAO = cT<0.5?easeOutExpoF(cT*2):2-easeOutExpoF(2-cT*2);
+			for (const [i,chall] of currentChalls.entries()) {
+				const solvedByPlayer = isChallSolved(chall.name);
+				ctx.fillStyle = mvmvm ? "#36008C" : "#FFF";
+				font(mvmvm ? "comic" : "cherry", 64);
+				//const wOff = SW/3;
+				//const wOff = SW/2;
+				//ctx.textAlign = (i%2)?"left":"right";
+				//ctx.fillText(chall.name,(i%2)?wOff*cTXIAO:(SW-wOff*cTXIAO),SH/currentChalls.length*(i+0.5))
+				const tWidth = ctx.measureText(chall.name).width;
+				//ctx.fillText(chall.name,((i%2)?-tWidth/2:tWidth/2)*(1-(cTXIAO-1))+(cTXIAO-1)*SW/2,SH/currentChalls.length*(i+0.5))
+				//const baseXpos = (cTXIAO-1)*(tWidth/2+SW/2)+SW/2;
+				//const xPos = (i%2)?SW-baseXpos:baseXpos;
+				const baseXpos = (cTXIAO-1)*(tWidth/2+SW/2)+SW/2;
+				const xPos = ((i%2)?SW-baseXpos:baseXpos)/2 + SW/4;
+				//const yPos = SH/currentChalls.length*(i+0.5);
+				const yPos = SY + 1080/currentChalls.length*(i+0.58-i/currentChalls.length*0.8);
+				ctx.save();
+				ctx.lineWidth = 8 + 8*drumEaseB;
+				ctx.lineJoin = "round";
+				ctx.strokeStyle = mvmvm ? '#F84FED' : '#FF849C';
+				if (solvedByPlayer)
+					ctx.strokeStyle = mvmvm ? "#0F0" : "#5FAD56";
+				ctx.strokeText(chall.name,xPos,yPos);
+				if (drumEaseB) {
+					ctx.lineWidth = drumEaseB*2;
+					ctx.strokeStyle = mvmvm ? "#36008C" : "#FFF";
+					ctx.strokeText(chall.name,xPos,yPos);
+				}
+				ctx.restore();
+				//easeInExpo(Math.max(0,1-latestDrumB))
+				//easeInExpo(Math.max(0,1-latestDrumA))
+				ctx.fillText(chall.name,xPos,yPos);
+				font(mvmvm ? "comic" : "cherry", 32);
+				ctx.fillText(`by ${chall.author}`,xPos,yPos + 64);
+				
+				ctx.fillText(solvesData.filter(e=>e.challengeName==chall.name).length + " solves",xPos,yPos + 64 + 40);
+				if (solvedByPlayer) {
+					ctx.fillStyle = mvmvm ? "#0F0" : "#5FAD56";
+					font(mvmvm ? "comic" : "cherry", 24);
+					ctx.fillText("(you solved this!)",xPos,yPos + 64 + 40 + 32);
+				}
+			}
+			//for (const [i,chall] of challenges.entries()) {
+			//	if (Math.floor(i/4) == Math.floor((currentBeat-16)/2))
+			//		ctx.fillText(chall.name,(i%4)<2?SW/3:SW/3*2,(i%2)?SH/3:SH/3*2)
+			//}
+
+
+			if (currentBeat>31) {
+				ctx.globalAlpha = (currentBeat-31)/0.5;
+				bg("#101019");
+			}
+			ctx.restore();
+			ctx.save();
+			ctx.translate(SW/2, SH/2);
+			ctx.rotate((0.5*drumEaseA*(latestDrumAIdx%2?1:-1) * Math.PI) / 180);
+			ctx.translate(-SW/2, -SH/2);
+			drawMouse(ctx);
+			ctx.restore();
+			if (currentBeat>31) {
+				ctx.globalAlpha = (currentBeat-31)/0.5;
+				bg("#101019");
+				ctx.globalAlpha = 1;
+			}
+		}
+
+		//if (f(24)) {
+		//	//challCreds.style.display = "block";
+		//	bg("#111");
+		//}
+		//if (f(31)) challCreds.style.display = "none";
+		if (r(31.5,3/16)) {
+			bg("#000");
+		}
+		//if (f(31.5)) {
+		//	bg("#000");
+		//}
+
+		if (f(31,1)) {
+			hdrwhite.style.display = "block";
+			hdrwhite.play();
+			hdrwhite.style.opacity = 0.5;
+			canvas.style.mixBlendMode = "multiply";
+		}
+		if (f(31+8/16,1)) {
+			hdrwhite.pause();
+		}
+
+		if (r(31+11/16,5/16)) {
+
+			//bg(currentBeat >= 31+15/16 ? "#FFF" : "#000");
+			bg("#000");
+			ctx.save();
+			ctx.translate(SW/2, SH/2);
+			ctx.scale(0.66,0.66);
+			ctx.translate(-SW/2, -SH/2);
+			if (currentBeat >= 31+11/16)
+				ctx.fillStyle = gradientY("#FF0039", "#FF006E");
+			if (currentBeat >= 31+11.5/16)
+				ctx.fillStyle = gradientY("#FFFF00", "#FFDE00");
+			if (currentBeat >= 31+12/16)
+				ctx.fillStyle = gradientY("#4CFF00", "#7FFF00");
+			if (currentBeat >= 31+13/16)
+				ctx.fillStyle = gradientY("#00D8FF", "#00FFFF");
+			if (currentBeat >= 31+14/16)
+				ctx.fillStyle = "#000";
+			if (currentBeat >= 31+15/16) {
+				ctx.fillStyle = "#FFF";
+			}
+			ctx.fillRect(SX+533, SY+448, 854, 183);
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			font("cherry");
+			if (currentBeat >= 31+11/16)
+				ctx.fillStyle = "#7D00FF";
+			if (currentBeat >= 31+11.5/16)
+				ctx.fillStyle = "#49FFFF";
+			if (currentBeat >= 31+12/16)
+				ctx.fillStyle = "#FFE3FF";
+			if (currentBeat >= 31+13/16)
+				ctx.fillStyle = "#FFF492";
+			if (currentBeat >= 31+14/16)
+				ctx.fillStyle = "#FFF";
+			if (currentBeat >= 31+15/16)
+				ctx.fillStyle = "#000";
+			ctx.fillText("x3CTF", SW/2, SH/2 - 6.5);
+			ctx.restore();
+		}
+
+		for (let i = 0; i < 4; i++) {
+			const baseBeat = 32 + i*2;
+			if (f(baseBeat)) {
+				/*
+				solvedChallTexts.innerText = "";
+				for (const chall of processedScoreboard[3-i].solved) {
+					const challText = document.createElement("div");
+					challText.innerText = chall;
+					challText.style.left = (Math.random()*0.7 + 0.15)*1920 + "px";
+					challText.style.top = (540+(Math.random()*250 + 200)*(Math.random() > 0.5 ? 1 : -1)) + "px";
+					solvedChallTexts.appendChild(challText);
+				}
+
+				teamname.style.display = "flex";
+				noise1.style.display = "block";
+				noise2.style.display = "block";
+				turbulent.style.display = "block";
+				glowFade.style.display = "block";*/
+
+				feTurb.setAttribute("seed", baseBeat);
+			}
+			if (r(baseBeat,2)) {
+				if (ultra<2 && canvas.width > SW/1.5) {
+					canvas.width = SW/2;
+					canvas.height = SH/2;
+					ctx.resetTransform();
+					ctx.scale(0.5, 0.5);
+					offCanvas.width = SW/2;
+					offCanvas.height = SH/2;
+					offCtx.resetTransform();
+					offCtx.scale(0.5, 0.5);
+				}
+				const teamNameColor = gradientY(`hsl(from #FF0000 calc(h + ${i*40}) s l)`, `hsl(from #FFFF00 calc(h + ${i*40}) s l)`)
+				const teamName = processedScoreboard[3-i].name;
+				const t = (currentBeat-baseBeat)/2;
+				const tE = easeOutExpo(t);
+				const tEx = m(tE,easeOutExpo(tE),0.5);
+
+				hdrwhite.opacity = 0.25 + (1-tE)*0.75;
+
+				feDis.setAttribute("scale", (1-tE)*(1500));
+				feDis.setAttribute("baseFrequency", 0.001 + (1-t)*0.0003);
+				//pushFilter(`${ultra?`blur(${easeInExpo(Math.max(0,1-t*2))*128}px)`:''} saturate(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.5)}%) contrast(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-t))*6)}%)`);
+				pushFilter(`${ultra?`blur(${easeInExpo(Math.max(0,1-t*2))*128}px)`:''} saturate(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.5)}%) contrast(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-t))*6)}%)`);
+				pushFilter(`${ultra?`url('#turb')`:``}`);
+				bg(gradientY(`hsl(from #080031 calc(h + ${i*40}) s l)`, `hsl(from #9900B0 calc(h + ${i*40}) s l)`))
+
+
+				ctx.globalAlpha = 0.4;
+				ctx.globalCompositeOperation = "multiply";
+				ctx.drawImage(noiseTex, 0, 0, SW, SH, -150, -150, SW+300, SH+300);
+				ctx.globalCompositeOperation = "source-over";
+				ctx.globalAlpha = 1;
+
+				if (teamPics[teamName]) {
+					if (ultra)
+						pushFilter("blur(4px)");
+					try {
+						ctx.globalAlpha = 0.05*tE;
+						ctx.globalCompositeOperation = "screen";
+						const picScale = 2-tE;
+						ctx.drawImage(teamPics[teamName], SW/2 - 1024*picScale/2, SH/2 - 1024*picScale/2, 1024*picScale, 1024*picScale);
+					} catch {}
+					ctx.globalCompositeOperation = "source-over";
+					ctx.globalAlpha = 1;
+					if (ultra)
+						popFilter();
+				}
+
+				
+
+				
+				ctx.save();
+				ctx.textAlign = "center";
+				ctx.textBaseline = "middle";
+				font("teamname");
+				const textWidthMult = Math.min(1.5,(1920*0.8)/ctx.measureText(teamName).width);
+				const scl = (1 + (1-tEx)*15)*textWidthMult;
+				ctx.translate(-SW/2, -SH/2);
+				ctx.scale(scl, scl);
+				ctx.letterSpacing = `${200*(1-tEx)}px`;
+				ctx.globalCompositeOperation = "screen";
+				ctx.fillStyle = teamNameColor;
+				//ctx.translate(0, (t > 0.5 ? easeOutExpoF(t*2-1) : (easeInExpoF(t*2)-1))*300/scl);
+				//ctx.translate(0, (t > 0.5 ? easeInExpoF(t*2-1) : (easeOutExpoF(t*2)-1))*300/scl);
+				ctx.fillText(teamName, SW/scl, SH/scl);
+				pushFilter('blur(8px)');
+				ctx.fillText(teamName, SW/scl, SH/scl);
+				popFilter();
+				ctx.globalCompositeOperation = "source-over";
+				ctx.letterSpacing = "0";
+				ctx.restore();
+
+				ctx.save();
+				//if (!ultra)
+				//	ctx.filter = "none";
+				//ctx.filter = `${ultra?`blur(${easeInExpo(Math.max(0,1-t*2))*128}px)`:''} saturate(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.5)}%) contrast(${100*(1-easeInExpo(Math.max(0,1-t*2))*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-t))*6)}%)`;
+				//ctx.filter = `url(#turb)`;
+				offCtx.textAlign = "left";
+				offCtx.textBaseline = "top";
+				offCtx.font = font("chall");
+				if (lastPlacements != i) {
+					lastPlacements == i;
+					challPlacements = [];
+					const allowedPadding = 32;
+					const allowedAreas = [
+						// [0,0,SW,SH/2 - textWidthMult*128],
+						// [0,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						// [SW/3*2,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						[0,0,SW,SH/2 - textWidthMult*128],
+						[0,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						//[SW/3,SH/2 + textWidthMult*128,SW/3,(SH/2 - textWidthMult*128)/2],
+						//[SW/3 - allowedPadding*2,SH/2 + textWidthMult*128 + (SH/2 - textWidthMult*128)/3,SW/3 + allowedPadding*4,(SH/2 - textWidthMult*128)/3*2],
+						[SW/3 - allowedPadding*2,SH/2 + textWidthMult*128 + (SH/2 - textWidthMult*128)/5,SW/3 + allowedPadding*4,(SH/2 - textWidthMult*128)/5*4],
+						[SW/3*2,SH/2 + textWidthMult*128,SW/3,SH/2 - textWidthMult*128],
+						//[SW/3*2,SH/3*2 + textWidthMult*128,SW/3,SH/3 - textWidthMult*128],
+					].map(e => [e[0]+allowedPadding,e[1]+allowedPadding,e[2]-allowedPadding*2,e[3]-allowedPadding*2]);
+					const disallowedAreas = [];
+					const getRand = mulberry32(1337+i);
+					const solves = processedScoreboard[3-i].solved;
+
+					for (const chall of solves) {
+						const tWidth = Math.round(offCtx.measureText(chall).width);
+						const tHeight = 32;
+						let tB;
+						for (let j = 0; j < 100; j++) {
+							tB = [getRand()*SW, getRand()*SH, tWidth, tHeight];
+							if (checkWithin(tB,allowedAreas[0]) || checkWithin(tB,allowedAreas[1]) || checkWithin(tB,allowedAreas[2]) || checkWithin(tB,allowedAreas[3])) {
+								if (!disallowedAreas.find(e => checkOverlap(tB, e))) break;
+							}
+							if (j==99) console.warn("Coudln't find spot for text, will cause overlap");
+						}
+						disallowedAreas.push(tB);
+						challPlacements.push({
+							x: tB[0],
+							y: tB[1],
+							text: chall,
+						});
+					}
+					/*
+					ctx.fillStyle = "#F007"
+					allowedAreas.forEach(e => ctx.fillRect(...e));
+					ctx.fillStyle = "#0F07"
+					disallowedAreas.forEach(e => ctx.fillRect(...e));
+					*/
+				}
+				offCtx.clearRect(0,0,SW,SH);
+				drawMouse(offCtx);
+				//drawCursors(offCtx, 0.1);
+				for (const [j,place] of challPlacements.entries()) {
+					const placeT = Math.max(0,(t-(0.1+0.5*j/challPlacements.length))*2);
+					if (!placeT) continue;
+					const placeTe = easeOutExpo(placeT);
+					offCtx.fillStyle = "#FFF";
+					offCtx.fillText(place.text.slice(0,Math.ceil(placeTe*place.text.length)), place.x, place.y);
+				}
+				offCtx.save();
+				offCtx.fillStyle = "#FFF";
+				offCtx.textAlign = "center";
+				offCtx.textBaseline = "middle";
+				offCtx.font = font("placement");
+				offCtx.letterSpacing = `${(400*(1-tE)+20)}px`;
+				//offCtx.fillText(`${['4th', '3rd', '2nd', '1st'][i]} place`, SW/2, SH*0.85);
+				//offCtx.fillText(`${['4th', '3rd', '2nd', '1st'][i]} place`, SW/2, SH/2 - textWidthMult*196);
+				//offCtx.fillText(`${['4th', '3rd', '2nd', '1st'][i]} place`, SW/2, SH/2 + textWidthMult*196);
+				offCtx.fillText(`${['4th', '3rd', '2nd', '1st'][i]} place`, SW/2, SH*0.65);
+				offCtx.restore();
+				ctx.globalCompositeOperation = "screen";
+				ctx.drawImage(offCanvas, 0, 0, SW, SH);
+				ctx.restore();
+
+				ctx.globalAlpha = 0.2;
+				ctx.globalCompositeOperation = "multiply";
+				ctx.drawImage(noiseTex, 0, 0, SW, SH, -150, -150, SW+300, SH+300);
+				ctx.globalCompositeOperation = "source-over";
+				ctx.globalAlpha = 1;
+				popFilter();
+				popFilter();
+
+			}
+		}
+
+		if (r(40,2)) {
+			if (ultra<2 && canvas.width < SW) {
+				canvas.width = SW;
+				canvas.height = SH;
+				ctx.resetTransform();
+				offCanvas.width = SW;
+				offCanvas.height = SH;
+				offCtx.resetTransform();
+			}
+			const extraFlash = (currentBeat >= 41+13/16 && currentBeat < 41+14/16) || currentBeat >= 41+15/16;
+			bg(`#000`);
+			const t = (currentBeat-40)/2;
+			const t2 = Math.max(0,(currentBeat-40.5)/1.5);
+			const tIe = easeInExpo(t);
+			const tE = easeOutExpo(t);
+			const tInOut = t < 0.5 ? easeInExpo(t*2) : (1 - easeOutExpo(t*2-1));
+			const tInOutF = t < 0.5 ? easeInExpo(t*2)/2 : (0.5 + easeOutExpo(t*2-1)/2);
+			const teamName = processedScoreboard[0].name;
+			//teamname.style.scale = m(15/processedScoreboard[0].name.length, 0.25, tIe);
+			const count = Math.floor((Math.min(1,tIe))*50);
+			//teamname.style.transform = `translateY(${m(((count*256/2)),0,tIe)}px)`;
+			//teamname.innerText = processedScoreboard.map(e=>e.name).slice(0,1+count).join("\n");
+
+			ctx.save()
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			font("teamname");
+			const textWidthMult1 = Math.min(1.5,(1920*0.8)/ctx.measureText(teamName).width);
+			const textWidthMult2 = Math.min(1.5,(1920*0.8)/ctx.measureText(myTeam).width);
+			//const scl = t < 0.5 ? m((1920*0.8)/ctx.measureText(teamName).width, 0.25, easeInExpo(t*2)) : m(0.25, 1, easeOutExpo(t*2-1));
+			//const scl = m((1920*0.8)/ctx.measureText(teamName).width, 0.25, easeInOutExpoF(s(t*2)));
+			//const scl = t < 0.75 ? m((1920*0.8)/ctx.measureText(teamName).width, 0.25, easeInOutExpoF(s(t*2))) : m((1920*0.8)/ctx.measureText(myTeam).width, 0.25, 1-m(easeInExpo(t*4-3),easeInExpo(easeInExpo(t*4-3)),0.5));
+			const scl = t < 0.75 ? m(textWidthMult1, 0.25, easeInOutExpoF(s(t*2))) : m(textWidthMult2/2, 0.25, 1-easeInExpo(easeInExpo(t*2-1)));
+			hdrwhite.style.opacity = 1-easeOutExpoF(s(t*2));
+			ctx.translate(-SW/2, -SH/2);
+			ctx.scale(scl, scl);
+			ctx.globalCompositeOperation = "screen";
+			ctx.fillStyle = "#FFF";
+			const myTeamIdx = processedScoreboard.map(e=>e.name).indexOf(myTeam);
+			for (const [i, name] of processedScoreboard.map(e=>e.name).entries()) {
+				let leEase = easeInOutExpoF(t2);
+				// idk this is some weird math bug idKKKK
+				//if (leEase > 0)
+				//	leEase -= 0.0005*Math.max(0,1-leEase*10);
+				const shownIdx = myTeamIdx*leEase;
+				const textPos = (SH)/scl + (i-shownIdx)*240;
+				if (textPos - (SH)/scl/2 < -200) continue;
+				if (textPos - (SH)/scl*1.5 > 400) continue;
+
+				if (i == 0) {
+					ctx.globalAlpha = 1;	
+				} else {
+					ctx.globalAlpha = s(easeInExpo(t)*10-(i-shownIdx)*0.1);
+				}
+
+				if (extraFlash) {
+					ctx.fillStyle = i==myTeamIdx ? "#FFF" : "#111";
+				}
+
+				ctx.fillText(name, SW/scl, textPos);
+				//if (ultra>=2 || i == 0 || i == myTeamIdx) {
+				if (i == 0 || i == myTeamIdx) {
+					pushFilter('blur(8px)');
+					ctx.fillText(name, SW/scl, textPos);
+					popFilter();
+				}
+			}
+			ctx.globalAlpha = 1;
+			ctx.globalCompositeOperation = "source-over";
+			ctx.restore()
+			if (extraFlash) {
+				ctx.globalAlpha = 0.2;
+				bg(`#000`);
+				ctx.globalAlpha = 1;
+			}
+			//teamname.innerText = processedScoreboard.map(e=>e.name).slice(0,tIe*processedScoreboard.length).join("\n");
+		}
+
+		if (f(42,1)) {
+			hdrwhite.style.display = "none";
+			hdrwhite.pause();
+			canvas.style.mixBlendMode = "";
+		}
+
+		if (r(42,80)) {
+			const extra = (currentBeat >= 58 && currentBeat < 66) || (currentBeat >= 95 && currentBeat < 107);
+			if (extra) {
+				//const xT = ((currentBeat - (currentBeat>=95?1:0))%2)/2;
+				const xT = ((currentBeat)%(currentBeat>=95?1:2))/2;
+				//const xT = (currentBeat%2)/2;
+				pushFilter(`${true?`blur(${easeInExpo(Math.max(0,1-xT*2))*8}px)`:''} contrast(${100*(1-easeInExpo(Math.max(0,1-xT*2))*0.25*0.25)}%) brightness(${100*(1+easeInExpo(Math.max(0,1-xT))*6*0.25)}%)`);
+			}
+			const t = (currentBeat-42)/2;
+			bg(gradientY(`hsl(from #080031 calc(h + ${-1*40}) s l)`, `hsl(from #9900B0 calc(h + ${-1*40}) s l)`));
+			if (currentBeat >= 67) {
+				ctx.globalAlpha = s(currentBeat-67);
+				bg("#000");
+				ctx.globalAlpha = 1;
+			}
+			if (currentBeat >= 95) {
+				// i really liked the way this red+white color scheme looked but
+				// it also kinda gave off nazi vibes so like i went with a deep
+				// purple instead :3
+				// bg(gradientY(`hsl(from #080031 calc(h + ${3*40 -}) s l)`, `hsl(from #9900B0 calc(h + ${2*40}) s l)`));
+				bg(gradientY(`hsl(from #080031 calc(h + ${3*40 - 90}) s l)`, `hsl(from #9900B0 calc(h + ${2*40 - 90}) s l)`));
+			}
+			offCtx.clearRect(0,0,SW,SH);
+			drawCursors(offCtx, s(currentBeat-44));
+			ctx.drawImage(offCanvas, 0, 0, SW, SH);
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			drawMouse(ctx);
+			ctx.save()
+			font("teamname");
+			const myTeamIdx = processedScoreboard.map(e=>e.name).indexOf(myTeam);
+			const textWidthMult = Math.min(1.5,(1920*0.8)/ctx.measureText(myTeam).width);
+			const scl = textWidthMult/(2-easeOutExpo(easeOutExpo(s(t)))) + 0.01*Math.sin(currentBeat*Math.PI*2);
+			ctx.translate(-SW/2, -SH/2);
+			ctx.scale(scl, scl);
+			ctx.globalCompositeOperation = "screen";
+			ctx.fillStyle = gradientY(`hsl(from #FF0000 calc(h + ${-1*40}) s l)`, `hsl(from #FFFF00 calc(h + ${-1*40}) s l)`)
+			ctx.fillText(myTeam, SW/scl, (SH)/scl);
+			pushFilter('blur(8px)');
+			ctx.fillText(myTeam, SW/scl, (SH)/scl);
+			popFilter();
+			ctx.globalAlpha = 1;
+			ctx.globalCompositeOperation = "source-over";
+			ctx.restore()
+			font("cherry", 64);
+			ctx.fillStyle = "#FFF";
+			if (myTeam == "player")
+				ctx.fillText(`(you're logged out)`, SW/2, SH/2+300);
+			else
+				ctx.fillText(`You placed ${th(myTeamIdx+1)}!`, SW/2, SH/2+300);
+			ctx.fillText("thank u for playing x3CTF :3", SW/2, SH/2+370);
+			font("cherry", 24);
+			ctx.fillText("Music: Vylet Pony - Flair for the Dramatic", SW/2, SH/2+430);
+			if (extra)
+				popFilter();
+			if (currentBeat >= 107) {
+				ctx.globalAlpha = s(currentBeat-107);
+				bg("#000");
+				ctx.globalAlpha = 1;
+			}
+			if (currentBeat >= 111) {
+				document.title = `bye..`;
+				ctx.globalAlpha = s((currentBeat-111)/4);
+				ctx.font = "16px Arial, sans-serif";
+				ctx.fillStyle = "#FFF";
+				ctx.fillText(`see you`, SW/2, SH/2);
+				ctx.globalAlpha = 1;
+			}
+		}
+
+		// TODO: trycatch everything
+		if (currentBeat >= 121) {
+			//flair.currentTime -= beat2time(1);
+		}
+
+		//requestAnimationFrame(animate);
+	}
+
+	function prepare() {
+		fontPreload.style.display = "none";
+		canvas.style.cursor = "url(assets/empty.png), auto";
+		
+
+		requestAnimationFrame(()=>{
+
+		//flair.style.display = "none";
+		//flair.style.opacity = "0.1";
+		flair.style.position = "absolute";
+		flair.style.top = "0";
+		startBtn.style.display = "none";
+		startBtn2.style.display = "none";
+		startBtn3.style.display = "none";
+		debugBtn.style.display = "none";
+			requestAnimationFrame(animate_catch)
+		});
+		
+	}
+
+	function outro(u) {
+		if (u>=0)
+			ultra = u;
+		//flair.currentTime = 77;
+		//flair.currentTime = 15*60+38;
+		createVolumeControl(1);
+		flair.play();
+		flair.volume = 0;
+		// silly silly silly
+		for (let i = 0; i<=100; i++) {
+			setTimeout(() => {flair.volume = i/100}, i*10)	
+		}
+		requestAnimationFrame(prepare);
+	}
+
+
+	function easeOutQuint(x) {
+		return 1 - Math.pow(1 - x, 5);
+	}
+	function easeInQuint(x) {
+		return x * x * x * x * x;
+	}
+function easeInQuart(x) {
+return x * x * x * x;
+}
+function easeInCubic(x) {
+return x * x * x;
+}
+function easeInExpo(x) {
+return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
+}
+function easeOutExpo(x) {
+return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+}
+function easeInExpoF(x) {
+return x === 0 ? 0 : (Math.pow(2, 10 * x - 10) - 0.0009765625*Math.max(0,1-x*10));
+}
+function easeOutExpoF(x) {
+return x === 1 ? 1 : 1 - Math.pow(2, -10 * x) + 0.0009765625*Math.max(0,x*10-9);
+}
+function easeOutSine(x) {
+  return Math.sin((x * Math.PI) / 2);
+}
+function easeInOutBack(x) {
+const c1 = 1.70158;
+const c2 = c1 * 1.525;
+
+return x < 0.5
+  ? (Math.pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2
+  : (Math.pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
+}
+	function easeInOutExpoF(x) {
+		return x === 0
+  ? 0
+  : x === 1
+  ? 1
+  : x < 0.5 ? (Math.pow(2, 20 * x - 10) - 0.0009765625*Math.max(0,1-x*10)) / 2
+  : (2 - Math.pow(2, -20 * x + 10) + 0.0009765625*Math.max(0,x*10-9)) / 2;
+}
+
+startThingButton.onclick = () => startTheThing();
+async function startTheThing() {
+	// replay mode
+	TARGET_TIME=Date.now();
+	startThingButton.disabled = "true";
+	document.getElementById("loginThing").style.opacity = 0.99;
+	await new Promise(resolve => requestAnimationFrame(resolve));
+	document.getElementById("loginThing").style.transition = "opacity 1s";
+	generateNoiseTex();
+	await new Promise(resolve => requestAnimationFrame(resolve));
+	loggedInMsg.innerText = "Testing your performance...";
+	const fps = await testPerformance();
+	let mode = "Ultra Quality (3/3)";
+	if (fps<36) mode = "Medium Quality (2/3)";
+	if (fps<5) mode = "Ultra-Low Quality (1/3)";
+	ultra = 2;
+	if (fps<36) ultra = 1;
+	if (fps<5) ultra = 0;
+	loggedInMsg.innerText = `FPS detected as ${Math.floor(fps)} - using ${mode}`;
+	hdrwhite.src = "data:video/mp4;base64,AAAAHGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAAvG1kYXQAAAAfTgEFGkdWStxcTEM/lO/FETzRQ6gD7gAA7gIAA3EYgAAAAEgoAa8iNjAkszOL+e58c//cEe//0TT//scp1n/381P/RWP/zOW4QtxorfVogeh8nQDbQAAAAwAQMCcWUTAA       AAMAAAMAAAMA84AAAAAVAgHQAyu+KT35E7gAADFgAAADABLQAAAAEgIB4AiS76MTkNbgAAF3AAAPSAAAABICAeAEn8+hBOTXYAADUgAAHRAAAAPibW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAAKcAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAB       AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAw10cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAAKcAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAABAAAAAQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAACnAAAAAA     ABAAAAAAKFbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABdwAAAD6BVxAAAAAAAMWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABDb3JlIE1lZGlhIFZpZGVvAAAAAixtaW5mAAAAFHZtaGQAAAABAAAAAAAAAAAAAAAkZGluZgAAABxkcmVmAAAAAAAAAAEAAAAMdXJsIAAAAAEAAAHsc3Rib       AAAARxzdHNkAAAAAAAAAAEAAAEMaHZjMQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAQABAASAAAAEgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABj//wAAAHVodmNDAQIgAAAAsAAAAAAAPPAA/P36+gAACwOgAAEAGEABDAH//wIgAAADALAAAAMAAAMAPBXAkKEA      AQAmQgEBAiAAAAMAsAAAAwAAAwA8oBQgQcCTDLYgV7kWVYC1CRAJAICiAAEACUQBwChkuNBTJAAAAApmaWVsAQAAAAATY29scm5jbHgACQAQAAkAAAAAEHBhc3AAAAABAAAAAQAAABRidHJ0AAAAAAAALPwAACz8AAAAKHN0dHMAAAAAAAAAAwAAAAIAAAPoAAAAAQAAAAEAAAABAAAD6AAAABR      zdHNzAAAAAAAAAAEAAAABAAAAEHNkdHAAAAAAIBAQGAAAAChjdHRzAAAAAAAAAAMAAAABAAAAAAAAAAEAAAfQAAAAAgAAAAAAAAAcc3RzYwAAAAAAAAABAAAAAQAAAAQAAAABAAAAJHN0c3oAAAAAAAAAAAAAAAQAAABvAAAAGQAAABYAAAAWAAAAFHN0Y28AAAAAAAAAAQAAACwAAABhdWR0YQ    AAAFltZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAACxpbHN0AAAAJKl0b28AAAAcZGF0YQAAAAEAAAAATGF2ZjYwLjMuMTAw";
+	await new Promise(resolve => requestAnimationFrame(resolve));
+	outro(-1);
+
+	// ARCHIVE - SCRUBBING INDICATOR
+	document.querySelector("#scrub").style.display = "";
+	setTimeout(() => document.querySelector("#scrub").style.opacity = 1, 2000);
+	setTimeout(() => document.querySelector("#scrub").style.opacity = "", 4500);
+	
+	setTimeout(()=>document.getElementById("loginThing").style.opacity = 0,2000);
+	setTimeout(()=>document.getElementById("loginThing").style.display = "none",3000);
+}
+
+let hasInit = false;
+async function init() {
+	if (hasInit) return;
+	hasInit = true;
+	tryLoadUser();
+	try {
+		const data = await (await fetch("../data.json")).json();
+		solvesData = data["solves"];
+		challengesData = data["challenges"];
+		playersData = data["players"];
+		startThingButton.disabled = false;
+		loggedInMsg.innerText = `Hi ${myTeam}, press the button below to start :3`
+		populateUsernames();
+		setTimeout(async() => {
+			const data2 = await (await fetch("../data.json?2")).json();
+			solvesData = data2["solves"];
+			challengesData = data2["challenges"];
+			playersData = data2["players"];
+			populateScoreboard();
+		}, 60000 + Math.random()*60000)
+	} catch {
+		hasInit = false;
+		setTimeout(()=>init(), Math.random()*10000);
+		return;
+	}
+	ws_connect();
+	await populateScoreboard();
+
+}
+
+window.onload = () => init();
+// For some reason Firefox fails to load this page? So we have a settimeout fallback lol.
+//setTimeout(()=>init(), 5000);
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Coming soon!! -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>\x3C/script></title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <meta content="x3CTF 2025 (feat. mvm)" property="og:title" />
+    <meta content="\x3C/script>" property="og:description" />
+    <meta content="https://x3c.tf/" property="og:url" />
+    <meta content="#0E162E" data-react-helmet="true" name="theme-color" />
+    <style>
+        html, body {
+            background: #0E162E;
+            font-family: sans-serif;
+            text-align: center;
+            min-height: 90vh;
+            margin: 0;
+        }
+        h1 {
+            color: #949494;
+            font-size: 36px;
+            font-weight: normal;
+        }
+        .searches {
+            max-width: 480px;
+            margin: auto;
+            color: #CCC;
+        }
+        .searches > p {
+            text-align: left;
+            font-size: 10px;
+        }
+        .searches > div {
+            border: 4px solid #343A4E;
+            border-radius: 12px;
+            width: 100%;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            user-select: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .searches > div > a {
+            color: #FFF;
+            text-decoration: none;
+        }
+        .searches > div:hover {
+            background: #343A4E50;
+        }
+        footer {
+            color: #CCC;
+            font-size: 8px;
+            width: 80%;
+            margin: auto;
+        }
+        footer a {
+            color: inherit;
+        }
+        header {
+            border-top: #FFF 2px solid;
+            border-bottom: #222 2px solid;
+            background: linear-gradient(180deg, #9DF 0%, #6BE 100%);;
+            width: 100%;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-size: 18px;
+            text-shadow: 1px 1px 1px #0009;
+            user-select: none;
+        }
+        details > summary {
+            list-style:none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .search {
+            margin-top: 24px;
+            margin-bottom: 64px
+        }
+        .modal {
+            left: 16px;
+            bottom: 16px;
+            width: 90%;
+            height: fit-content;
+            max-width: 320px;
+            max-height: 480px;
+            background: #FFF;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            box-shadow: 2px 2px 8px #0007;
+            & h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+            & .button {
+                background: #0d6efd;
+                border: 1px solid #0d6efd;
+                user-select: none;
+                color: #fff;
+                padding: 6px 12px;
+                border-radius: 6px;
+                height: 24px;
+                display: inline-block;
+                line-height: 22px;
+                text-decoration: none;
+                &.decline {
+                    background: #FFF;
+                    color: #000;
+                    border: 1px solid #000;
+                    cursor: not-allowed;
+                    transition: 0.2s opacity;
+                    opacity: 1;
+                    &:hover {
+                        opacity: 0;
+                    }
+                }
+            }
+            position: fixed;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <p>x3CTF 2025 will be happening 24th through 26th January 2025. Check the <a href="https://ctftime.org/event/2467">CTFtime</a> and join our <a href="https://discord.gg/WpFHfD6nqH">Discord</a>!</p>
+</header>
+<article>
+<h1>x3c.tf</h1>
+<div class="searches">
+    <p>Related searches</p>
+    <div><a href="https://open.ecsc2024.it/">openECSC</a></div>
+    <div><a href="https://downunderctf.com/">DownUnderCTF</a></div>
+    <div><a href="https://ctf.hitcon.org/">HITCON CTF</a></div>
+    <div><a href="https://cursedc.tf/">CursedCTF</a></div>
+    <div><a href="https://capturetheflag.withgoogle.com/">GoogleCTF</a></div>
+</div>
+<div class="search">
+    <form action="https://duckduckgo.com/">
+        <input type="text" name="q"><input type="submit" value="Hacker Search" name="">
+    </form>
+</div>
+</article>
+<footer>
+    <p>This webpage was set up by <a href="https://twitter.com/rebane2001">one of the organizers</a> using <a href="https://www.sublimetext.com/">Sublime Text</a>. Disclaimer: The links displayed on this page have no relation to x3CTF. They are literally just random CTFs we decided to put on this page for no reason.</p>
+    <details>
+        <summary>Privacy Policy</summary>
+        <p>
+            Hi we're not stealing your information yet.
+            <br>
+            Stay tuned for a new Privacy Policy for when we start collecting your information.
+        </p>
+    </details>
+</footer>
+<div class="modal">
+    <div>
+        <h1>We care about your privacy</h1>
+        <p>However, we <u>will</u> steal your CTF challenges and share them with our <u>841</u> partners (CTF players) worldwide.</p>
+        <p>That's right, x3CTF is teaming up with mvm to accept <b>your</b> challenge submissions for the next x3CTF event, x3CTF 2025 (feat. mvm).</p>
+        <a href="https://ctf.mvm.lol/" class="button">Submit a chall</a>
+        <a class="button decline" style="">Decline</a>
+    </div>
+</div>
+</body>
+</html>

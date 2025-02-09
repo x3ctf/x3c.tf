@@ -1,0 +1,37 @@
+general:
+- login/logout emu (authentik mock)
+- remember and load logged in user (locally)
+- removed websocket and other networking
+
+landing:
+- countdown timer adjusted (7 days)
+
+intro:
+- countdown timer adjusted (10 minutes)
+- historic websocket data replay
+- scrubbar for seeking through experience
+  - can also use arrow keys
+- various scrubbing-related tweaks
+- loads old x3ctf page after intro
+  - same archive changes as the main page, but on the older code
+    - e.g no activity log, no kill instance button, no solvecount
+    - players data is from beginning of ctf (no newer signups)
+
+x3ctf page:
+- random countdown time
+- archived player/solves/challs data
+- archived handout files
+- launching/stopping instances emu
+  - timing/delay emu
+  - launched instance links to chall's github page
+- submitting flags emu
+  - empty flag error
+  - wrong flag error
+  - rate limit error (10/min)
+  - correct flag submission
+- emu solves appear on challs/scoreboard/activity (not persistent)
+
+outro:
+- historic websocket data replay
+- scrubbar for seeking through experience
+  - can also use arrow keys

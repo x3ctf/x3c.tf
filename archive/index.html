@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>x3CTF Archive</title>
+  	<meta content="x3CTF Archive" property="og:title" />
+  	<meta content="archive of past x3CTF events" property="og:description" />
+  	<meta content="https://x3c.tf/archive/" property="og:url" />
+  	<meta content="#14191F" data-react-helmet="true" name="theme-color" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Doto:wght@100..900&family=Geo:ital@0;1&family=Patrick+Hand&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=UnifrakturCook:wght@700&display=block" rel="stylesheet">
+	<link rel="icon" type="image/x-icon" href="favicon.ico" />
+	<style type="text/css">
+		:root {
+			--bg: #14191F;
+			--dark: #000;
+			--fg: #FFF;
+			--preview-width: 160px;
+			--preview-height: 90px;
+			--preview-scale: 0.2;
+			--preview-zoom: 0.75;
+		}
+		*::selection {
+			color:#000;
+			background:#FFF;
+		}
+		html, body {
+			font-family: "Geo", system-ui, sans-serif;
+			background: var(--bg);
+			color: var(--fg);
+			text-align: center;
+		}
+		h1 {
+			font-size: 200px;
+			margin: 0;
+			text-shadow: 8px 8px 0 var(--dark);
+			font-weight: 400;
+		}
+		@media (width <= 1200px) {
+			h1 { font-size: 100px; }
+		}
+		@media (width <= 640px) {
+			h1 { font-size: 64px; }
+		}
+		.entry {
+			margin: 0 auto 32px;
+			max-width: 768px;
+			border: 1px solid var(--fg);
+			box-shadow: 8px 8px 0 var(--dark);
+			align-items: center;
+			padding-bottom: 32px;
+			& ul {
+				list-style-type:none;
+				padding: 0;
+				margin: 0;
+				& a {
+					color: #FFF;
+				}
+				& .writtenBy {
+					color: #AAA;
+					font-style: italic;
+				}
+			}
+			& .pages {
+				gap: 16px;
+				display: flex;
+				flex-wrap: wrap;
+				flex-direction: row;
+				justify-content: center;
+				& .page {
+					& a {
+						color: #FFF;
+						text-decoration: none;
+					}
+					background: #14191F;
+					box-shadow: 4px 4px 0 #0007;
+					font-weight: 600;
+					font-size: 16px;
+					border: 1px solid #FFF;
+					padding: 16px 16px 12px;
+					&:hover {
+						z-index: 1;
+					}
+					&:nth-child(1) { background: hsl(400 50% 15%); }
+					&:nth-child(2) { background: hsl(375 50% 15%); }
+					&:nth-child(3) { background: hsl(350 50% 15%); }
+					&:nth-child(4) { background: hsl(325 50% 15%); }
+					&:nth-child(5) { background: hsl(300 50% 15%); }
+				}
+			}
+		}
+		.preview {
+			margin: 0 auto 8px;
+			width: var(--preview-width);
+			height: var(--preview-height);
+			& > a {
+				display: block;
+				transition: width 0.25s cubic-bezier(0,0,0,1), height 0.25s cubic-bezier(0,0,0,1), translate 0.25s cubic-bezier(0,0,0,1), box-shadow 0.25s cubic-bezier(0,0,0,1);
+				box-shadow: 0 0 0 2px #FF00;
+				width: var(--preview-width);
+				height: var(--preview-height);
+				overflow: hidden;
+				cursor: pointer;
+			}
+			& > a > iframe {
+				transition: width 0.25s cubic-bezier(0,0,0,1), height 0.25s cubic-bezier(0,0,0,1), scale 0.25s cubic-bezier(0,0,0,1);
+				transform-origin: 0 0;
+				width: calc(var(--preview-width) / var(--preview-scale));
+				height: calc(var(--preview-height) / var(--preview-scale));
+				scale: var(--preview-scale);
+				pointer-events: none;
+			}
+			&:hover {
+				& > a {
+					box-shadow: 0 0 2px 1px #FF0;
+					width: calc(var(--preview-width) * 2);
+					height: calc(var(--preview-height) * 2);
+					translate: -25% -25%;
+				}
+				& > a > iframe {
+					scale: calc(var(--preview-scale) / var(--preview-zoom));
+					width: calc(var(--preview-width) / var(--preview-scale) * 2 * var(--preview-zoom));
+					height: calc(var(--preview-height) / var(--preview-scale) * 2 * var(--preview-zoom));
+				}
+			}
+			
+		}
+		@media (prefers-reduced-motion) {
+			.preview {
+				& > a, & > a > iframe {
+					transition: none;
+				}
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>x3CTF Archive</h1>
+	<div class="entry">
+		<h2>2025</h2>
+		<h2>Web Design</h2>
+		<div class="pages">
+			<div class="page">
+				<div class="preview"><a href="2025/parking.html"><iframe src="2025/parking.html"></iframe></a></div>
+				<a href="2025/parking.html">fake parking page</a>
+			</div>
+			<div class="page">
+				<div class="preview" style="--preview-scale: 0.15; --preview-zoom: 1"><a href="2025/serious-landing.html"><iframe src="2025/serious-landing.html"></iframe></a></div>
+				<a href="2025/serious-landing.html">"serious" landing page</a>
+			</div>
+			<div class="page">
+				<div class="preview" style="--preview-scale: 0.2; --preview-zoom: 1"><a href="2025/intro.html"><iframe src="2025/intro-preview.html"></iframe></a></div>
+				<a href="2025/intro.html">intro sequence</a>
+			</div>
+			<div class="page">
+				<div class="preview" style="--preview-scale: 0.12"><a href="2025/x3ctf.html"><iframe src="2025/x3ctf-preview.html"></iframe></a></div>
+				<a href="2025/x3ctf.html">x3CTF platform (cute)</a>
+			</div>
+			<div class="page">
+				<div class="preview" style="--preview-scale: 0.12"><a href="2025/PDMgdGh4NHBsYXlpbmc/"><iframe src="2025/PDMgdGh4NHBsYXlpbmc/outro-preview.html"></iframe></a></div>
+				<a href="2025/PDMgdGh4NHBsYXlpbmc/">outro sequence</a>
+			</div>
+		</div>
+		<h2>Data</h2>
+		<ul>
+			<li><a href="#">#announcements dump</a> (coming soon)</li>
+			<li><a href="https://github.com/x3ctf/challenges-2025">Challenges GitHub</a></li>
+			<li><a href="https://ctftime.org/event/2467">CTFTime page</a></li>
+			<li><a href="https://discord.gg/WpFHfD6nqH">Discord invite</a></li>
+		</ul>
+		<h2>Writeups</h2>
+		<ul>
+			<li style="font-weight:600;color:#FF0"><a href="https://exe2py.neocities.org/writeups/2025_x3ctf/kittyconvert/">kittyconvert Writeup</a><span class="writtenBy"> by exe2py</span> (1st place!)</li>
+			<li style="font-weight:600;color:#FF0"><a href="https://scuffed.online/x3ctf-2025/">rev writeups</a><span class="writtenBy"> by scufFed</span> (2nd place!)</li>
+			<li>~</li>
+			<li><a href="https://jorianwoltjer.com/blog/p/ctf/x3ctf-blogdog-new-css-injection-xs-leak">blogdog (+ new CSS Injection XS-Leak!)</a><span class="writtenBy"> by Jorian Woltjer</span></li>
+			<li><a href="https://oshawk.uk/Writeups/MVMCheckers+Inc">MVMCheckers Inc writeup</a><span class="writtenBy"> by Oshawk</span></li>
+			<li><a href="https://ensy.zip/posts/2025-x3ctf-blogdog/">blogdog(web) Write up</a><span class="writtenBy"> by ensy</span></li>
+			<li><a href="https://k3sero.github.io/posts/Curved-mvm-x3CTF2025/">Curved MVM writeup</a><span class="writtenBy"> by Kesero</span></li>
+			<li><a href="https://x3ctf-writeup.neocities.org/">MVM writeup</a><span class="writtenBy"> by hivesec</span></li>
+			<li><a href="https://blog.whale-tw.com/2025/01/27/x3ctf-2025/">various writeups</a><span class="writtenBy"> by William Lin</span></li>
+			<li><a href="https://pingotux.si/blog/oh-my-gadt/">oh-my-writeup</a><span class="writtenBy"> by pingotux</span></li>
+			<li><a href="https://www.youtube.com/watch?v=fnhXAMnzUJ8">Submission video walkthrough</a><span class="writtenBy"> by ZeroDay Gym</span></li>
+			<li><a href="https://youtu.be/0TNxp2SIxAo">Submission video walkthrough</a><span class="writtenBy"> by SloppyJoePirates</span></li>
+			<li><a href="https://github.com/siunam321/CTF-Writeups/tree/main/x3CTF-2025">MVMCheckers Inc writeup</a><span class="writtenBy"> by siunam321</span></li>
+		</ul>
+	</div>
+</body>
+</html>
