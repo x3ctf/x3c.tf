@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>openECSC 2025</title>
+	<link rel="icon" type="image/x-icon" href="./favicon.ico" />
+	<meta content="openECSC 2025" property="og:title" />
+	<meta content="A worldwide cybersecurity competition open to everyone" property="og:description" />
+	<meta content="https://openec.sc/" property="og:url" />
+	<meta content="#1E5EA4" name="theme-color" />
+	<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Didact+Gothic&family=Doto:wght@100..900&family=League+Gothic&family=Material+Icons&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--header: #1E5EA4;
+			--nav: #1B4778;
+			--bg: #212529;
+
+			--body: #dee2e6;
+
+			--link: #6ea8fe;
+			--link-hov: #8bb9fe;
+		}
+
+		a {
+			text-decoration: none;
+			color: var(--link);
+
+			&:hover {
+				color: var(--link-hov);
+			}
+		}
+
+		h1 {
+			font-size: 2.5rem;
+			margin: 48px 0 8px;
+		}
+
+		h3 {
+			font-size: 1.75rem;
+			margin: 0.5rem 0;
+		}
+
+		h4 {
+			font-size: 1.4rem;
+			margin: 0.5rem 0;
+		}
+
+		h1,
+		h2,
+		h3,
+		h4 {
+			font-weight: 500;
+			&>span.material-icons.md-48 {
+				vertical-align: middle;
+				font-size: 1.2em;
+			}
+		}
+
+		html,
+		body {
+			min-height: 100dvh;
+			margin: 0;
+			color: #FFF;
+			background: var(--bg);
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+		}
+
+		header {
+			background: #1E5EA4;
+
+			&>div {
+				display: flex;
+				flex-direction: column;
+				padding: 48px 12px;
+				align-items: center;
+				text-align: center;
+			}
+		}
+
+		nav {
+			background: var(--nav);
+			color: #FFF;
+			display: flex;
+			height: 74px;
+			padding: 8px 16px;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+			&>:first-child, &>#nav-account {
+				flex: 1;
+			}
+
+			ul {
+				padding: 0;
+				margin: 0;
+
+				&>li {
+					display: inline;
+
+					label {
+						input {
+							opacity: 0;
+							position: absolute;
+							pointer-events: none;
+						}
+
+						&:hover {
+							color: var(--link-hov);
+						}
+					}
+
+					&,&>a {
+						color: #CCC;
+
+						&>span.material-icons.md-48 {
+							vertical-align: middle;
+							font-size: 1.2em;
+						}
+					}
+
+					&>a.active {
+						color: #FFF;
+					}
+
+					margin: 0 4px;
+					white-space: nowrap;
+				}
+			}
+		}
+
+		main {
+			margin: 48px 0;
+			color: var(--body);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			line-height: 1.5;
+
+			section {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				padding: 12px;
+				max-width: 760px;
+			}
+
+			h3, h4, .discord {
+				align-self: center;
+			}
+
+			.discord {
+				filter: none;
+
+				&:hover {
+					filter: brightness(0.9);
+				}
+
+				@media not (prefers-reduced-motion) {
+					transition: filter 0.2s;
+				}
+			}
+		}
+
+		footer {
+			padding: 16px 32px 16px;
+			font-size: .875em;
+			background: var(--nav);
+		}
+
+		q-m {
+			background: -webkit-linear-gradient(#474B79, #FFA1C3);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+
+			@media not (prefers-reduced-motion) {
+				animation: 3s infinite ease-in-out normal aaaa;
+			}
+
+			&::selection,
+			::selection {
+				background: #e10ddb66;
+				text-shadow: 0.1em 0.1em 1px color-mix(in oklab, #e10ddb 10%, #e10d8c),
+					0.2em 0.2em 2px color-mix(in oklab, #e10ddb 20%, #e10d8c),
+					0.3em 0.3em 3px color-mix(in oklab, #e10ddb 30%, #e10d8c),
+					0.4em 0.4em 4px color-mix(in oklab, #e10ddb 40%, #e10d8c),
+					0.5em 0.5em 5px color-mix(in oklab, #e10ddb 50%, #e10d8c),
+					0.6em 0.6em 6px color-mix(in oklab, #e10ddb 60%, #e10d8c),
+					0.7em 0.7em 7px color-mix(in oklab, #e10ddb 70%, #e10d8c),
+					0.8em 0.8em 8px color-mix(in oklab, #e10ddb 80%, #e10d8c),
+					0.9em 0.9em 9px color-mix(in oklab, #e10ddb 90%, #e10d8c);
+			}
+		}
+
+		::selection {
+			background: #FFCD1E66;
+		}
+
+		@keyframes aaaa {
+
+			from,
+			to {
+				text-shadow: -0.05em 0.05em 6px #e10ddb;
+			}
+
+			25% {
+				text-shadow: 0em -0.075em 6px color-mix(in oklab, #e10ddb, #e10d8c);
+			}
+
+			75% {
+				text-shadow: 0.05em 0.05em 6px #e10d8c;
+			}
+		}
+
+		/* Coderion ugly css */ /* <3  */
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			margin-top: 2em;
+
+			th,
+			td {
+				border: 1px solid #555;
+				text-align: left;
+				padding: 8px;
+
+				&>span.material-icons.md-18 {
+					vertical-align: middle;
+					font-size: 1.5em;
+				}
+			}
+
+			th {
+				background-color: #333;
+			}
+
+			tr:nth-child(even) {
+				background-color: #2a2a2a;
+			}
+
+			tr:hover {
+				background-color: #3a3a3a;
+			}
+		}
+
+		.code {
+			overflow: auto;
+			max-width: 80vw;
+			padding: 1em;
+		}
+
+		#nav-toggle,
+		#nav-toggle-box {
+			display: none;
+			&, & > label {
+				cursor: pointer;
+			}
+		}
+
+		#nav-account {
+			text-align: right;
+		}
+
+		@media screen and (max-width: 700px) {
+			#nav-account {
+				text-align: left;
+			}
+
+			nav {
+				flex-direction: column;
+				height: auto;
+
+				&>a {
+					display: none;
+				}
+
+				&>ul {
+					&>li {
+						display: block;
+						margin: 1em 0;
+					}
+
+					display: none;
+				}
+			}
+
+			#nav-toggle {
+				margin: 1em 0;
+				display: block;
+			}
+
+			nav:has(#nav-toggle-box:checked) > ul {
+				display: block;
+				&>li {
+					display: block;
+					height: auto;
+				}
+			}
+		}
+
+		#countdownTimer {
+			font-size: 300%;
+    		margin-top: 0.1em;
+		}
+	</style>
+</head>
+
+<body>
+	<header id="home">
+		<nav>
+			<a href="/"><img src="./img/openECSC.svg" height="52" width="52" alt="Logo"></a>
+			<!--<div aria-label="Website tabs" role="radiogroup">-->
+			<input type="checkbox" id="nav-toggle-box">
+			<ul id="nav-items">
+				<!-- <li><label><input type="radio" name="demo" id="link-home" checked>Home</label></li> -->
+				<!-- <li><label><input type="radio" name="demo" id="link-home" checked>Rules</label></li> -->
+				<li><a href="#home"><span class="material-icons md-48">home</span> <span></span>Home</span></a></li>
+				<li><a href="#submissions"><span
+							class="material-icons md-48">file_upload</span><span>Submissions</span></a></li>
+				<li><a href="#discord"><span class="material-icons md-48">discord</span> <span>Discord</span></a></li>
+				<li><a href="#rules"><span class="material-icons md-48">rule</span> <span>Rules</span></a></li>
+			</ul>
+			<ul id="nav-account">
+				<li class="loggedOut"><a onclick="xD.login()" href="#login"><span class="material-icons md-48">login</span> Login<noscript> (JS required)</noscript></a></li>
+				<li class="loggedOut"><a archive-href="https://idp.openec.sc/if/flow/berg-enrollment/" onclick="xD.login()"><span class="material-icons md-48">app_registration</span> Register</a></li>
+				<li class="loggedIn"  style="display:none"><a onclick="xD.logout()" href="#logout"><span class="material-icons md-48">logout</span> Logout</a></li>
+				<li class="loggedIn" style="cursor:default;display:none"><span class="material-icons md-48">account_circle</span> <span id="loggedInPlayer">...</span></li>
+			</ul>
+			<!-- Navbar toggle -->
+			<span id="nav-toggle">
+				<label for="nav-toggle-box">
+					<span class="material-icons md-48">menu</span>
+				</label>
+			</span>
+		</nav>
+		<div>
+			<a href="/"><img src="./img/openECSC.svg" height="250" alt="Logo"></a>
+			<h1>openECSC 2025</h1>
+			<h3 style="color:#FFCD1E;margin:0">A worldwide cybersecurity competition open to everyone</h3>
+			<div id="countdownTimer"></div>
+		</div>
+	</header>
+	<main>
+		<section>
+			<p>openECSC is a cybersecurity competition open to everyone that invites enthusiasts to participate without
+				any kind of limitations. Launched in 2022 as an extension of the European Cybersecurity Challenge, it
+				aims to broaden participation beyond traditional age and nationality restrictions, featuring a series of
+				jeopardy-style CTF competition rounds. openECSC 2025 will run <strong>September 29th</strong> through
+				<strong>October 5th</strong>
+			</p>
+		</section>
+		<section>
+			<h3><span class="material-icons md-48">computer</span> Overview</h3>
+			<p>The European Cybersecurity Challenge (ECSC) stands as a collaborative effort between the European Union
+				Agency for Cybersecurity (ENISA) and multiple European nations. Its primary goal is to foster
+				cybersecurity
+				talent across the continent while forging connections between promising individuals and industry
+				leaders.</p>
+
+			<p>Each year, thousands of aspiring talents from diverse European regions participate in national selection
+				competitions. Their ultimate aim is to represent their respective nations at the prestigious ECSC Grand
+				Finals. However, this event accommodates only a limited number of participants due to stringent age and
+				nationality criteria. Consequently, many contestants miss out on the opportunity to showcase their
+				skills at
+				the international level.</p>
+
+			<p>To address this disparity and broaden participation, the openECSC has been introduced since 2022. Unlike
+				ECSC, which is restricted to individuals aged 25 and under, the "open" designation of this program
+				signals
+				inclusivity. It welcomes participation from individuals of all ages, backgrounds, and nationalities,
+				effectively inviting cybersecurity enthusiasts worldwide to engage, demonstrate their skills, and join
+				the
+				ECSC community.</p>
+
+			<p>The 2025 edition of openECSC will consist of only one round, instead of multiple rounds as in previous
+				years. See the schedule section for more
+				details.</p>
+
+			<p>The goal behind openECSC is to accommodate both not very experienced players and top level ones. Expect
+				challenges with a wide range of difficulty levels.</p>
+
+			<p>Top performers in each openECSC rounds will be rewarded with unique openECSC merchandise.</p>
+		</section>
+
+		<section>
+			<h4><span class="material-icons md-48">schedule</span> Schedule</h4>
+			<table>
+				<thead>
+					<tr>
+						<th><span class="material-icons md-18">event</span> <span>Event</span></th>
+						<th><span class="material-icons md-18">hourglass_empty</span> <span>Timeframe</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Challenge draft submission deadline</td>
+						<td>September 8th, 2025</td>
+					</tr>
+					<tr>
+						<td>Challenge final submission deadline</td>
+						<td>September 21st, 2025</td>
+					</tr>
+					<tr>
+						<td>openECSC 2025</td>
+            <td>September 29th 18:00:00 CEST - <br>October 5th, 2025 23:59:59 CEST</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section>
+			<h4 id="discord"><span class="material-icons md-48">discord</span> Discord server</h4>
+			<p>The main point for all the communication between players and organizers is the official Discord server,
+				available <a href="https://discord.gg/n7SHk8guyC">here</a>. Every announcement regarding the competition
+				will be published on the dedicated announcement channel. The server includes a ticketing system, which
+				can be used by players to request any kind of support during the competitions.</p>
+			<a href="https://discord.gg/n7SHk8guyC" class="discord"><img src="./img/discord.png" height="96"
+					alt="Discord" style="border-radius:0.375rem"></a>
+		</section>
+
+		<section>
+			<h4><span class="material-icons md-48">psychology</span> Competition format</h4>
+			<p>The competition is a Capture The Flag (CTF) event, played in a jeopardy-style fashion.</p>
+			<p>The CTF platform (<a href="https://berg.norelect.ch/">Berg</a>) used for the openECSC competition will be
+				available under this domain soon.</p>
+		</section>
+
+		<section>
+			<h4><span class="material-icons md-48">emoji_events</span> Challenge details</h4>
+			<p>The CTF will feature up to 91 challenges in total, distributed as follows.</p>
+			7 categories with 13 challenges each:
+			<ul>
+				<li>Web</li>
+				<li>Reverse Engineering</li>
+				<li>Cryptography</li>
+				<li>Forensics</li>
+				<li>Steganography</li>
+				<li>Binary Exploitation</li>
+				<li>Miscellaneous</li>
+			</ul>
+			<p>Each category will have challenges with different difficulty levels:</p>
+			<ul>
+				<li>Easy: up to 3 challenges</li>
+				<li>Medium: up to 5 challenges</li>
+				<li>Hard: up to 3 challenges</li>
+				<li>Leet: up to 2 challenges</li>
+			</ul>
+		</section>
+		<section>
+			<h4><span class="material-icons md-48">star</span> Scoring</h4>
+			<p>The scoring for each challenge is identical and every challenge weighs the same number of points at the
+				time
+				of its release. Scoring is dynamic: the more a challenge is solved, the less points it weighs. Every
+				challenge starts at 500 points and decreases to a minimum of 100 points after 50 solves. The
+				scoring formula is the following:</p>
+
+				<pre class="code">
+def challenge_score(num_solves, max_score=500, min_score=100, decay=50):
+	score = ((min_score - max_score) / (decay * decay)) * (num_solves ** 2) + max_score
+	return max(min_score, math.ceil(score))
+				</pre>
+			<p>The table below describes an example set of scores for a challenge, depending on the numer of solves:</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Number of solves</th>
+						<th>Score</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>0 solves</td>
+						<td>500 points</td>
+					</tr>
+					<tr>
+						<td>1 solve</td>
+						<td>500 points</td>
+					</tr>
+					<tr>
+						<td>5 solves</td>
+						<td>496 points</td>
+					</tr>
+					<tr>
+						<td>10 solves</td>
+						<td>484 points</td>
+					</tr>
+					<tr>
+						<td>45 solves</td>
+						<td>176 points</td>
+					</tr>
+					<tr>
+						<td>50 solves</td>
+						<td>100 points</td>
+					</tr>
+					<tr>
+						<td>61 solves</td>
+						<td>100 points</td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<p>
+				The final score for a single player is computed as the sum of the points given by the challenges the
+				player has solved. Players will be sorted in the final scoreboard using descending order of points. Ties
+				are broken using the last correct submission timestamp: earlier submissions win over later ones.
+			</p>
+			<p>No additional points are given for early submission (i.e. first blood) or for particularly good solutions
+				to the challenges.</p>
+		</section>
+		<section>
+			<h3 id="rules"><span class="material-icons md-48">rule</span> Rules</h3>
+		</section>
+		<section>
+			<h4><span class="material-icons md-48">verified_user</span> Eligibility</h4>
+			<p>Everyone is eligible to participate in openECSC; no age,country or any other kind of restriction applies.
+				Challenge authors can play, but won't appear on the public scoreboard.</p>
+		</section>
+
+		<section>
+			<h4><span class="material-icons md-48">leaderboard</span> Competition</h4>
+			<ul>
+				<li>Each player can have only one account and must play under only one name/nickname</li>
+				<li>Email confirmation (or social login with Discord) is required to play. Email addresses used during
+					registration will also be used to contact the winners. They won’t be publicly visible to the other
+					players.</li>
+				<li>Announcements regarding the competition will be posted on the official Discord server. In case of
+					challenge-specific announcements, they will be mirrored in the challenge description.</li>
+				<li>Collaboration with other players is prohibited. This includes (but is not limited to) sharing hints,
+					exploits or flags.</li>
+				<li>If not specified otherwise in the challenge description, only targets inside
+					<code>*.challs.openec.sc</code> are in-scope for the challenges. Attacking anything outside is
+					forbidden.
+				</li>
+				<li>Flags are in the format <code>openECSC{l33t_string}</code> if not specified otherwise.</li>
+				<li>The use of automatic scanning tools, or in general tools generating large amounts of traffic is
+					prohibited.</li>
+				<li>Support is given using the official Discord server only. In particular, the correct way to ask for
+					support is by using the ticketing system.</li>
+				<li>If you are not sure if something is allowed or not, <b><u>use the ticketing system to ask before
+							doing it.</u></b></li>
+			</ul>
+		</section>
+
+		<section>
+			<h4><span class="material-icons md-48">handshake</span> Fair play</h4>
+			<ul>
+				<li>Attacking other participants or the contest infrastructure is prohibited. Targets are clearly stated
+					in the challenge descriptions. This also includes social engineering and all the actions aimed to
+					gain access to other player's accounts.</li>
+				<li>Any action aimed at altering the behavior of a challenge for other players is prohibited. This
+					includes modifying/deleting flags, patching them via RCE, backdooring, etc.</li>
+				<li>Any action aimed at generating excessive load to the contest infrastructure is not allowed. Any kind
+					of action resulting in DoS is not allowed (e.g. network, logical, …)</li>
+				<li>Asking privately for hints (to authors or players) is prohibited. This is valid for both asking and
+					giving hints.</li>
+				<li>Sharing exploits, solutions or writeups publicly on the internet during the competition is not
+					allowed.</li>
+				<li>If any bug or flaw is found in the infrastructure platform, players are kindly asked to report it by
+					opening a ticket. Reports will be awarded with a special mention published on the platform itself.
+				</li>
+			</ul>
+		</section>
+	</main>
+	<footer>@ openECSC 2025 | <a href="https://x3c.tf">x3ctf</a> | initial website adopted from <a href="https://open.ecsc2024.it/">open.ecsc2024.it</a></footer>
+<script type="text/javascript">
+const PRE_WS_ENDPOINT = "wss://openec.sc/irc/";
+const PRE_SITE_VER = 6;
+let prefers_reduced = getPrefersReducedMotion();
+const TARGET_TIME = 1759161600_000;
+const openTime = Date.now();
+let time_offset = null;
+let nextSiteHtml = "";
+
+const countdownTime = document.getElementById("countdownTimer");
+
+// ARCHIVE LOGIN UTILS
+window.xD = (() => {
+	async function login() {
+		document.location.href = "archive-login.html#landing.html";
+	}
+	async function logout() {
+		document.location.href = "archive-logout.html#landing.html";
+	}
+	return {login, logout};
+})();
+
+// DISABLED FOR ARCHIVE
+/*
+// funny rebane oidc library
+window.xD = (() => {
+    const REDIRECT_URI = "https://openec.sc/";
+    const LOGOUT_URI = "https://idp.openec.sc/if/flow/default-invalidation-flow/";
+    const CLIENT_ID = "berg-client";
+    const PRE = "o25";
+    let refreshTimeout;
+
+    async function bufferToBase64(buffer) {
+      const base64url = await new Promise(r => {
+        const reader = new FileReader()
+        reader.onload = () => r(reader.result)
+        reader.readAsDataURL(new Blob([buffer]))
+      });
+      return base64url.slice(base64url.indexOf(',') + 1);
+    }
+
+    function cryptoHex(bytes) {
+        return Array.from(crypto.getRandomValues(new Uint8Array(bytes)))
+            .map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function login() {
+        const state = cryptoHex(16);
+        const code_verifier = cryptoHex(32);
+        const code_verifier_enc = new TextEncoder().encode(code_verifier);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', code_verifier_enc);
+        const code_challenge = (await bufferToBase64(new Uint8Array(hashBuffer))).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+
+        localStorage.setItem(`${PRE}-state`, state);
+        localStorage.setItem(`${PRE}-verifier`, code_verifier);
+
+        const params = {
+            "client_id": CLIENT_ID,
+            "redirect_uri": REDIRECT_URI,
+            "response_type": "code",
+            "scope": "openid offline_access",
+            "state": state,
+            "code_challenge": code_challenge,
+            "code_challenge_method": "S256",
+            "response_mode": "query",
+        };
+        document.location = `/api/openid/authorize?${new URLSearchParams(params)}`;
+    }
+
+    async function logout() {
+        localStorage.removeItem(`${PRE}-refresh`);
+        await fetch("https://openec.sc/api/openid/end-session");
+        document.location.href = LOGOUT_URI;
+    }
+
+    async function fetchAccessToken(code = null) {
+        const params = code ? {
+            "client_id": CLIENT_ID,
+            "code": code,
+            "redirect_uri": REDIRECT_URI,
+            "code_verifier": localStorage.getItem(`${PRE}-verifier`),
+            "grant_type": "authorization_code",
+        } : {
+            "client_id": CLIENT_ID,
+            "refresh_token": localStorage.getItem(`${PRE}-refresh`),
+            "grant_type": "refresh_token",
+        };
+        try {
+            const resp = await fetch("/api/openid/token", {
+                  "headers": { "content-type": "application/x-www-form-urlencoded" },
+                  "body": new URLSearchParams(params),
+                  "method": "POST",
+                });
+            const {access_token, refresh_token, expires_in} = await resp.json();
+            if (refreshTimeout)
+                clearTimeout(refreshTimeout);
+            refreshTimeout = setTimeout(() => fetchAccessToken(), expires_in*1000);
+            localStorage.setItem(`${PRE}-refresh`, refresh_token);
+            localStorage.setItem(`${PRE}-access`, access_token);
+            localStorage.setItem(`${PRE}-expires`, Math.floor(Date.now()/1000 + expires_in));
+            return access_token;
+        } catch (e) {
+            // idk some error, token probably expired
+            console.error(e);
+            localStorage.removeItem(`${PRE}-refresh`);
+        }
+    }
+
+    async function getAccessToken() {
+        const refresh_token = localStorage.getItem(`${PRE}-refresh`);
+        if (!refresh_token || refresh_token === "undefined") return localStorage.removeItem(`${PRE}-refresh`);
+        const expires_at = parseInt(localStorage.getItem(`${PRE}-expires`, 0));
+        if (!isNaN(expires_at) && Date.now()/1000 < expires_at) return localStorage.getItem(`${PRE}-access`);
+        return await fetchAccessToken();
+    }
+
+    async function getHeader() {
+        const access_token = await getAccessToken();
+        return access_token ? {"Authorization": `Bearer ${access_token}`} : {};
+    }
+    
+    async function init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const state = localStorage.getItem(`${PRE}-state`);
+        if (state && urlParams.get("state") === state) {
+            const code = urlParams.get("code");
+            if (code) {
+                history.pushState({}, "", "?");
+                localStorage.removeItem(`${PRE}-state`);
+                await fetchAccessToken(code);
+            }
+        }
+    }
+
+    return {init, login, logout, getHeader, getAccessToken};
+})();
+
+function ws_connect() {
+  const ws = new WebSocket(PRE_WS_ENDPOINT);
+  ws.onopen = () => ws.send("nya~");
+
+  ws.onmessage = function(e) {
+  	if (e.data.startsWith("uwu")) {
+  		//
+  	} else {
+  		const [_w1, site_ver, _w2, current_time, mvm] = e.data.split(" ");
+  		if (parseInt(site_ver) > PRE_SITE_VER) {
+  			if (parseInt(site_ver)+2 > PRE_SITE_VER)
+  				document.location.reload();
+  			setTimeout(()=>document.location.reload(),Math.random()*10*60_000)
+  		}
+  		setTimeOffset(parseInt(current_time));
+  		if (mvm !== "mvm") {
+  			preloadCtfData(mvm);
+  		}
+		setTimeout(() => ws.send("meow"), 10000);
+  	}
+  };
+
+  ws.onclose = function(e) {
+    console.log('Socket closed, reconnecting... ', e.reason);
+    setTimeout(() => ws_connect(), 1000);
+  };
+
+  ws.onerror = function(err) {
+    console.error('Socket error: ', err.message, 'Closing socket');
+    ws.close();
+  };
+};
+*/
+
+function getPrefersReducedMotion() {
+	const mediaQuery = window?.matchMedia?.('(prefers-reduced-motion: reduce)');
+	mediaQuery?.addEventListener?.('change', () => {
+	  prefers_reduced = mediaQuery.matches;
+	});
+	return mediaQuery?.matches;
+}
+
+function setTimeOffset(time) {
+	time_offset = Date.now() - time;
+}
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+let dataPreloadStarted = false;
+async function preloadCtfData(mvm) {
+	if (dataPreloadStarted) return;
+	dataPreloadStarted = true;
+	fetch(`${mvm}/index.html`).then(e=>e.text()).then(e=>nextSiteHtml=e).catch(setTimeout(() => preloadCtfData(mvm), 10000));
+	window.preCtfData = await (await fetch(`${mvm}/swag.json`)).json();
+}
+
+//https://stackoverflow.com/a/69190644
+function executeScriptElements(containerElement) {
+  const scriptElements = containerElement.querySelectorAll("script");
+
+  Array.from(scriptElements).forEach((scriptElement) => {
+    const clonedElement = document.createElement("script");
+
+    Array.from(scriptElement.attributes).forEach((attribute) => {
+      clonedElement.setAttribute(attribute.name, attribute.value);
+    });
+    
+    clonedElement.text = scriptElement.text;
+
+    scriptElement.parentNode.replaceChild(clonedElement, scriptElement);
+  });
+}
+
+function loadNextPage() {
+	document.documentElement.innerHTML = nextSiteHtml;
+	executeScriptElements(document.documentElement);
+	document.body.style.filter = `none`;
+}
+
+function animate() {
+	const timeLeft = (TARGET_TIME-getOffsetTime(true))/1000;
+	const timeSplit = [Math.floor(timeLeft/24/60/60), (timeLeft/60/60)%24, (timeLeft/60)%60, timeLeft%60, timeLeft%1];
+	const timeText = 
+		(timeSplit[0] ? (`${timeSplit[0]}:`) : ``) +
+		timeSplit.slice(1,4).map(t => String(Math.floor(t)).padStart(2,"0")).join(":");
+		((timeSplit[0] || prefers_reduced) ? "" : ("." + String(timeSplit[4]).slice(2,5).padEnd(3,"0")));
+	countdownTime.textContent = timeText;
+
+	// const refresh_time = TARGET_TIME - 30*60*1000;
+	// if (openTime < refresh_time && Date.now() > refresh_time) {
+	// 	setTimeout(()=>document.location.reload(), Math.random()*10*60*1000);
+	// }
+	if (timeLeft <= 0 && nextSiteHtml.length) {
+		loadNextPage();
+		return;
+	}
+
+	if (timeLeft < 10) {
+		document.body.style.filter = `brightness(${Math.max(0, timeLeft/10)})`;
+	}
+
+	requestAnimationFrame(animate);
+}
+
+
+async function checkLogin() {
+	try {
+		// ARCHIVE
+		// const playerData = (await (await fetch("./api/players/current", {"headers": await xD.getHeader()})).json());
+		// document.querySelector("#loggedInPlayer").innerText = playerData.name;
+		// document.querySelectorAll(".loggedOut").forEach(e => e.style.display = "none");
+		// document.querySelectorAll(".loggedIn").forEach(e => e.style.display = "");
+		// localStorage.setItem("o25-username", playerData?.name);
+		// localStorage.setItem("o25-userid", playerData?.id);
+		const username = localStorage.getItem("o25-username");
+		if (username && username !== "undefined") {
+			document.querySelector("#loggedInPlayer").innerText = username;
+			document.querySelectorAll(".loggedOut").forEach(e => e.style.display = "none");
+			document.querySelectorAll(".loggedIn").forEach(e => e.style.display = "");
+		}
+	} catch {}
+}
+
+window.onload = async () => {
+	// ARCHIVE
+	setTimeOffset(new Date("2025-09-29T16:00:00")-1000*60*60*24*2*Math.random());
+	// ws_connect();
+	animate();
+	//await xD.init();
+	checkLogin();
+};
+</script>
+</body>
+
+</html>

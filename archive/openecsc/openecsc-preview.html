@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>openECSC 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Didact+Gothic&family=Doto:wght@100..900&family=League+Gothic&family=Material+Icons&display=swap" rel="stylesheet">
+    <meta property="og:title" content="openECSC 2025">
+    <meta name="description" content="A worldwide cybersecurity competition open to everyone">
+    <meta property="og:description" content="A worldwide cybersecurity competition open to everyone">
+    <meta property="og:locale" content="en-us">
+    <meta property="og:type" content="website">
+    <meta content="#FFDD00" name="theme-color" />
+    <link rel="icon" type="image/png" href="img/openECSC.svg" />
+
+    <style type="text/css">
+
+        html {
+            --lines-col: #1c1e0f;
+            background: linear-gradient(90deg, #0000 48%, var(--lines-col) 50%, #0000 52%), linear-gradient(#0000 48%, var(--lines-col) 50%, #0000 52%), hsl(240 5% 34%);
+            background-size: 96px 96px;
+            color: #FFF;
+            font-family: var(--font-text);
+            color-scheme: dark;
+            scrollbar-gutter: stable;
+        }
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #page-challs, #page-account {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        challenge-board {
+            /* not fully sure about this one */
+            -webkit-user-select: none;
+            user-select: none;
+
+            font-size-adjust: 0.5;
+
+            font-family: var(--font-display);
+            --char: calc(1em * 0.6 + 2px);;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+            width: 100%;
+            max-width: 925px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #555;
+            outline: 1px solid #000;
+            outline-offset: 0px;
+            background: #222;
+            padding: 16px;
+            position: relative;
+            box-shadow: 0 0 0 2px inset #000, 0 0 6px #000;
+            overflow: auto;
+
+            &:not(:has(tbody>tr)) {
+                display: none;
+            }
+
+            & > div {
+                content: attr(category);
+                text-align: left;
+                font-family: var(--font-display);
+                font-size: 2.7rem;
+                font-weight:400;
+                color: #fd0;
+                margin-bottom: 8px;
+                &::before {
+                    content: attr(data-icon);
+                    display: inline-block;
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 0.375rem;
+                    background: #FD0;
+                    margin-right: 0.375rem;
+                    /* font-size: 22px; */
+                    font-size: 1.375rem;
+                    line-height: 2rem;
+                    font-family: 'Material Icons';
+                    color: #222;
+                    text-align: center;
+                    translate: 0 -0.25rem;
+                    -webkit-user-select: none;
+                    user-select: none;
+                    font-size-adjust: none;
+                }
+            }
+
+            table {
+                --outline-opacity: 0;
+                /* transition: --outline-opacity 0.1s; */
+                &:has(:focus-visible) { --outline-opacity: 1; }
+
+                flex-grow: 1;
+                --gap-h: 6px;
+                border-spacing: var(--gap-h) 2px;
+                margin: 0 calc(-1 * var(--gap-h));
+                @supports (font: -apple-system-body) and (-webkit-appearance: none) {
+                    /* i hate safari */
+                    margin-right: 0;
+                }
+                th {
+                    text-align: left;
+                    font-family: var(--font-display);
+                    font-size: 1.1rem;
+                    font-weight:400;
+                    color: #fd0;
+                    &:nth-child(1) { width: calc((var(--char) * 4) - 3px); }
+                    &:nth-child(2) { min-width: calc((var(--char) * 16) - 3px); }
+                    &:nth-child(3) { width: calc((var(--char) * 7) - 3px); }
+                    &:nth-child(4) { width: calc((var(--char) * 4) - 3px); }
+                    &:nth-child(5) { width: calc((var(--char) * 7) - 3px); }
+                }
+                tr {
+                    font-family: var(--font-dots);
+                    font-weight: 600;
+                    font-size: 1.125rem;
+                    &.solved td:nth-child(2) { --bg-col: #FD4; color: #000; &:has(:hover), &:has(:focus-within) { --bg-col: #FA0; } &:has(:focus-visible) { --outline-color: #FA0; } }
+                    td {
+                        --bg-col: #4444;
+                        /*transition: --bg-col .2s;*/
+                        /*background: #444;*/
+                        background: linear-gradient(90deg, var(--bg-col) 92.1875%, #0000 92.1876%, #0000);
+                        background-size: var(--char) 24px;
+                        background-position: -0.35px 0;
+                        vertical-align: top;
+                        letter-spacing: 2px;
+                        button {
+                            all: unset;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        &:nth-child(2) {
+                            &:has(:hover), &:has(:focus-within) {
+                                cursor: pointer;
+                                --bg-col: #6668;
+                            }
+                            --outline-color: #FD0;
+                            &:has(:focus-visible) {
+                                outline: 2px solid rgb(from var(--outline-color) r g b / var(--outline-opacity));
+                                outline-offset: 2px;
+                                border-radius: 2px;
+                                position: relative;
+                                &::after {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    outline: 1px solid rgb(0 0 0 / var(--outline-opacity));
+                                    outline-offset: 4px;
+                                    border-radius: 2px;
+                                }
+                            }
+                            color: #fd0;
+                        }
+                    }
+                }
+            }
+        }
+
+        title-sign {
+            background: #3a5195;
+            color: #FFF;
+            font-size: 4rem;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            font-family: var(--font-display);
+            border: 2px outset #383f67;
+            padding: 4px 0;
+            position: relative;
+            display: block;
+            margin: auto;
+            margin-bottom: 16px;
+            &::after, &::before {
+                content: "";
+                position: absolute;
+                bottom: 100%;
+                width: 10px;
+                height: 200px;
+                background: linear-gradient(90deg, #696969, #777777, #5d5d5d, #494949, #555555);
+                box-shadow: 0 0 1px #0008, 0 0 8px #0002;
+                z-index: -1;
+                pointer-events: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            &::before { left: 15% }
+            &::after { right: 15% }
+        }
+
+    </style>
+
+
+
+    <style>
+        :root {
+            --accent: #ff849c;
+            --stroke: #FFF;
+            --text: #330049;
+            --link: var(--stroke);
+            --background: #FD0;
+            --alt-accent: var(--background);
+            --points: #2D3142;
+            --border-rad: 16px;
+            --font-display: "League Gothic", Impact, fantasy, sans-serif;
+            --font-dots: doto, sans-serif;
+            --font-text: "Didact Gothic", system-ui, sans-serif;
+            --font-script: "Bad Script", cursive;
+            --sb-mult: 0.5;
+        }
+
+        html {
+            width: 100%;
+        }
+        html, body {
+            font-family: var(--font-text);
+            margin: 0;
+        }
+        /* scrollbar-gutter breaks our cool modal overlay unfortunately :( 
+            [!] and the marquee text ;_;
+        html:not(:has(#active-challenges:checked)) {
+            scrollbar-gutter: stable both-edges;
+        }*/
+        body {
+            margin-bottom: 16px;
+        }
+        ::selection {
+            color:#FD0;
+            background:#000;
+        }
+
+        code {
+            background: #000;
+            color: #FFF;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+        .pageTitle {
+            font: 400 72px var(--font-display);
+            width: 100%;
+
+            & text {
+                stroke-dasharray: 1000, 1000;
+                fill: var(--accent); /* #F7717D */
+                paint-order: stroke;
+                stroke: var(--stroke); /* #E9F7CA */
+                transition:
+                    2s stroke-width cubic-bezier(0,0,0,1),
+                    1s opacity cubic-bezier(0,0,0,1),
+                    2s letter-spacing cubic-bezier(0,0,0,1);
+                opacity: 100%;
+                stroke-width: 14px;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                margin: auto;
+                letter-spacing: 0;
+                /*animation: 20s pulsate infinite;*/
+                @starting-style {
+                    stroke-width: 0px;
+                    letter-spacing: 10px;
+                    opacity: 0;
+                }
+            }
+
+            & #countdown {
+                font-size: 24px;
+                stroke-width: 4px;
+                @starting-style {
+                    letter-spacing: 1px;
+                }
+            }
+        }
+
+
+
+        #menubar {
+            display: flex;
+            font-size: 32px;
+            font-family: var(--font-display);
+            max-width: 1000px;
+            box-sizing: border-box;
+
+            justify-content: space-around;
+            align-items: center;
+            /*color: #005391;*/
+            color: #FFF;
+
+            padding: 0 12px;
+
+            min-height: 64px;
+            flex-wrap: wrap;
+            gap: 0 8px;
+
+            background: #333;
+            margin: 32px 32px;
+            margin-bottom: 48px;
+            width:calc(100% - 64px - 16px);
+
+            box-shadow: 3px 3px 9px #0004;
+
+            & div {
+                cursor: pointer;
+            }
+            & a {
+                text-decoration: inherit;
+                color: inherit;
+            }
+        }
+
+
+        .none {
+            display: none;
+        }
+
+        .page { margin: 8px; max-width: 1200px; width: calc(100% - 16px); }
+        .pageRadio {display: none;}
+
+        body:has(>input#active-home:checked) label[for="active-home"],
+        body:has(>input#active-challenges:checked) label[for="active-challenges"],
+        body:has(>input#active-scoreboard:checked) label[for="active-scoreboard"],
+        body:has(>input#active-account:checked) label[for="active-account"] {
+            div { text-decoration:underline; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="menubar">
+    <label for="active-home"><a href="#home"><div style="color:#FD0">openECSC</div></a></label>
+    <label for="active-challenges"><a href="#challenges"><div>Challenges</div></a></label>
+    <label for="active-scoreboard"><a href="#scoreboard"><div>Scoreboard</div></a></label>
+    <label for="active-account"><a href="#account"><div id="link-account">log in</div></a></label>
+</div>
+<input type="radio" class="pageRadio" name="page" id="active-home" />
+<input type="radio" class="pageRadio" name="page" id="active-challenges" checked />
+<input type="radio" class="pageRadio" name="page" id="active-scoreboard" />
+<input type="radio" class="pageRadio" name="page" id="active-account" />
+
+<div class="page" id="page-challs">
+    <title-sign>Challenges</title-sign>
+    <!-- todo:ideally we'll prebuild this html with challs, and js will swap them out once the api catches out -->
+    <challenge-board category="web"><div data-icon="alternate_email">World Wide Web</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="confused-submission"><td>500</td><td><button>CONFUSED-SUBMISSION</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="eventhub"><td>500</td><td><button>EVENTHUB</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="kittychat"><td>500</td><td><button>KITTYCHAT</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="polish-bar"><td>500</td><td><button>POLISH-BAR</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="kv-messenger"><td>500</td><td><button>KV-MESSENGER</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="plfanzen-laden"><td>500</td><td><button>PLFANZEN-LADEN</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr><tr data-chall="plfanzen-laden-revenge"><td>500</td><td><button>PLFANZEN-LADEN-REVENGE</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr><tr data-chall="kittychat-secure"><td>500</td><td><button>KITTYCHAT-SECURE</button></td><td>LEET</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board><challenge-board category="crypto"><div data-icon="key">Cryptography</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="mind-the-gap"><td>500</td><td><button>MIND-THE-GAP</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="phantom-token"><td>500</td><td><button>PHANTOM-TOKEN</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="swaped"><td>500</td><td><button>SWAPED</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="polite-email"><td>500</td><td><button>POLITE-EMAIL</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="scrambled-randomness"><td>500</td><td><button>SCRAMBLED-RANDOMNESS</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="frivolousuov"><td>500</td><td><button>FRIVOLOUSUOV</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr><tr data-chall="theory-of-elliptic-curves"><td>500</td><td><button>THEORY-OF-ELLIPTIC-CURVES</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board><challenge-board category="for"><div data-icon="save">Computer Forensics</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody></tbody></table></challenge-board><challenge-board category="stego"><div data-icon="gradient">Steganography</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="mandatory-annoying-stego"><td>500</td><td><button>MANDATORY-ANNOYING-STEGO</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="yellow"><td>500</td><td><button>YELLOW</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="universe"><td>500</td><td><button>UNIVERSE</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="calamansi"><td>500</td><td><button>CALAMANSI</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="weird-transmitter"><td>500</td><td><button>WEIRD-TRANSMITTER</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board><challenge-board category="rev"><div data-icon="dvr">Reverse Engineering</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="mvmory"><td>500</td><td><button>MVMORY</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="nonplanar"><td>500</td><td><button>NONPLANAR</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="absolutely-strange-malware"><td>500</td><td><button>ABSOLUTELY-STRANGE-MALWARE</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="secure-snek-reveng"><td>500</td><td><button>SECURE-SNEK-REVENG</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr><tr data-chall="unzip-them-all"><td>500</td><td><button>UNZIP-THEM-ALL</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board><challenge-board category="pwn"><div data-icon="developer_board">Binary Exploitation</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="cfp"><td>500</td><td><button>CFP</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="avalonia"><td>500</td><td><button>AVALONIA</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="exitnction"><td>500</td><td><button>EXITNCTION</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="http101"><td>500</td><td><button>HTTP101</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="http202"><td>500</td><td><button>HTTP202</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board><challenge-board category="misc"><div data-icon="emoji_symbols">Miscellaneous</div><table><thead><tr><th>POINTS</th><th>NAME</th><th>DIFFICULTY</th><th>SOLVES</th><th>STATUS</th></tr></thead><tbody><tr data-chall="faas"><td>500</td><td><button>FAAS</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="jinjail"><td>500</td><td><button>JINJAIL</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="jinjail2"><td>500</td><td><button>JINJAIL2</button></td><td>EASY</td><td>0</td><td>OPEN</td></tr><tr data-chall="ipython-jail"><td>500</td><td><button>IPYTHON-JAIL</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="jinjail3"><td>500</td><td><button>JINJAIL3</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="oci"><td>500</td><td><button>OCI</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="organization"><td>500</td><td><button>ORGANIZATION</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="ruby-matcher"><td>500</td><td><button>RUBY-MATCHER</button></td><td>MEDIUM</td><td>0</td><td>OPEN</td></tr><tr data-chall="more-than-streets-these-signs"><td>500</td><td><button>MORE-THAN-STREETS-THESE-SIGNS</button></td><td>HARD</td><td>0</td><td>OPEN</td></tr></tbody></table></challenge-board>
+</div>
+
+</body>
+</html>
