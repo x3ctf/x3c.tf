@@ -4,54 +4,162 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>\x3C/script></title>
-  	<meta content="x3CTF" property="og:title" />
-  	<meta content="\x3C/script>" property="og:description" />
-  	<meta content="https://x3c.tf/" property="og:url" />
-  	<meta content="#474B79" data-react-helmet="true" name="theme-color" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Geo:ital@0;1&family=Cherry+Bomb+One&family=Lilita+One&display=block" rel="stylesheet">
-	<link rel="icon" type="image/x-icon" href="favicon.ico" />
-	<style type="text/css">
-		body,html {
-			font-family: system-ui, sans-serif;
-			background: #474B79;
-			color: #224;
-			height: 95%;
-			overflow: hidden;
-			align-content: center;
-			text-align: center;
+	<link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <meta content="x3CTF 2026" property="og:title" />
+  <meta content="\x3C/script>" property="og:description" />
+  <meta content="https://x3c.tf/" property="og:url" />
+  <meta content="#0000AA" data-react-helmet="true" name="theme-color" />
+	<link rel="icon" type="image/png" href="favicon.ico" />
+	<style>
+		@font-face {
+			font-family: "Nokia";
+			src: url("nokiafc22.ttf") format("truetype");
 		}
+		@font-face {
+			font-family: "XanhMono";
+			src: url("XanhMono-Regular.ttf") format("truetype");
+		}
+
+		html, body {
+			background: #f7f7e4;
+			font-family: Nokia, monospace;
+			font-size: 16px;
+			line-height: 1.1;
+			text-size-adjust: none;
+  			-webkit-text-size-adjust: none;
+  			color-scheme: light;
+  			color: #444;
+		}
+
 		h1 {
-			font-family: "Cherry Bomb One", sans-serif;
-		}
-		a {
-			display: block;
-			margin: auto;
-			background: #FFF;
-			rotate: 2deg;
-			width: 240px;
-      		height: 120px;
-			background: #FFF;
-      		border: 10px solid #FFF;
-      		border-radius: 16px;
-      		cursor: pointer;
-			align-content: center;
-			text-align: center;
-			font-family: "Lilita One", sans-serif;
-			font-size: 24px;
-			color: #474B79;
-			text-decoration: none;
-			transition: 2s scale cubic-bezier(0,0,0,1);
-			&:hover {
-				scale: 1.1;
+			font-size: 2em;
+			font-weight: normal;
+			color: #000;
+			@media (width >= 800px) {
+				margin-top: 0;
 			}
+		}
+		h2 {
+			font-size: 1em;
+			text-transform: uppercase;
+			font-weight: normal;
+			background: #d4e1e9;
+			color: #000;
+/*			width: fit-content;*/
+			padding: 3px 3px 0 3px;
+			margin-bottom: -8px;
+		}
+		body {
+			transform: rotate3d(0, 0, 1, 0deg);
+		}
+		section {
+			@media (width >= 800px) {
+				max-width: 400px;
+			}
+		}
+		a[href] {
+			color: #757575;
+			color: #00F;
+		}
+		#countdown {
+			font-size: 3em;
+			text-align: right;
+			@media (width >= 800px) {
+				position: fixed;
+				top: 0;
+				left: 0;
+				transform: translate(calc(50vw - 200px + 400px - 50%), calc(50vh - 50%)) rotate(45deg);
+				font-size: min(10vw, 20vh);
+			}
+			margin: 0;
+			font-family: "XanhMono", monospace;
+			color: #4b492f;
+			z-index: -1;
 		}
 	</style>
 </head>
 <body>
-<h1>x3CTF 2025 is over.</h1>
-<a href="/archive">website archive</a>
-<p style="color:#224">see you next time <span style="font-family:sans-serif">^_-</span></p>
+<div></div>
+<h1>x3CTF 2026</h1>
+<p id="countdown" inert></p>
+<section>
+<h2>About</h2>
+
+<p>x3CTF is a cute little jeopardy-style CTF with web, pwn, rev, crypto, and misc challs!</p>
+
+<p>x3CTF 2026 will run from Dec 4th 18:00 UTC until Dec 6th 18:00 UTC (48h). Be here a few minutes early for a fun surprise ^_^.</p>
+
+<p>Check us out on <a href="https://ctftime.org/event/3450">CTFtime</a>, join our <a href="https://discord.gg/WpFHfD6nqH">Discord</a> server, and explore our <a href="/archive/">previous years' archives</a>.</p>
+<section>
+</section>
+<h2>Prizes</h2>
+
+<p>List of prizes:</p>
+
+...
+
+<p>The prizes are still being determined, so the list and conditions may still change. More information to come.</p>
+
+<p>We reserve the right to not send out a physical prize if shipping it would be prohibitively difficult or expensive (<a href="https://www.omniva.ee/public/files/failid/hinnakiri-rv-pakiteenused-era-est-en-2024.pdf">shipping costs</a> over 50€ will be decided on a case-by-case basis).</p>
+</section>
+<section>
+<h2>Rules</h2>
+
+<ol>
+<li>You are allowed to play either individually or with a team. When playing with a team, register and use a single account for the entire team.  
+<ol>
+<li>If playing on a team, you are allowed to also have 1 personal account, but you are not allowed to submit flags on the personal account.  </li>
+</ol></li>
+<li>There is no bruteforce or scanning of public infrastructure required to solve the challenges.  </li>
+<li>Attacking or abusing the organizers infrastructure is forbidden.<br />
+Valid challenge targets are located at:  
+<ol>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:1337  </li>
+<li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:31337  </li>
+<li>instances.x3c.tf:30000-65535 (tcp/udp)  </li>
+</ol></li>
+<li>Have fun!</li>
+</ol>
+
+<p><i>Note: The rules are work in progress and will change before the CTF begins.</i></p>
+</section>
+<section>
+<h2>Credits</h2>
+
+<p>The x3CTF team consists of <a href="https://blog.gk.wtf/">Coderion</a>, <a href="https://dagurb.com">DagurB</a>, Raptor, rdx4.2, <a href="https://lyra.horse">Rebane</a>, and ShadowCone.<br />
+We're using the Berg CTF Platform by <a href="https://norelect.ch/">NoRelect</a>, with a custom frontend by Rebane.<br />
+Music: ??? (surprise!)</p>
+</section>
+2026 nya~
+<script type="text/javascript">
+const PRE_SITE_VER = 1;
+const TARGET_TIME = 1796407200*1000;
+
+const time_offset = null;
+
+const countdownTime = document.querySelector("#countdown");
+
+function getOffsetTime(canFallback = false) {
+	if (time_offset === null) return canFallback ? Date.now() : 0;
+	return Date.now() - time_offset;
+}
+
+function animate() {
+	const timeLeft = (TARGET_TIME-getOffsetTime(true))/1000;
+	const timeSplit = [Math.floor(timeLeft/24/60/60), (timeLeft/60/60)%24, (timeLeft/60)%60, timeLeft%60, timeLeft%1];
+	const timeText = 
+		(timeSplit[0] ? (`${timeSplit[0]}:`) : ``) +
+		timeSplit.slice(1,4).map(t => String(Math.floor(t)).padStart(2,"0")).join(":") +
+		(timeSplit[0] ? "" : ("." + String(timeSplit[4]).slice(2,5).padEnd(3,"0")));
+	countdownTime.textContent = timeText;//.replace(/1/g,"I");
+	if (timeLeft <= 3600) {
+		document.location.reload();
+		return;
+	}
+}
+
+animate();
+setInterval(animate, 1000);
+</script>
 </body>
 </html>
