@@ -68,7 +68,7 @@
 				position: fixed;
 				top: 0;
 				left: 0;
-				transform: translate(calc(50vw - 200px + 400px - 50%), calc(50vh - 50%)) rotate(45deg);
+				transform: translate(calc(50vw - 200px + 400px - 50%), calc(50vh - 50%)) rotate(45deg) skew(45deg, 0);
 				font-size: min(10vw, 20vh);
 			}
 			margin: 0;
@@ -76,12 +76,16 @@
 			color: #4b492f;
 			z-index: -1;
 		}
+		::selection {
+			color:#F7F7E4;
+			background:#444444;
+		}
 	</style>
 </head>
 <body>
 <div></div>
 <h1>x3CTF 2026</h1>
-<p id="countdown" inert></p>
+<p id="countdown"></p>
 <section>
 <h2>About</h2>
 
@@ -98,7 +102,7 @@
 
 ...
 
-<p>The prizes are still being determined, so the list and conditions may still change. More information to come.</p>
+<p>The prizes are still being determined. More information to come.</p>
 
 <p>We reserve the right to not send out a physical prize if shipping it would be prohibitively difficult or expensive (<a href="https://www.omniva.ee/public/files/failid/hinnakiri-rv-pakiteenused-era-est-en-2024.pdf">shipping costs</a> over 50€ will be decided on a case-by-case basis).</p>
 </section>
@@ -107,21 +111,28 @@
 
 <ol>
 <li>You are allowed to play either individually or with a team. When playing with a team, register and use a single account for the entire team.  
-<ol>
+<!--<ol> same as the other one
 <li>If playing on a team, you are allowed to also have 1 personal account, but you are not allowed to submit flags on the personal account.  </li>
-</ol></li>
+</ol>--></li>
 <li>There is no bruteforce or scanning of public infrastructure required to solve the challenges.  </li>
-<li>Attacking or abusing the organizers infrastructure is forbidden.<br />
+<li>Attacking or abusing the organizers infrastructure is forbidden.<!--<br /> commenting this out to make the landing page less noisy
 Valid challenge targets are located at:  
 <ol>
 <li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:1337  </li>
 <li>https://&lt;UUID>.x3c.tf&ZeroWidthSpace;:31337  </li>
 <li>instances.x3c.tf:30000-65535 (tcp/udp)  </li>
+</ol>--></li>
+<li>Don't share flags or discuss challenges outside of your team while the CTF is running. <br>
+<ol>
+<li>You are, of course, allowed to discuss the challenges and share solutions once the CTF has ended.  </li>
 </ol></li>
-<li>Have fun!</li>
+<li>Have fun! <br>
+<ol>
+<li>Let others have fun too! We're an inclusive CTF and discrimination or harassment will not be tolerated.</li>
+</ol></li>
 </ol>
-
-<p><i>Note: The rules are work in progress and will change before the CTF begins.</i></p>
+<p>Rules around LLM tool usage will be coming soon, but our intent is to provide a human experience to humans and other living beings.</p>
+<p><i>Note: The rules are <span style="color:darkred">work in progress</span> and <span style="color:darkred">will change</span> before the CTF begins.</i></p>
 </section>
 <section>
 <h2>Credits</h2>
